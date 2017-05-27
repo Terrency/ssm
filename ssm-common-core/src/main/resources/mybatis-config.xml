@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC
+        "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <!-- 全局设置 -->
+    <settings>
+        <!-- 开启延迟加载 -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <!-- 开启二级缓存 -->
+        <!--
+        说明:
+        (1)缓存在查询时候生效, 一般也需要在修改或者删除新增的时候更新;
+        (2)Mybatis支持二级缓存机制, 对应到不同的executor实现: BaseExecutor(普通的执行器, 包含一级缓存), CachingExecutor(二级缓存).
+        -->
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+
+    <!-- 别名设置 -->
+    <typeAliases>
+        <!-- 内建的常见类型别名 -->
+        <!--
+        <typeAlias alias="_byte" type="byte"/>
+        <typeAlias alias="_long" type="long"/>
+        <typeAlias alias="_short" type="short"/>
+        <typeAlias alias="_int" type="int"/>
+        <typeAlias alias="_integer" type="int"/>
+        <typeAlias alias="_double" type="double"/>
+        <typeAlias alias="_float" type="float"/>
+        <typeAlias alias="_boolean" type="boolean"/>
+        <typeAlias alias="string" type="String"/>
+        <typeAlias alias="byte" type="Byte"/>
+        <typeAlias alias="long" type="Long"/>
+        <typeAlias alias="short" type="Short"/>
+        <typeAlias alias="int" type="Integer"/>
+        <typeAlias alias="integer" type="Integer"/>
+        <typeAlias alias="double" type="Double"/>
+        <typeAlias alias="float" type="Float"/>
+        <typeAlias alias="boolean" type="Boolean"/>
+        <typeAlias alias="date" type="Date"/>
+        <typeAlias alias="decimal" type="BigDecimal"/>
+        <typeAlias alias="bigdecimal" type="BigDecimal"/>
+        <typeAlias alias="object" type="Object"/>
+        <typeAlias alias="map" type="Map"/>
+        <typeAlias alias="hashmap" type="HashMap"/>
+        <typeAlias alias="list" type="List"/>
+        <typeAlias alias="arraylist" type="ArrayList"/>
+        <typeAlias alias="collection" type="Collection"/>
+        <typeAlias alias="iterator" type="Iterator"/>
+        -->
+        <!-- MyBatis自动扫描所指定包中的类并自动创建别名(别名就是类名且大小写均可) -->
+        <!--<package name="com.ssm.sys.api.model"/>-->
+    </typeAliases>
+
+    <!--
+    <plugins>
+        <plugin interceptor="com.ssm.common.core.page.PageInterceptor"/>
+    </plugins>
+    -->
+
+    <!--
+    <a href="http://www.mybatis.org/mybatis-3/zh/configuration.html#databaseIdProvider">MyBatis</a>
+    {@link org.apache.ibatis.builder.xml.XMLConfigBuilder#databaseIdProviderElement}
+    <pre>
+    if (environment != null && databaseIdProvider != null) {
+        String databaseId = databaseIdProvider.getDatabaseId(environment.getDataSource());
+        configuration.setDatabaseId(databaseId);
+    }
+    </pre>
+    -->
+    <!--
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="MySQL" value="mysql"/>
+        <property name="Oracle" value="oracle"/>
+    </databaseIdProvider>
+    -->
+
+    <!-- 映射文件 -->
+    <mappers>
+        <!-- 自动扫描(Mapper代理开发) -->
+        <!--<package name="com.ssm.sys.core.mapper" />-->
+    </mappers>
+
+</configuration>

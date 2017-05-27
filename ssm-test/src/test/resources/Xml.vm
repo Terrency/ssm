@@ -1,0 +1,33 @@
+#parse ("macro.vm")
+#set($comma=".")
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ssm.${modulePrefix}.core.extension.${modelPrefix}ExtMapper">
+
+    <resultMap id="BaseResultMap" type="com.ssm.${modulePrefix}.api.dto.${modelPrefix}">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <select id="selectSelective" parameterType="com.ssm.${modulePrefix}.api.wrapper.${modelPrefix}Wrapper" resultMap="BaseResultMap">
+        SELECT * FROM ${modulePrefix}_#toLowerCase(${modelPrefix})
+
+        <where>
+            <if test="#toLowerCase(${modelPrefix})!=null">
+                <if test="#toLowerCase(${modelPrefix})${comma}id!=null">
+                    AND id = #{#toLowerCase(${modelPrefix})${comma}id}
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByIds" parameterType="list">
+        DELETE FROM ${modulePrefix}_#toLowerCase(${modelPrefix}) WHERE id IN
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

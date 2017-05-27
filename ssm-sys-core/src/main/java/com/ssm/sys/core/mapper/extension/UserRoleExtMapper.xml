@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ssm.sys.core.mapper.extension.UserRoleExtMapper">
+
+    <delete id="deleteByUserId" parameterType="long">
+        DELETE FROM sys_user_role WHERE user_id = #{userId}
+    </delete>
+
+    <delete id="deleteByRoleId" parameterType="long">
+        DELETE FROM sys_user_role WHERE role_id = #{roleId}
+    </delete>
+
+    <select id="selectRoleIdsByUserId" parameterType="long" resultType="long">
+        SELECT role_id FROM sys_user_role WHERE user_id = #{userId}
+    </select>
+
+    <insert id="insertBatch" parameterType="com.ssm.sys.api.model.UserRole" databaseId="mysql">
+        INSERT INTO sys_user_role (id, user_id, role_id) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.roleId,jdbcType=BIGINT})
+        </foreach>
+    </insert>
+
+    <insert id="insertBatch" parameterType="com.ssm.sys.api.model.UserRole" databaseId="oracle">
+        INSERT INTO sys_user_role (id, user_id, role_id)
+        <foreach collection="list" item="item" separator=" UNION ALL ">
+            SELECT #{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.roleId,jdbcType=BIGINT} FROM DUAL
+        </foreach>
+    </insert>
+
+    <delete id="deleteBatch" parameterType="map">
+        DELETE FROM sys_user_role WHERE user_id = #{userId} AND
+        <foreach collection="roleIds" item="roleId" open="(" separator=" OR " close=")">
+            role_id = #{roleId}
+        </foreach>
+    </delete>
+
+</mapper>

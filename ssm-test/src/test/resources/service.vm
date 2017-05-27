@@ -1,0 +1,39 @@
+#parse ("macro.vm")
+package com.ssm.${modulePrefix}.api.service;
+
+import com.ssm.common.page.Page;
+import com.ssm.${modulePrefix}.api.dto.${modelPrefix};
+import com.ssm.${modulePrefix}.api.wrapper.${modelPrefix}Wrapper;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Collection;
+import java.util.List;
+
+public interface ${modelPrefix}Service {
+
+    /* ===== 与方法同名接口, 首字母大写, 用于区分验证场景, 如: @Validated({Save.class}) ===== */
+
+    @interface Add {}
+
+    @interface Update {}
+
+    int add(@NotNull @Validated({Add.class}) ${modelPrefix} #toLowerCase(${modelPrefix}));
+
+    int add(@Size(min = 1) Collection<${modelPrefix}> #toLowerCase(${modelPrefix})s);
+
+    int delete(@NotNull Long id);
+
+    int delete(@Size(min = 1) Long[] ids);
+
+    int update(@NotNull @Validated({Update.class}) ${modelPrefix} #toLowerCase(${modelPrefix}));
+
+    ${modelPrefix} get${modelPrefix}ById(@NotNull Long id);
+
+    List<${modelPrefix}> getList(${modelPrefix}Wrapper #toLowerCase(${modelPrefix})Wrapper);
+
+    Page<${modelPrefix}> getPage(${modelPrefix}Wrapper #toLowerCase(${modelPrefix})Wrapper, int offset, int length);
+
+}

@@ -1,0 +1,419 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>请假管理</title>
+    <style type="text/css">
+        div.diagram {
+            position: absolute;
+            border: 2px solid #a94442;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="bs-content" data-content="请假管理">
+        <table id="table" class="table table-hover table-condensed" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>申请日期</th>
+                <th>请假天数</th>
+                <th>请假事由</th>
+                <th>备注</th>
+                <th>当事人</th>
+                <th>请假状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <td colspan="7" class="text-danger">
+                    <i class="glyphicon glyphicon-warning-sign"></i> 注意：只有当请假状态为【初始录入】时方可执行修改、删除和申请请假操作。
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<script id="actionTemplate" type="text/x-handlebars-template">
+    {{#if isEq0}}
+    <a href="javascript:void(0)" class="btn btn-xs btn-default" role="button" onclick="fnEdit(this)">
+        <i class="fa fa-edit"></i> 修改
+    </a>
+    <a href="javascript:void(0)" class="btn btn-xs btn-default" role="button" onclick="fnDelete(this)">
+        <i class="fa fa-trash"></i> 删除
+    </a>
+    <a href="javascript:void(0)" class="btn btn-xs btn-default" role="button" onclick="fnApply(this)">
+        <i class="fa fa-hand-o-right"></i> 申请请假
+    </a>
+    {{else}}
+    <a href="javascript:void(0)" class="btn btn-xs btn-default" role="button" onclick="fnQuery(this)">
+        <i class="fa fa-search"></i> 查看审核记录
+    </a>
+    {{#unless isEq3}}
+    <a href="javascript:void(0)" class="btn btn-xs btn-default" role="button" onclick="fnView(this)">
+        <i class="fa fa-eye"></i> 查看流程进度
+    </a>
+    {{/unless}}
+    {{/if}}
+</script>
+
+<script id="commentTemplate" type="text/x-handlebars-template">
+    <div class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <label class="modal-title">审核记录列表</label>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-condensed" cellspacing="0" width="100%">
+                            <thead>
+                            <tr>
+                                <th>批注时间</th>
+                                <th>批注人</th>
+                                <th>批注信息</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{#.}}
+                            <tr>
+                                <td>{{time}}</td>
+                                <td>{{userId}}</td>
+                                <td>{{fullMessage}}</td>
+                            </tr>
+                            {{/.}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="viewTemplate" type="text/x-handlebars-template">
+    <div class="modal fade">
+        <div class="modal-dialog" style="width: 900px;">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <label class="modal-title">历史任务-查看流程进度</label>
+                </div>
+                <div class="modal-body" style="padding: 0;">
+                    <img src="${contextPath}/process/getDiagram?pdKey={{pdKey}}&&bizKey={{bizKey}}"
+                         class="img-thumbnail" style="padding: 0; border: none;">
+                    <div class="diagram"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="template" type="text/x-handlebars-template">
+    <div class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <label class="modal-title">{{title}}</label>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form id="form_{{index}}" class="form-horizontal form-group-sm" role="form">
+                            <div class="form-group">
+                                <label class="control-label" for="applyTime_{{index}}">申请日期</label>
+                                <input id="applyTime_{{index}}" name="applyTime" value="{{applyTime}}" type="date"
+                                       class="form-control" placeholder="申请日期" data-bv-notempty="true">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="days_{{index}}">请假天数</label>
+                                <input id="days_{{index}}" name="days" value="{{days}}" type="number" min="1" max="90"
+                                       class="form-control" placeholder="请假天数" data-bv-notempty="true">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="content_{{index}}">请假事由</label>
+                                <input id="content_{{index}}" name="content" value="{{content}}" type="text"
+                                       class="form-control" placeholder="请假事由" data-bv-notempty="true">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="remark_{{index}}">备注</label>
+                                <textarea id="remark_{{index}}" name="remark" maxlength="100" class="form-control" placeholder="备注">{{remark}}</textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnSave_{{index}}" type="button" class="btn btn-sm btn-primary">
+                        <i class="glyphicon glyphicon-saved"></i> 保存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+
+    var fnEdit, fnDelete, fnApply, fnQuery, fnView;
+
+    require([
+        'jquery',
+        'noty',
+        'moment',
+        'handlebars',
+        'bootstrap',
+        'bootstrapValidator',
+        'datatables.net',
+        'datatables.net-bs',
+        'datatables.net-buttons',
+        'datatables.net-buttons-bs',
+        'datatables.net-buttons-colVis'
+    ], function ($, noty, moment, Handlebars) {
+
+        var template = Handlebars.compile($('#template').html()),
+            actionTemplate = Handlebars.compile($('#actionTemplate').html()),
+            commentTemplate = Handlebars.compile($('#commentTemplate').html()),
+            viewTemplate = Handlebars.compile($('#viewTemplate').html());
+
+        $.extend($.fn.dataTable.ext.buttons, {
+            reload: {
+                text: 'Reload',
+                action: function (e, dt, node, config) {
+                    dt.ajax.reload();
+                }
+            }
+        });
+
+        var $table = $('#table').DataTable({
+            info: false,
+            paging: false,
+            ordering: false,
+            lengthChange: false,
+            searching: true,
+            rowId: 'id',
+            buttons: [
+                {
+                    enabled: true,
+                    text: '<i class="fa fa-plus"></i> 起草申请',
+                    name: 'add',
+                    className: 'btn-sm',
+                    titleAttr: 'Click To Add',
+                    action: function () {
+                        var index = Base.generateRandomNumber(), isSuccess = false;
+                        $(template({
+                            title: '请假管理-起草申请',
+                            index: index
+                        })).insertBefore('#template').modal({
+                            show: true
+                        }).on('shown.bs.modal', function () {
+                            var $form = $('#form_' + index);
+                            $form.bootstrapValidator();
+                            $('#btnSave_' + index).click(function () {
+                                if ($form.validate()) {
+                                    var $this = $(this);
+                                    $.ajax({
+                                        url: '${contextPath}/leave/addSubmit',
+                                        type: 'POST',
+                                        data: $form.serialize(),
+                                        dataType: 'json',
+                                        success: function (result) {
+                                            isSuccess = result.success;
+                                            isSuccess && $this.attr({disabled: true});
+                                            noty.message(result.message, isSuccess);
+                                        }
+                                    });
+                                }
+                            });
+                        }).on('hidden.bs.modal', function () {
+                            $(this).remove();
+                            isSuccess && $table.ajax.reload();
+                        });
+                    }
+                },
+                {
+                    extend: 'reload',
+                    enabled: true,
+                    text: '<i class="fa fa-refresh"></i> 刷新列表',
+                    name: 'reload',
+                    className: 'btn-sm',
+                    titleAttr: 'Click To Reload'
+                },
+                {
+                    extend: 'colvis',
+                    enabled: true,
+                    text: '<i class="fa fa-columns"></i> 隐藏列',
+                    name: 'colvis',
+                    className: 'btn-sm',
+                    titleAttr: 'Click To Hidden Column'
+                }
+            ],
+            ajax: {
+                url: '${contextPath}/leave/getList',
+                type: 'POST',
+                dataType: 'json',
+                dataSrc: function (data) {
+                    return $.map(data, function (obj) {
+                        return $.extend(obj, {
+                            applyTime: moment(obj.applyTime, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD')
+                        });
+                    });
+                }
+            },
+            columns: [
+                {data: 'applyTime'},
+                {data: 'days'},
+                {data: 'content'},
+                {data: 'remark'},
+                {data: 'applicant', visible: false},
+                {
+                    data: 'status',
+                    render: function (data, type, row) {
+                        var map = {0: '初始录入', 1: '正在申请', 2: '正在审批', 3: '审批完成'};
+                        return map[data] || '';
+                    }
+                },
+                {
+                    data: 'status',
+                    width: '20%',
+                    render: function (data, type, row) {
+                        return actionTemplate({
+                            isEq0: data == 0,
+                            isEq3: data == 3
+                        });
+                    }
+                }
+            ],
+            fnInitComplete: function (settings, json) {
+                $table.buttons().container().appendTo($('.col-sm-6:eq(0)', $table.table().container()));
+                $table.buttons().nodes().attr({'data-toggle': 'tooltip'}).bind('click', $.noop());
+            }
+        });
+
+        fnEdit = function (node) {
+            var rowData = $table.row($(node).parents('tr')).data();
+            var index = Base.generateRandomNumber(), isSuccess = false;
+            $(template($.extend({}, rowData, {
+                title: '请假管理-更新',
+                index: index
+            }))).insertBefore('#template').modal({
+                show: true
+            }).on('shown.bs.modal', function () {
+                var $form = $('#form_' + index);
+                $form.bootstrapValidator();
+                $('#btnSave_' + index).click(function () {
+                    if ($form.validate()) {
+                        var $this = $(this);
+                        $.ajax({
+                            url: '${contextPath}/leave/editSubmit',
+                            type: 'POST',
+                            data: $.extend({}, $form.serializeObject(), {id: rowData.id}),
+                            dataType: 'json',
+                            success: function (result) {
+                                isSuccess = result.success;
+                                isSuccess && $this.attr({disabled: true});
+                                noty.message(result.message, isSuccess);
+                            }
+                        });
+                    }
+                });
+            }).on('hidden.bs.modal', function () {
+                $(this).remove();
+                isSuccess && $table.ajax.reload();
+            });
+        };
+
+        fnDelete = function (node) {
+            noty.confirm('确认删除吗?', function (yes) {
+                if (yes) {
+                    var id = $table.row($(node).parents('tr')).id();
+                    $.ajax({
+                        url: '${contextPath}/leave/deleteSubmit',
+                        type: 'POST',
+                        data: {id: id},
+                        dataType: 'json',
+                        success: function (result) {
+                            $table.ajax.reload(function () {
+                                noty.message(result.message, result.success);
+                            });
+                        }
+                    });
+                }
+            });
+        };
+
+        fnApply = function (node) {
+            var id = $table.row($(node).parents('tr')).id();
+            $.ajax({
+                url: '${contextPath}/leave/startProcess',
+                type: 'POST',
+                data: {id: id},
+                dataType: 'json',
+                success: function (result) {
+                    if (result.success) {
+                        location.href = '${contextPath}/process/task';
+                    } else {
+                        noty.message(result.message, result.success);
+                    }
+                }
+            });
+        };
+
+        fnQuery = function (node) {
+            var id = $table.row($(node).parents('tr')).id();
+            $.ajax({
+                url: '${contextPath}/process/getHistoryCommentList',
+                type: 'POST',
+                data: {pdKey: '${pdKey}', bizKey: id},
+                dataType: 'json',
+                success: function (data) {
+                    $(commentTemplate(data)).insertBefore('#commentTemplate').modal({
+                        show: true
+                    }).on('hidden.bs.modal', function () {
+                        $(this).remove();
+                    });
+                }
+            });
+        };
+
+        fnView = function (node) {
+            var param = {
+                pdKey: '${pdKey}',
+                bizKey: $table.row($(node).parents('tr')).id()
+            };
+            $.ajax({
+                url: '${contextPath}/process/ActivityImpl',
+                type: 'POST',
+                data: param,
+                dataType: 'json',
+                success: function (data) {
+                    if ($.isEmptyObject(data)) {
+                        noty.alert('流程已结束！', function () {
+                            $table.ajax.reload();
+                        });
+                    } else {
+                        $(viewTemplate(param)).insertBefore('#viewTemplate').modal({
+                            show: true
+                        }).on('hidden.bs.modal', function () {
+                            $(this).remove();
+                        }).find('div.diagram').css({
+                            left: data['x'] + 'px',
+                            top: data['y'] + 'px',
+                            width: data['width'] + 'px',
+                            height: data['height'] + 'px'
+                        });
+                    }
+                }
+            });
+        };
+
+    });
+</script>
+
+</body>
+</html>

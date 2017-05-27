@@ -1,0 +1,21 @@
+#**
+ *(1)Velocity中所有的关键字都是以#开头, 而所有的变量则是以$开头;
+ *(2)Velocity中的变量是弱数据类型的, 这就意味着可以在赋了一个String给变量之后再赋一个数字或者数组给它;
+ *(3)Velocity引擎提供了 AND, OR 和 NOT 操作符, 分别对应 &&, || 和 ! ;
+ *(4)Velocity中的宏可以理解为函数定义;
+ *(5)#include和#parse指令的功能都是在外部引用文件, 区别是:
+ *    |- #include: 被引入文件的内容将不会通过模板引擎解析
+ *    |- #parse: 引入的文件内容Velocity将解析其中的Velocity语法并移交给模板
+ **#
+#set($variable = "I am a variable!" )
+Welcome $name to use Velocity.
+today is $date.
+#foreach($item in $list)
+    $item
+#end
+$variable
+##宏定义
+#macro(toUpperCase $str)$str.substring(0,1).toUpperCase()$str.substring(1)#end
+#macro(toLowerCase $str)$str.substring(0,1).toLowerCase()$str.substring(1)#end
+##调用宏
+#toUpperCase("user")

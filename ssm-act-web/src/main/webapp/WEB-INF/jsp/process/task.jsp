@@ -1,0 +1,173 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>任务管理</title>
+    <style type="text/css">
+        div.diagram {
+            position: absolute;
+            border: 2px solid #a94442;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="bs-content" data-content="任务管理">
+        <table id="table" class="table table-hover table-condensed" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>任务ID</th>
+                <th>任务名称</th>
+                <th>创建时间</th>
+                <th>任务执行者</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<template id="actionTemplate">
+    <a href="${contextPath}/leave/task?taskId={{taskId}}&processInstanceId={{processInstanceId}}"
+       class="btn btn-xs btn-default" role="button">
+        <i class="fa fa-tasks"></i> 办理任务
+    </a>
+    <a href="javascript:void(0)" class="btn btn-xs btn-default" role="button" onclick="fnView(this)">
+        <i class="fa fa-eye"></i> 查看流程进度
+    </a>
+</template>
+
+<script id="template" type="text/x-handlebars-template">
+    <div class="modal fade">
+        <div class="modal-dialog" style="width: 900px;">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <label class="modal-title">任务管理-查看流程进度</label>
+                </div>
+                <div class="modal-body" style="padding: 0;">
+                    <img src="${contextPath}/process/getProcessDiagram?pdId={{pdId}}"
+                         class="img-thumbnail" style="padding: 0; border: none;">
+                    <div class="diagram"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+
+    var fnView;
+
+    require([
+        'jquery',
+        'noty',
+        'handlebars',
+        'bootstrap',
+        'bootstrapValidator',
+        'datatables.net',
+        'datatables.net-bs',
+        'datatables.net-buttons',
+        'datatables.net-buttons-bs',
+        'datatables.net-buttons-colVis'
+    ], function ($, noty, Handlebars) {
+
+        var template = Handlebars.compile($('#template').html()),
+            actionTemplate = Handlebars.compile($('#actionTemplate').html());
+
+        $.extend($.fn.dataTable.ext.buttons, {
+            reload: {
+                text: 'Reload',
+                action: function (e, dt, node, config) {
+                    dt.ajax.reload();
+                }
+            }
+        });
+
+        var $table = $('#table').DataTable({
+            info: false,
+            paging: false,
+            ordering: false,
+            lengthChange: false,
+            searching: true,
+            rowId: 'id',
+            buttons: [
+                {
+                    extend: 'reload',
+                    enabled: true,
+                    text: '<i class="fa fa-refresh"></i> 刷新列表',
+                    name: 'reload',
+                    className: 'btn-sm',
+                    titleAttr: 'Click To Reload'
+                },
+                {
+                    extend: 'colvis',
+                    enabled: true,
+                    text: '<i class="fa fa-columns"></i> 隐藏列',
+                    name: 'colvis',
+                    className: 'btn-sm',
+                    titleAttr: 'Click To Hidden Column'
+                }
+            ],
+            ajax: {
+                url: '${contextPath}/process/getTaskList',
+                type: 'POST',
+                dataType: 'json',
+                dataSrc: function (data) {
+                    return data;
+                }
+            },
+            columns: [
+                {data: 'id'},
+                {data: 'name'},
+                {data: 'createTime'},
+                {data: 'assignee', visible: false},
+                {
+                    width: '20%',
+                    render: function (data, type, row) {
+                        return actionTemplate({
+                            taskId: row.id,
+                            processInstanceId: row.processInstanceId
+                        });
+                    }
+                }
+            ],
+            fnInitComplete: function (settings, json) {
+                $table.buttons().container().appendTo($('.col-sm-6:eq(0)', $table.table().container()));
+                $table.buttons().nodes().attr({'data-toggle': 'tooltip'}).bind('click', $.noop());
+            }
+        });
+
+        fnView = function (node) {
+            var rowData = $table.row($(node).parents('tr')).data();
+            $.ajax({
+                url: '${contextPath}/process/getActivity',
+                type: 'POST',
+                data: {processInstanceId: rowData.processInstanceId},
+                dataType: 'json',
+                success: function (data) {
+                    $(template({
+                        pdId: rowData['processDefinitionId']
+                    })).insertBefore('#template').modal({
+                        show: true
+                    }).on('hidden.bs.modal', function () {
+                        $(this).remove();
+                    }).find('div.diagram').css({
+                        left: data['x'] + 'px',
+                        top: data['y'] + 'px',
+                        width: data['width'] + 'px',
+                        height: data['height'] + 'px'
+                    });
+                }
+            });
+        };
+
+    });
+
+</script>
+</body>
+</html>

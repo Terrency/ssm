@@ -1,0 +1,4 @@
+##首字母大写
+#macro(toUpperCase $str)$str.substring(0,1).toUpperCase()$str.substring(1)#end
+##首字母小写
+#macro(toLowerCase $str)$str.substring(0,1).toLowerCase()$str.substring(1)#end

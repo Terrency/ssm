@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ssm.sys.core.mapper.extension.UserExtMapper">
+
+    <insert id="insertBatch" parameterType="com.ssm.sys.api.model.User" databaseId="mysql">
+        INSERT INTO sys_user (id, code, name, pass, salt, status) VALUES
+        <foreach collection="list" item="user" separator=",">
+            (
+            #{user.id,jdbcType=BIGINT},
+            #{user.code,jdbcType=VARCHAR},
+            #{user.name,jdbcType=VARCHAR},
+            #{user.pass,jdbcType=VARCHAR},
+            #{user.salt,jdbcType=VARCHAR},
+            #{user.status,jdbcType=CHAR}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="insertBatch" parameterType="com.ssm.sys.api.model.User" databaseId="oracle">
+        INSERT INTO sys_user (id, code, name, pass, salt, status) VALUES
+        <foreach collection="list" item="user" separator=",">
+            (
+            #{user.id,jdbcType=BIGINT},
+            #{user.code,jdbcType=VARCHAR},
+            #{user.name,jdbcType=VARCHAR},
+            #{user.pass,jdbcType=VARCHAR},
+            #{user.salt,jdbcType=VARCHAR},
+            #{user.status,jdbcType=CHAR}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteBatch">
+        DELETE FROM sys_user WHERE
+        <foreach collection="array" item="id" open="(" separator=" OR " close=")">
+            id = #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByCode" parameterType="string" resultType="com.ssm.sys.api.model.extension.UserExt">
+        SELECT a.id AS id,
+               a.code AS code,
+               a.name AS name,
+               a.pass AS pass,
+               a.salt AS salt,
+               a.status AS status,
+               a.manager AS manager,
+               b.code AS managerCode,
+               b.name AS managerName
+          FROM sys_user a LEFT JOIN sys_user b
+            ON a.manager = b.id
+         WHERE a.code = #{code}
+    </select>
+
+    <select id="selectSelective" parameterType="map" resultType="hashMap" databaseId="mysql">
+        SELECT id AS id,
+               code AS code,
+               name AS name,
+               pass AS pass,
+               salt AS salt,
+               status AS status,
+               manager AS manager
+          FROM sys_user
+        <where>
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="code!=null and code!=''">
+                AND code = #{code}
+            </if>
+            <if test="name!=null and name!=''">
+                AND name LIKE CONCAT('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPage" parameterType="com.ssm.common.page.Pageable" resultType="hashMap" databaseId="mysql">
+        SELECT id AS id,
+               code AS code,
+               name AS name,
+               pass AS pass,
+               salt AS salt,
+               status AS status,
+               manager AS manager
+          FROM sys_user
+        <where>
+            <if test="param!=null">
+                <if test="param.id!=null">
+                    AND id = #{param.id}
+                </if>
+                <if test="param.code!=null and param.code!=''">
+                    AND code = #{param.code}
+                </if>
+                <if test="param.name!=null and param.name!=''">
+                    AND name LIKE CONCAT('%',#{param.name},'%')
+                </if>
+            </if>
+        </where>
+    </select>
+
+</mapper>

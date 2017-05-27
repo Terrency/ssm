@@ -1,0 +1,75 @@
+#parse ("macro.vm")
+package com.ssm.${modulePrefix}.core.service;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.ssm.common.page.Page;
+import com.ssm.common.page.PageImpl;
+import com.ssm.${modulePrefix}.api.dto.${modelPrefix};
+import com.ssm.${modulePrefix}.api.service.${modelPrefix}Service;
+import com.ssm.${modulePrefix}.api.wrapper.${modelPrefix}Wrapper;
+import com.ssm.${modulePrefix}.core.extension.${modelPrefix}ExtMapper;
+import com.ssm.${modulePrefix}.core.mapper.${modelPrefix}Mapper;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.Collection;
+import java.util.List;
+
+@Service("#toLowerCase(${modelPrefix})Service")
+public class ${modelPrefix}ServiceImpl implements ${modelPrefix}Service {
+
+    @Resource(name = "#toLowerCase(${modelPrefix})Mapper")
+    private ${modelPrefix}Mapper #toLowerCase(${modelPrefix})Mapper;
+
+    @Resource(name = "#toLowerCase(${modelPrefix})ExtMapper")
+    private ${modelPrefix}ExtMapper #toLowerCase(${modelPrefix})ExtMapper;
+
+    @Override
+    public int add(${modelPrefix} #toLowerCase(${modelPrefix})) {
+        return #toLowerCase(${modelPrefix})Mapper.insert(#toLowerCase(${modelPrefix}));
+    }
+
+    @Override
+    public int add(Collection<${modelPrefix}> #toLowerCase(${modelPrefix})s) {
+        int count = 0;
+        for (${modelPrefix} #toLowerCase(${modelPrefix}) : #toLowerCase(${modelPrefix})s) {
+            count += add(#toLowerCase(${modelPrefix}));
+        }
+        return count;
+    }
+
+    @Override
+    public int delete(Long id) {
+        return #toLowerCase(${modelPrefix})Mapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public int delete(Long[] ids) {
+        return #toLowerCase(${modelPrefix})ExtMapper.deleteByIds(ids);
+    }
+
+    @Override
+    public int update(${modelPrefix} #toLowerCase(${modelPrefix})) {
+        return #toLowerCase(${modelPrefix})Mapper.updateByPrimaryKeySelective(#toLowerCase(${modelPrefix}));
+    }
+
+    @Override
+    public ${modelPrefix} get${modelPrefix}ById(Long id) {
+        return #toLowerCase(${modelPrefix})Mapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<${modelPrefix}> getList(${modelPrefix}Wrapper #toLowerCase(${modelPrefix})Wrapper) {
+        return #toLowerCase(${modelPrefix})ExtMapper.selectSelective(#toLowerCase(${modelPrefix})Wrapper);
+    }
+
+    @Override
+    public Page<${modelPrefix}> getPage(${modelPrefix}Wrapper #toLowerCase(${modelPrefix})Wrapper, int offset, int length) {
+        PageHelper.startPage(offset / length + 1, length);
+        List<${modelPrefix}> list = #toLowerCase(${modelPrefix})ExtMapper.selectSelective(#toLowerCase(${modelPrefix})Wrapper);
+        PageInfo<${modelPrefix}> pageInfo = new PageInfo<>(list);
+        return new PageImpl<>(pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getList(), new Long(pageInfo.getTotal()).intValue());
+    }
+
+}

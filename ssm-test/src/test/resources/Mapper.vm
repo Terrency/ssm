@@ -1,0 +1,15 @@
+#parse ("macro.vm")
+package com.ssm.${modulePrefix}.core.extension;
+
+import com.ssm.${modulePrefix}.api.dto.${modelPrefix};
+import com.ssm.${modulePrefix}.api.wrapper.${modelPrefix}Wrapper;
+
+import java.util.List;
+
+public interface ${modelPrefix}ExtMapper {
+
+    int deleteByIds(Long[] ids);
+
+    List<${modelPrefix}> selectSelective(${modelPrefix}Wrapper #toLowerCase(${modelPrefix})Wrapper);
+
+}
