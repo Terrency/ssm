@@ -156,16 +156,6 @@
 
     <!-- 配置拦截器: 多个拦截器顺序执行(/**表示拦截所有URL包括子URL路径) -->
     <mvc:interceptors>
-        <!--
-        <mvc:interceptor>
-            <mvc:mapping path="/**"/>
-            <bean class="com.ssm.common.web.servlet.interceptor.AuthenticationInterceptor"/>
-        </mvc:interceptor>
-        <mvc:interceptor>
-            <mvc:mapping path="/**"/>
-            <bean class="com.ssm.common.web.servlet.interceptor.PermissionInterceptor"/>
-        </mvc:interceptor>
-        -->
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <!--<mvc:exclude-mapping path="/**/get*"/>-->
