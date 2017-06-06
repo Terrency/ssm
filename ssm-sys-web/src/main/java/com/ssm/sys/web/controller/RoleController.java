@@ -1,7 +1,7 @@
 package com.ssm.sys.web.controller;
 
 import com.ssm.common.model.ModelMap;
-import com.ssm.common.web.data.ResponseData;
+import com.ssm.common.web.base.ResponseData;
 import com.ssm.sys.api.model.Role;
 import com.ssm.sys.api.service.PermissionService;
 import com.ssm.sys.api.service.RoleService;

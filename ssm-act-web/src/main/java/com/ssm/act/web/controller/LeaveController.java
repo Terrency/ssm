@@ -5,7 +5,7 @@ import com.ssm.act.api.service.LeaveService;
 import com.ssm.act.api.service.ProcessService;
 import com.ssm.common.util.ActivitiHelper;
 import com.ssm.common.util.SecurityHelper;
-import com.ssm.common.web.data.ResponseData;
+import com.ssm.common.web.base.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

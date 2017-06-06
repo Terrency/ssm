@@ -3,7 +3,7 @@ package com.ssm.sys.web.controller;
 import com.ssm.common.model.ModelMap;
 import com.ssm.common.page.Page;
 import com.ssm.common.util.Constant;
-import com.ssm.common.web.data.ResponseData;
+import com.ssm.common.web.base.ResponseData;
 import com.ssm.common.web.datatable.DataTableRequest;
 import com.ssm.common.web.datatable.DataTableResponse;
 import com.ssm.common.web.datatable.DataTableUtility;

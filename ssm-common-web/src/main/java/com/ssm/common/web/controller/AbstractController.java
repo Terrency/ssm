@@ -1,4 +1,4 @@
-package com.ssm.common.web.base;
+package com.ssm.common.web.controller;
 
 public abstract class AbstractController {
 

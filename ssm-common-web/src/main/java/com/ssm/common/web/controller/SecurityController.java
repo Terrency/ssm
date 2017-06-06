@@ -1,4 +1,4 @@
-package com.ssm.sys.web.controller;
+package com.ssm.common.web.controller;
 
 import com.ssm.common.exception.IncorrectCaptchaException;
 import com.ssm.common.util.Constant;

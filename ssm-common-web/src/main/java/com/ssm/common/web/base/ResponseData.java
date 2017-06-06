@@ -1,4 +1,4 @@
-package com.ssm.common.web.data;
+package com.ssm.common.web.base;
 
 import com.ssm.common.enums.StatusCode;
 import org.apache.commons.lang3.builder.ToStringBuilder;
