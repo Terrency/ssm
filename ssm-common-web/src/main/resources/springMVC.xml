@@ -98,7 +98,7 @@
 
     <!--
     日期类型转换的三种方式:
-    (1)在实体类中加日期格式化注解@DateTimeFormat(pattern = Constant.DATETIME_PATTERN);
+    (1)在实体类中加日期格式化注解@DateTimeFormat(pattern = Constant.DATETIME_FORMAT);
     (2)定义一个实现Converter接口的全局日期类型转换器并在配置文件中进行配置;
     (3)使用@InitBinder注解.
     -->

@@ -25,7 +25,7 @@ public class DateConverter implements Converter<String, Date> {
             return null;
         }
         if(patterns.isEmpty()) {
-            patterns.addAll(Arrays.asList(Constant.DATE_PATTERN, Constant.DATETIME_PATTERN));
+            patterns.addAll(Arrays.asList(Constant.DATE_FORMAT, Constant.DATETIME_FORMAT));
         }
         try {
             return DateUtils.parseDate(source, patterns.toArray(new String[patterns.size()]));

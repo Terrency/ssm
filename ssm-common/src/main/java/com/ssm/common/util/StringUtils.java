@@ -4,7 +4,7 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 
     private static final String UNDERSCORE = Constant.UNDERSCORE_SEPARATOR;
 
-    public static String mapUnderscoreToCamelCase(String underscoreName) {
+    public static String toCamelName(String underscoreName) {
         StringBuilder sb = new StringBuilder();
         for (String str : underscoreName.split(UNDERSCORE)) {
             sb.append(capitalize(str.toLowerCase()));
@@ -12,9 +12,9 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
         return uncapitalize(sb.toString());
     }
 
-    public static String mapCamelCaseToUnderscore(String camelCaseName) {
+    public static String toUnderscoreName(String camelCaseName) {
         if (isBlank(camelCaseName)) {
-            return EMPTY;
+            return "";
         }
         StringBuilder result = new StringBuilder();
         result.append(camelCaseName.substring(0, 1).toLowerCase());

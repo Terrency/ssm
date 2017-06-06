@@ -16,6 +16,12 @@ public abstract class PropertiesLoader {
 
     private static final Properties properties = new Properties();
 
+    public enum Config {
+        PHASE_ENV, PAGE_SIZE, USE_CAPTCHA,
+        DATE_FORMAT, TIME_FORMAT, DATETIME_FORMAT,
+        COMPANY, PROJECT
+    }
+
     public static void init(String... resources) {
         loadProperties(resources);
     }
@@ -46,7 +52,7 @@ public abstract class PropertiesLoader {
     }
 
     public static String getValue(Config config) {
-        return getValue(config.getValue());
+        return getValue(StringUtils.toCamelName(config.name()));
     }
 
     public static String getValue(Config config, String defaultValue) {
@@ -78,28 +84,6 @@ public abstract class PropertiesLoader {
 
     public static Properties getProperties() {
         return properties;
-    }
-
-    public enum Config {
-
-        PHASE_ENV("phaseEnv"),
-        PAGE_SIZE("pageSize"),
-        USE_CAPTCHA("useCaptcha"),
-        DATE_FORMAT("dateFormat"),
-        DATETIME_FORMAT("datetimeFormat"),
-        COMPANY_NAME("companyName"),
-        PROJECT_NAME("projectName");
-
-        private final String value;
-
-        Config(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
     }
 
 }
