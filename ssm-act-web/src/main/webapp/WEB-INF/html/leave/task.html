@@ -40,9 +40,8 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-8 col-sm-offset-2">
-                    <span th:each="item : ${outgoingList}">
-                        <button type="submit" class="btn btn-sm btn-default" th:text="${item}"></button>
-                    </span>
+                    <button type="submit" class="btn btn-sm btn-default"
+                            th:each="item:${outgoingList}" th:text="${item}"></button>
                     <!--
                     history.go(-1) => 返回上一页, 原页面表单内容会丢失;
                     history.back() => 返回上一页, 原页面表单内容会保留;
