@@ -2,11 +2,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>认证失败</title>
+    <title>404 Error Page</title>
 </head>
 <body>
-<div class="alert alert-danger" role="alert">
-    <p>认证失败！</p>
-</div>
+    <img src="assets/img/404.png" alt="404">
 </body>
 </html>

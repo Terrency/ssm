@@ -2,11 +2,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>认证失败</title>
+    <title>错误页面</title>
 </head>
 <body>
 <div class="alert alert-danger" role="alert">
-    <p>认证失败！</p>
+    <p>出错啦！</p>
 </div>
 </body>
 </html>

@@ -24,8 +24,12 @@
         <slf4j.version>1.7.12</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
         <cglib.version>3.1</cglib.version>
-        <velocity.version>1.7</velocity.version>
+        <!-- Thymeleaf应用: 取代JSP -->
+        <thymeleaf.version>3.0.2.RELEASE</thymeleaf.version>
+        <!-- FreeMarker应用: 处理XML -->
         <freemarker.version>2.3.23</freemarker.version>
+        <!-- Velocity应用: 代码生成器 -->
+        <velocity.version>1.7</velocity.version>
         <ognl.version>2.6.7</ognl.version>
         <hessian.version>4.0.7</hessian.version>
         <junit.version>4.12</junit.version>
@@ -153,14 +157,14 @@
 
         <!-- Template Engine -->
         <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>${velocity.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>${freemarker.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>${velocity.version}</version>
         </dependency>
 
         <!-- OGNL -->

@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
     <title>授权失败</title>

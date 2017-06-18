@@ -1,9 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>系统首页</title>
     <style type="text/css">
@@ -132,7 +128,7 @@
         <div class="navbar-header">
             <a href="#" class="navbar-brand">
                 <i class="fa fa-html5 fa-lg"></i>
-                <small>${applicationScope.app.project}</small>
+                <small th:text="${#servletContext.getAttribute('app')['project']}">SpringMVC + MyBatis + Shiro</small>
             </a>
         </div>
         <div id="navbar" class="navbar-header" role="navigation">
@@ -168,8 +164,11 @@
                 </li>
                 <li>
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                        <img src="${contextPath}/assets/img/user.jpg" class="img-circle" style="max-width: 30px;">
-                        <span class="user-info"><small>欢迎您</small> ${sessionScope.activeUser.name}</span>
+                        <img src="assets/img/user.jpg" class="img-circle" style="max-width: 30px;">
+                        <span class="user-info">
+                            <small>欢迎您</small>
+                            <span th:text="${session.activeUser.name}"></span>
+                        </span>
                         <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -196,14 +195,16 @@
     </nav>
     <div id="page-wrapper">
         <div class="main-content">
-            <iframe id="iframe" name="iframe" src="${contextPath}/portal/dashboard" class="embed-responsive-item"
+            <iframe id="iframe" name="iframe" th:src="@{/portal/dashboard}" class="embed-responsive-item"
                     frameborder="0" scrolling="auto"></iframe>
         </div>
     </div>
     <footer class="nav navbar-fixed-bottom navbar-inverse">
         <div class="text-center">
             <address class="navbar-link" style="display: inline;">
-                <small>© 2016 - 2017 ${applicationScope.app.company} Inc.</small>
+                <small th:text="'© 2016 - 2017 '+${#servletContext.getAttribute('app')['company']}+' Inc.'">
+                    © 2016 - 2017 Gavin Software Inc.
+                </small>
             </address>
         </div>
     </footer>
@@ -264,7 +265,7 @@
                             stringLength: {min: 6},
                             remote: {
                                 message: 'The password is incorrect!',
-                                url: '${contextPath}/user/checkPass'
+                                url: 'user/checkPass'
                             }
                         }
                     },
@@ -288,7 +289,7 @@
         });
 
         $('#treeMenu').treeMenu({
-            url: '${contextPath}/portal/getMenus',
+            url: 'portal/getMenus',
             idKey: 'id',
             pidKey: 'parentId',
             rootPid: null,
@@ -308,7 +309,7 @@
         $('#logout').click(function () {
             noty.confirm('确认退出吗？', function (yes) {
                 if (yes) {
-                    location.href = '${contextPath}/security/logout';
+                    location.href = 'security/logout';
                 }
             });
         });
@@ -317,13 +318,13 @@
             var $form = $('#form');
             if ($form.validate()) {
                 $.ajax({
-                    url: '${contextPath}/user/changePass',
+                    url: 'user/changePass',
                     type: 'POST',
                     data: $form.serialize(),
                     dataType: 'json',
                     success: function (result) {
                         result.success ? noty.alert('修改成功，请重新登录？', function () {
-                            location.href = '${contextPath}/security/logout';
+                            location.href = 'security/logout';
                         }) : noty.message(result.message, result.success);
                     }
                 });

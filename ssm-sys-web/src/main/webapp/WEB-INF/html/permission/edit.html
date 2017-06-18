@@ -1,26 +1,27 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>权限管理-新增</title>
+    <title>权限管理-更新</title>
 </head>
 <body>
 <div class="container-fluid">
-    <%--
+    <!--
     <div class="page-header">
-        <label class="h4">权限管理-新增</label>
+        <label class="h4">权限管理-更新</label>
         <label class="h4 pull-right">
-            <small>SSM-PERMISSION-ADD</small>
+            <small>SSM-PERMISSION-EDIT</small>
         </label>
     </div>
-    --%>
-    <form id="form" method="post" class="form-horizontal form-group-sm" role="form">
+    -->
+    <form id="form" class="form-horizontal form-group-sm" role="form">
+        <div class="hidden">
+            <input id="id" name="id" th:value="${permission.id}" type="hidden">
+            <input id="pid" th:value="${permission.parentId}" type="hidden">
+        </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="name">资源名称</label>
             <div class="col-sm-8">
-                <input id="name" name="name" type="text" class="form-control" placeholder="资源名称"
+                <input id="name" name="name" th:value="${permission.name}" type="text" class="form-control" placeholder="资源名称"
                        data-bv-notempty="true"
                        data-bv-stringlength="true"
                        data-bv-stringlength-min="2"
@@ -30,42 +31,52 @@
         <div class="form-group">
             <label class="control-label col-sm-2" for="code">资源编码</label>
             <div class="col-sm-8">
-                <input id="code" name="code" type="text" class="form-control" placeholder="资源编码">
+                <input id="code" name="code" th:value="${permission.code}" type="text" class="form-control"
+                       readonly="readonly" placeholder="资源编码">
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="url">资源地址</label>
             <div class="col-sm-8">
-                <input id="url" name="url" type="text" class="form-control" placeholder="资源地址">
+                <input id="url" name="url" th:value="${permission.url}" type="text" class="form-control" placeholder="资源地址">
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="type">资源类型</label>
             <div class="col-sm-8">
                 <select id="type" name="type" class="form-control" data-provide="select2" data-bv-notempty="true">
-                    <option value=""></option>
-                    <option value="FUNC">功能</option>
-                    <option value="MENU">菜单</option>
+                    <option value="FUNC" th:selected="${permission.type=='FUNC'}">功能</option>
+                    <option value="MENU" th:selected="${permission.type=='MENU'}">菜单</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="status">资源状态</label>
+            <div class="col-sm-8">
+                <select id="status" name="status" class="form-control" data-provide="select2" data-bv-notempty="true">
+                    <option value="1" th:selected="${permission.status=='1'}">可用</option>
+                    <option value="0" th:selected="${permission.status=='0'}">不可用</option>
                 </select>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="seq">排序号</label>
             <div class="col-sm-8">
-                <input id="seq" name="seq" type="number" class="form-control" placeholder="排序号"
+                <input id="seq" name="seq" th:value="${permission.seq}" type="number" class="form-control" placeholder="排序号"
                        data-bv-notempty="true">
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="icon">资源图标</label>
             <div class="col-sm-8">
-                <input id="icon" name="icon" type="text" class="form-control" placeholder="资源图标">
+                <input id="icon" name="icon" th:value="${permission.icon}" type="text" class="form-control" placeholder="资源图标">
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="parentId">上级资源</label>
             <div class="col-sm-8">
-                <input id="parentId" class="form-control" readonly="readonly" placeholder="请选择...">
+                <input id="parentId" th:value="${permission.parentName}" type="text" class="form-control"
+                       readonly="readonly" placeholder="请选择...">
             </div>
         </div>
         <div class="form-group">
@@ -109,11 +120,11 @@
             },
             async: {
                 enable: true,
-                url: '${contextPath}/permission/getList',
-                type: 'POST',
+                url: 'permission/getList',
                 dataFilter: function (treeId, parentNode, responseData) {
+                    var permissionId = $('#id').val();
                     return $.grep(responseData, function (obj, idx) {
-                        return obj.type === 'MENU';
+                        return obj.type === 'MENU' && obj.id != permissionId && obj.parentId != permissionId;
                     });
                 }
             },
@@ -133,6 +144,8 @@
                     // var nodes = zTree.getNodes();
                     // zTree.expandNode(nodes[0], true, true, true);
                     zTree.expandAll(true);
+                    var defaultCheckNode = zTree.getNodeByParam('id', $('#pid').val());
+                    defaultCheckNode && zTree.checkNode(defaultCheckNode, true, true);
                 },
                 onClick: function (e, treeId, treeNode) {
                     e.preventDefault();
@@ -187,7 +200,7 @@
                     $.extend(formData, {parentId: checkedNodes[0].id});
                 }
                 $.ajax({
-                    url: '${contextPath}/permission/addSubmit',
+                    url: 'permission/editSubmit',
                     type: 'POST',
                     data: JSON.stringify(formData),
                     contentType: 'application/json',        // 发送信息至服务器时内容编码类型
@@ -201,7 +214,6 @@
         });
 
     });
-
 </script>
 </body>
 </html>

@@ -1,9 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>请假管理</title>
     <style type="text/css">
@@ -16,6 +12,9 @@
 </head>
 <body>
 <div class="container-fluid">
+    <form id="form" class="form-horizontal form-group-sm" role="form">
+        <input id="pdKey" th:value="${pdKey}" type="hidden">
+    </form>
     <div class="bs-content" data-content="请假管理">
         <table id="table" class="table table-hover table-condensed" cellspacing="0" width="100%">
             <thead>
@@ -107,7 +106,7 @@
                     <label class="modal-title">历史任务-查看流程进度</label>
                 </div>
                 <div class="modal-body" style="padding: 0;">
-                    <img src="${contextPath}/process/getDiagram?pdKey={{pdKey}}&&bizKey={{bizKey}}"
+                    <img src="process/getDiagram?pdKey={{pdKey}}&&bizKey={{bizKey}}"
                          class="img-thumbnail" style="padding: 0; border: none;">
                     <div class="diagram"></div>
                 </div>
@@ -218,7 +217,7 @@
                                 if ($form.validate()) {
                                     var $this = $(this);
                                     $.ajax({
-                                        url: '${contextPath}/leave/addSubmit',
+                                        url: 'leave/addSubmit',
                                         type: 'POST',
                                         data: $form.serialize(),
                                         dataType: 'json',
@@ -254,7 +253,7 @@
                 }
             ],
             ajax: {
-                url: '${contextPath}/leave/getList',
+                url: 'leave/getList',
                 type: 'POST',
                 dataType: 'json',
                 dataSrc: function (data) {
@@ -310,7 +309,7 @@
                     if ($form.validate()) {
                         var $this = $(this);
                         $.ajax({
-                            url: '${contextPath}/leave/editSubmit',
+                            url: 'leave/editSubmit',
                             type: 'POST',
                             data: $.extend({}, $form.serializeObject(), {id: rowData.id}),
                             dataType: 'json',
@@ -333,7 +332,7 @@
                 if (yes) {
                     var id = $table.row($(node).parents('tr')).id();
                     $.ajax({
-                        url: '${contextPath}/leave/deleteSubmit',
+                        url: 'leave/deleteSubmit',
                         type: 'POST',
                         data: {id: id},
                         dataType: 'json',
@@ -350,13 +349,13 @@
         fnApply = function (node) {
             var id = $table.row($(node).parents('tr')).id();
             $.ajax({
-                url: '${contextPath}/leave/startProcess',
+                url: 'leave/startProcess',
                 type: 'POST',
                 data: {id: id},
                 dataType: 'json',
                 success: function (result) {
                     if (result.success) {
-                        location.href = '${contextPath}/process/task';
+                        location.href = 'process/task';
                     } else {
                         noty.message(result.message, result.success);
                     }
@@ -367,9 +366,9 @@
         fnQuery = function (node) {
             var id = $table.row($(node).parents('tr')).id();
             $.ajax({
-                url: '${contextPath}/process/getHistoryCommentList',
+                url: 'process/getHistoryCommentList',
                 type: 'POST',
-                data: {pdKey: '${pdKey}', bizKey: id},
+                data: {pdKey: $('#pdKey').val(), bizKey: id},
                 dataType: 'json',
                 success: function (data) {
                     $(commentTemplate(data)).insertBefore('#commentTemplate').modal({
@@ -383,11 +382,11 @@
 
         fnView = function (node) {
             var param = {
-                pdKey: '${pdKey}',
+                pdKey: $('#pdKey').val(),
                 bizKey: $table.row($(node).parents('tr')).id()
             };
             $.ajax({
-                url: '${contextPath}/process/ActivityImpl',
+                url: 'process/ActivityImpl',
                 type: 'POST',
                 data: param,
                 dataType: 'json',

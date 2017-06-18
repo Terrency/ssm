@@ -35,6 +35,21 @@ public class ProcessController {
     @Autowired
     private ProcessService processService;
 
+    @RequestMapping("/deploy")
+    public String deploy() {
+        return "process/deploy";
+    }
+
+    @RequestMapping("/task")
+    public String task() {
+        return "process/task";
+    }
+
+    @RequestMapping("/historyTask")
+    public String historyTask() {
+        return "process/historyTask";
+    }
+
     @ResponseBody
     @RequestMapping("/deploySubmit")
     public ResponseData deploySubmit(@RequestParam Part file, @RequestParam String name) throws Exception {

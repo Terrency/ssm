@@ -1,28 +1,26 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>我的任务</title>
 </head>
 <body>
 <div class="container-fluid">
     <div class="bs-content" data-content="流程详细信息">
-        <form id="form" action="${contextPath}/leave/taskSubmit" method="post" class="form-horizontal form-group-sm" role="form">
+        <form id="form" th:action="@{/leave/taskSubmit}" method="post" class="form-horizontal form-group-sm" role="form">
             <div class="hidden">
-                <input name="taskId" type="hidden" value="${taskId}">
+                <input id="taskId" name="taskId" type="hidden" th:value="${taskId}">
+                <input id="processInstanceId" type="hidden" th:value="${processInstanceId}">
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-2" for="days">请假天数</label>
                 <div class="col-sm-8">
-                    <input id="days" name="days" value="${leave.days}" class="form-control" disabled="disabled">
+                    <input id="days" name="days" th:value="${leave.days}" class="form-control" disabled="disabled">
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-2" for="content">请假事由</label>
                 <div class="col-sm-8">
-                    <input id="content" name="content" value="${leave.content}" class="form-control"
+                    <input id="content" name="content" th:value="${leave.content}" class="form-control"
                            disabled="disabled">
                 </div>
             </div>
@@ -30,7 +28,7 @@
                 <label class="control-label col-sm-2" for="remark">备注</label>
                 <div class="col-sm-8">
                     <textarea id="remark" name="remark" maxlength="100" class="form-control"
-                              disabled="disabled">${leave.remark}</textarea>
+                              disabled="disabled" th:text="${leave.remark}"></textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -42,13 +40,13 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-8 col-sm-offset-2">
-                    <c:forEach var="item" items="${outgoingList}">
-                        <button type="submit" class="btn btn-sm btn-default">${item}</button>
-                    </c:forEach>
-                    <%--
+                    <span th:each="item : ${outgoingList}">
+                        <button type="submit" class="btn btn-sm btn-default" th:text="${item}"></button>
+                    </span>
+                    <!--
                     history.go(-1) => 返回上一页, 原页面表单内容会丢失;
                     history.back() => 返回上一页, 原页面表单内容会保留;
-                    --%>
+                    -->
                     <button type="button" class="btn btn-sm btn-default" onclick="history.back();">返回</button>
                 </div>
             </div>
@@ -98,8 +96,8 @@
             lengthChange: false,
             searching: false,
             ajax: {
-                url: '${contextPath}/process/getHistoryComments',
-                data: {processInstanceId: '${processInstanceId}'},
+                url: 'process/getHistoryComments',
+                data: {processInstanceId: $('#processInstanceId').val()},
                 type: 'POST',
                 dataType: 'json',
                 dataSrc: function (data) {

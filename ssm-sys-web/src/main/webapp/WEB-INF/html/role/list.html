@@ -1,7 +1,3 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,12 +25,10 @@
                     </select>
                 </div>
                 <div class="col-sm-4">
-                    <%-- 一定要指明type属性的值(否则可能向服务端发送两次请求) --%>
-                    <shiro:hasPermission name="role:query">
+                    <!-- 一定要指明type属性的值(否则可能向服务端发送两次请求) -->
                     <button id="btnQuery" type="button" class="btn btn-primary btn-sm" accesskey="enter">
                         <i class="glyphicon glyphicon-search"></i> 查询
                     </button>
-                    </shiro:hasPermission>
                     <button id="btnReset" type="reset" class="btn btn-default btn-sm">
                         <i class="glyphicon glyphicon-refresh"></i> 重置
                     </button>
@@ -192,7 +186,7 @@
                                 if ($form.validate()) {
                                     var $this = $(this);
                                     $.ajax({
-                                        url: '${contextPath}/role/addSubmit',
+                                        url: 'role/addSubmit',
                                         type: 'POST',
                                         data: $form.serialize(),
                                         dataType: 'json',
@@ -233,7 +227,7 @@
                                 if ($form.validate()) {
                                     var $this = $(this);
                                     $.ajax({
-                                        url: '${contextPath}/role/editSubmit',
+                                        url: 'role/editSubmit',
                                         type: 'POST',
                                         data: $.extend({}, $form.serializeObject(), {id: id}),
                                         dataType: 'json',
@@ -266,7 +260,7 @@
                                     data.push(id);
                                 });
                                 $.ajax({
-                                    url: '${contextPath}/role/deleteSubmit',
+                                    url: 'role/deleteSubmit',
                                     type: 'POST',
                                     data: {ids: String(data)},
                                     dataType: 'json',
@@ -302,7 +296,7 @@
                                 return node.id;
                             });
                             $.ajax({
-                                url: '${contextPath}/role/authSubmit',
+                                url: 'role/authSubmit',
                                 type: 'POST',
                                 data: {
                                     id: event.data.id,
@@ -325,7 +319,7 @@
                             },
                             async: {
                                 enable: true,
-                                url: '${contextPath}/role/getPermissionList?id=' + roleId,
+                                url: 'role/getPermissionList?id=' + roleId,
                                 dataFilter: function (treeId, parentNode, responseData) {
                                     return responseData['permissionList'];
                                 }
@@ -374,7 +368,7 @@
                 }
             ],
             ajax: {
-                url: '${contextPath}/role/getList',
+                url: 'role/getList',
                 type: 'POST',
                 data: function () {
                     return $('#form').serialize();

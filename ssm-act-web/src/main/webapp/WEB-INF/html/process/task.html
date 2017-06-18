@@ -1,7 +1,3 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,7 +28,7 @@
 </div>
 
 <template id="actionTemplate">
-    <a href="${contextPath}/leave/task?taskId={{taskId}}&processInstanceId={{processInstanceId}}"
+    <a href="leave/task?taskId={{taskId}}&processInstanceId={{processInstanceId}}"
        class="btn btn-xs btn-default" role="button">
         <i class="fa fa-tasks"></i> 办理任务
     </a>
@@ -50,7 +46,7 @@
                     <label class="modal-title">任务管理-查看流程进度</label>
                 </div>
                 <div class="modal-body" style="padding: 0;">
-                    <img src="${contextPath}/process/getProcessDiagram?pdId={{pdId}}"
+                    <img src="process/getProcessDiagram?pdId={{pdId}}"
                          class="img-thumbnail" style="padding: 0; border: none;">
                     <div class="diagram"></div>
                 </div>
@@ -114,7 +110,7 @@
                 }
             ],
             ajax: {
-                url: '${contextPath}/process/getTaskList',
+                url: 'process/getTaskList',
                 type: 'POST',
                 dataType: 'json',
                 dataSrc: function (data) {
@@ -145,7 +141,7 @@
         fnView = function (node) {
             var rowData = $table.row($(node).parents('tr')).data();
             $.ajax({
-                url: '${contextPath}/process/getActivity',
+                url: 'process/getActivity',
                 type: 'POST',
                 data: {processInstanceId: rowData.processInstanceId},
                 dataType: 'json',

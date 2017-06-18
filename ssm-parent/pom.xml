@@ -14,7 +14,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javaee-api.version>7.0</javaee-api.version>
         <spring.version>4.3.3.RELEASE</spring.version>
         <mybatis.version>3.2.8</mybatis.version>
         <mybatis-spring.version>1.2.3</mybatis-spring.version>
@@ -39,8 +38,9 @@
         <jackson.version>2.7.4</jackson.version>
         <kaptcha.version>2.3.2</kaptcha.version>
         <sitemesh.version>3.0.1</sitemesh.version>
+        <thymeleaf.version>3.0.2.RELEASE</thymeleaf.version>
         <activiti.version>5.14</activiti.version>
-        <velocity.version>1.7</velocity.version>
+        <javaee-api.version>7.0</javaee-api.version>
         <jstl-api.version>1.2</jstl-api.version>
         <junit.version>4.12</junit.version>
     </properties>
@@ -53,14 +53,6 @@
 
     <dependencyManagement>
         <dependencies>
-
-            <!-- JavaEE Specification API -->
-            <dependency>
-                <groupId>javax</groupId>
-                <artifactId>javaee-api</artifactId>
-                <version>${javaee-api.version}</version>
-                <scope>provided</scope>
-            </dependency>
 
             <!-- Spring Core -->
             <dependency>
@@ -335,6 +327,18 @@
                 <version>${sitemesh.version}</version>
             </dependency>
 
+            <!-- Thymeleaf -->
+            <dependency>
+                <groupId>org.thymeleaf</groupId>
+                <artifactId>thymeleaf</artifactId>
+                <version>${thymeleaf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.thymeleaf</groupId>
+                <artifactId>thymeleaf-spring4</artifactId>
+                <version>${thymeleaf.version}</version>
+            </dependency>
+
             <!-- Activiti -->
             <dependency>
                 <groupId>org.activiti</groupId>
@@ -348,13 +352,14 @@
                 <version>${activiti.version}</version>
             </dependency>
 
-            <!-- Velocity -->
+            <!-- JavaEE Specification API -->
             <dependency>
-                <groupId>org.apache.velocity</groupId>
-                <artifactId>velocity</artifactId>
-                <version>${velocity.version}</version>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>${javaee-api.version}</version>
+                <scope>provided</scope>
             </dependency>
-
+            
             <!-- JSP Standard Tag Library API -->
             <dependency>
                 <groupId>javax.servlet.jsp.jstl</groupId>
@@ -401,6 +406,19 @@
         -->
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>2.3</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
