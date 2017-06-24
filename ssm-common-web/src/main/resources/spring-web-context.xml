@@ -12,7 +12,7 @@
     <!-- 自动扫描带注解的Bean -->
     <context:component-scan base-package="com.ssm.*.web"/>
 
-    <bean id="captchaService" class="com.ssm.common.web.service.CaptchaServiceImpl">
+    <bean id="captchaService" class="com.ssm.common.web.captcha.CaptchaServiceImpl">
         <property name="cacheService" ref="cacheService"/>
         <property name="charString" value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"/>
         <property name="cachePrefix" value="cap"/>

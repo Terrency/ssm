@@ -3,7 +3,7 @@ package com.ssm.common.web.controller;
 import com.google.code.kaptcha.Producer;
 import com.ssm.common.model.ModelMap;
 import com.ssm.common.util.Constant;
-import com.ssm.common.web.service.CaptchaService;
+import com.ssm.common.web.captcha.CaptchaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

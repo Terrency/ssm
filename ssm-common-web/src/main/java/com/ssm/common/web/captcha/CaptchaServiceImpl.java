@@ -1,4 +1,4 @@
-package com.ssm.common.web.service;
+package com.ssm.common.web.captcha;
 
 import com.ssm.common.exception.BusinessException;
 import com.ssm.common.cache.CacheService;
@@ -18,6 +18,7 @@ public class CaptchaServiceImpl implements CaptchaService, InitializingBean {
 
     private static final String DEFAULT_CHAR_STRING = "abcde2345678gfynmnpwx";
     private static final String DEFAULT_SEC_KEY = "I+Rj5j]#D*a-";
+    // 缓存有效期一定要比验证码有效期长一些
     private static final int DEFAULT_MAX_AGE = 600;
     private static final String DEFAULT_CACHE_PREFIX = "cap";
     private static final int DEFAULT_CHAR_LENGTH = 4;
@@ -83,9 +84,9 @@ public class CaptchaServiceImpl implements CaptchaService, InitializingBean {
     public boolean doVerify(String capToken, String capText) throws BusinessException {
         String cacheKey = genTokenVerifiedCacheKey(capToken);
         // 判断缓存中有没有此token
-        if (cacheService.get(cacheKey) != null) { // 如果有说明已经被验证过了
+        if (cacheService.get(cacheKey) != null) { // 如果有则说明已经被验证过了
             throw new BusinessException("该验证码已经被验证过");
-        } else { // 如果没有将其放入到已验证缓存库中
+        } else { // 如果没有则将其放入到已验证缓存库中(防止重放攻击)
             cacheService.set(cacheKey, Boolean.TRUE);
         }
         return getCapText(capToken).equals(capText);

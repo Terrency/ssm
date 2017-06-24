@@ -3,7 +3,7 @@ package com.ssm.common.web.security;
 import com.ssm.common.exception.IncorrectCaptchaException;
 import com.ssm.common.util.Constant;
 import com.ssm.common.util.PropertiesLoader;
-import com.ssm.common.web.service.CaptchaService;
+import com.ssm.common.web.captcha.CaptchaService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;

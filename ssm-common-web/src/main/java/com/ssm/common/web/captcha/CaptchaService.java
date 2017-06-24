@@ -1,4 +1,4 @@
-package com.ssm.common.web.service;
+package com.ssm.common.web.captcha;
 
 import com.ssm.common.exception.BusinessException;
 

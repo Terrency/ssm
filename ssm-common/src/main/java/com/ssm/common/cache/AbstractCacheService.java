@@ -4,7 +4,7 @@ import org.springframework.beans.factory.InitializingBean;
 
 public abstract class AbstractCacheService implements CacheService, InitializingBean {
 
-    protected static final int DEFAULT_MAX_AGE = 600;
+    protected static final int DEFAULT_MAX_AGE = 720;
 
     @Override
     public boolean set(String key, Object value) {
