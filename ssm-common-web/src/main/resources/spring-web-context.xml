@@ -7,21 +7,29 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <import resource="classpath:spring-cache.xml"/>
+
     <!-- 自动扫描带注解的Bean -->
     <context:component-scan base-package="com.ssm.*.web"/>
 
-    <!-- 验证码 -->
-    <bean id="kaptchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
+    <bean id="captchaService" class="com.ssm.common.web.service.CaptchaServiceImpl">
+        <property name="cacheService" ref="cacheService"/>
+        <property name="charString" value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"/>
+        <property name="cachePrefix" value="cap"/>
+        <property name="charLength" value="6"/>
+        <property name="maxAge" value="300"/>
+        <property name="secKey" value="Gavin Software"/>
+    </bean>
+
+    <bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
         <property name="config">
             <bean class="com.google.code.kaptcha.util.Config">
                 <constructor-arg type="java.util.Properties">
                     <props>
-                        <prop key="kaptcha.textproducer.char.string">0123456789</prop>
-                        <prop key="kaptcha.textproducer.char.length">4</prop>
-                        <prop key="kaptcha.textproducer.char.space">3</prop>
                         <prop key="kaptcha.textproducer.font.color">red</prop>
                         <prop key="kaptcha.textproducer.font.size">34</prop>
-                        <prop key="kaptcha.noise.color">blue</prop>
+                        <prop key="kaptcha.word.impl">com.ssm.common.web.captcha.WordRendererExt</prop>
+                        <prop key="kaptcha.obscurificator.impl">com.ssm.common.web.captcha.DefaultRipple</prop>
                     </props>
                 </constructor-arg>
             </bean>

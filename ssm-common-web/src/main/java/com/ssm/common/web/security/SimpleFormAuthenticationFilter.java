@@ -3,10 +3,12 @@ package com.ssm.common.web.security;
 import com.ssm.common.exception.IncorrectCaptchaException;
 import com.ssm.common.util.Constant;
 import com.ssm.common.util.PropertiesLoader;
+import com.ssm.common.web.service.CaptchaService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -16,58 +18,75 @@ import javax.servlet.ServletResponse;
  */
 public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
 
-    public static final String DEFAULT_CAPTCHA_PARAM = "captcha";
-    private String captchaParam = DEFAULT_CAPTCHA_PARAM;
+    public static final String DEFAULT_CAPTCHA_TEXT_PARAM = "capText";
+    public static final String DEFAULT_CAPTCHA_TOKEN_PARAM = "capToken";
+
+    private String capTextParam = DEFAULT_CAPTCHA_TEXT_PARAM;
+    private String capTokenParam = DEFAULT_CAPTCHA_TOKEN_PARAM;
+
+    @Autowired
+    private CaptchaService captchaService;
 
     @Override
     protected CaptchaUsernamePasswordToken createToken(ServletRequest request, ServletResponse response) {
-        String username = this.getUsername(request);
-        String password = this.getPassword(request);
-        boolean rememberMe = this.isRememberMe(request);
-        String host = this.getHost(request);
-        String captcha = this.getCaptcha(request);
-        return new CaptchaUsernamePasswordToken(username, password, rememberMe, host, captcha);
+        return new CaptchaUsernamePasswordToken(
+                getUsername(request),
+                getPassword(request),
+                isRememberMe(request),
+                getHost(request),
+                getCapText(request),
+                getCapToken(request)
+        );
     }
 
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         CaptchaUsernamePasswordToken token = this.createToken(request, response);
         try {
-            if (!doCaptchaValidate(request, token)) {
-                // 若验证码校验失败则拒绝访问, 不再校验帐户和密码
+            // 若验证码校验失败则拒绝访问, 不再校验帐户和密码
+            if (!doCaptchaVerify(request, token)) {
                 return true;
             }
-            Subject subject = this.getSubject(request, response);
+            Subject subject = getSubject(request, response);
             subject.login(token);
             subject.getSession().setAttribute(Constant.USER_SESSION_ATTRIBUTE, subject.getPrincipal());
-            return this.onLoginSuccess(token, subject, request, response);
+            return onLoginSuccess(token, subject, request, response);
         } catch (AuthenticationException e) {
-            return this.onLoginFailure(token, e, request, response);
+            return onLoginFailure(token, e, request, response);
         }
     }
 
-    protected boolean doCaptchaValidate(ServletRequest request, CaptchaUsernamePasswordToken token) {
+    protected boolean doCaptchaVerify(ServletRequest request, CaptchaUsernamePasswordToken token) {
         if (PropertiesLoader.getBoolean(PropertiesLoader.Config.USE_CAPTCHA)) {
-            String captcha = token.getCaptcha();
-            String kaptcha = (String) WebUtils.toHttp(request).getSession().getAttribute(com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY);
-            if (captcha != null && kaptcha != null && !captcha.equalsIgnoreCase(kaptcha)) {
-                request.setAttribute(this.getFailureKeyAttribute(), IncorrectCaptchaException.class.getName());
+            if (!captchaService.doVerify(token.getCapToken(), token.getCapText())) {
+                request.setAttribute(getFailureKeyAttribute(), IncorrectCaptchaException.class.getName());
                 return false;
             }
         }
         return true;
     }
 
-    protected String getCaptcha(ServletRequest request) {
-        return WebUtils.getCleanParam(request, this.getCaptchaParam());
+    protected String getCapText(ServletRequest request) {
+        return WebUtils.getCleanParam(request, getCapTextParam());
     }
 
-    public String getCaptchaParam() {
-        return captchaParam;
+    protected String getCapToken(ServletRequest request) {
+        return WebUtils.getCleanParam(request, getCapTokenParam());
     }
 
-    public void setCaptchaParam(String captchaParam) {
-        this.captchaParam = captchaParam;
+    public String getCapTextParam() {
+        return capTextParam;
     }
 
+    public void setCapTextParam(String capTextParam) {
+        this.capTextParam = capTextParam;
+    }
+
+    public String getCapTokenParam() {
+        return capTokenParam;
+    }
+
+    public void setCapTokenParam(String capTokenParam) {
+        this.capTokenParam = capTokenParam;
+    }
 }

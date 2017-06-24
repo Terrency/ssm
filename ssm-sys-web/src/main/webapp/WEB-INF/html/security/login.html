@@ -14,12 +14,12 @@
             background-size: cover;
         }
 
-        #captcha {
+        #capText {
             width: 50%;
             display: inline;
         }
 
-        #captchaImg {
+        #capImage {
             width: 120px;
             height: 34px;
             cursor: pointer;
@@ -52,7 +52,8 @@
                             <label class="control-label sr-only" for="username" th:text="#{username}">用户名</label>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                <input id="username" name="username" type="text" class="form-control" autofocus="autofocus"
+                                <input id="username" name="username" type="text" class="form-control"
+                                       autofocus="autofocus"
                                        placeholder="用户名" th:placeholder="#{username}"
                                        data-bv-notempty="true"
                                        data-bv-stringlength="true"
@@ -70,13 +71,14 @@
                             </div>
                         </div>
                         <div class="form-group" th:if="${#servletContext.getAttribute('app')['useCaptcha']=='true'}">
-                            <label class="control-label sr-only" for="captcha" th:text="#{captcha}">验证码</label>
-                            <input id="captcha" name="captcha" type="text" class="form-control"
-                                   placeholder="验证码" th:placeholder="#{captcha}"
-                                   data-bv-notempty="true">
-                            <img id="captchaImg" src="captcha/getCaptcha" th:src="@{/captcha/getCaptcha}"
-                                 alt="kaptcha.jpg" title="点击刷新" th:title="#{clickToRefresh}"
-                                 data-toggle="tooltip">
+                            <label class="control-label sr-only" for="capText" th:text="#{capText}">验证码</label>
+                            <input id="capText" name="capText" type="text" class="form-control"
+                                   placeholder="验证码" th:placeholder="#{capText}"
+                                   data-bv-notempty="true"
+                                   data-bv-threshold="6">
+                            <img id="capImage" src="" alt="正在生成验证码..." title="点击刷新"
+                                 th:title="#{clickToRefresh}" data-toggle="tooltip">
+                            <input id="capToken" name="capToken" type="hidden">
                         </div>
                         <div class="checkbox">
                             <label>
@@ -99,30 +101,46 @@
     ], function ($) {
 
         $('#form').bootstrapValidator({
-            <!--
-            fields: {
-                captcha: {
-                    validators: {
-                        notEmpty: {},
-                        callback: {
-                            message: '验证码不匹配!',
-                            callback: function (value, validator) {
-                                return /^[0-9]{4}$/.test(value);
-                            }
-                        },
-                        remote: {
-                            message: '验证码不匹配!',
-                            url: Base.contextPath + 'captcha/validateCaptcha'
-                        }
-                    }
-                }
+            feedbackIcons: {
+                valid: '',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
             }
-            -->
+            // fields: {
+            //     captcha: {
+            //         validators: {
+            //             remote: {
+            //                 message: '验证码不匹配!',
+            //                 url: Base.contextPath + 'captcha/verify',
+            //                 delay: 2000,
+            //                 data: function (validator) {
+            //                     var form = validator.$form[0];
+            //                     return {
+            //                         capToken: form.capToken.value,
+            //                         capText: form.capText.value
+            //                     };
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
         });
 
-        $('#captchaImg').click(function () {
-            $(this).attr('src', 'captcha/getCaptcha?random=' + Math.floor(Math.random() * 1000)).fadeIn();
+        var Captcha = {
+            refreshCaptcha: function () {
+                $.get("captcha/getCapToken", function (data) {
+                    var capToken = data.capToken;
+                    $("#capToken").val(capToken);
+                    $("#capImage").attr({src: "captcha/getCapImage?capToken=" + capToken});
+                });
+            }
+        };
+
+        $('#capImage').click(function () {
+            Captcha.refreshCaptcha();
         });
+
+        Captcha.refreshCaptcha();
 
     });
 </script>

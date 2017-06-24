@@ -13,7 +13,27 @@
         <property name="locations" value="classpath:jdbc.properties"/>
     </bean>
 
-    <beans profile="test">
+    <beans profile="dev">
+        <bean id="dataSource" class="com.ssm.common.core.datasource.BasicDataSource" destroy-method="close">
+            <property name="url" value="${jdbc.url}"/>
+            <property name="username" value="${jdbc.username}"/>
+            <property name="password" value="${jdbc.password}"/>
+            <property name="driverClassName" value="${jdbc.driver}"/>
+            <property name="validationQuery" value="${validation.query}"/>
+            <property name="initialSize" value="5"/>
+            <property name="minIdle" value="5"/>
+            <property name="maxIdle" value="10"/>
+            <property name="testOnBorrow" value="false"/>
+            <property name="testOnReturn" value="false"/>
+            <property name="testWhileIdle" value="true"/>
+            <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+            <property name="minEvictableIdleTimeMillis" value="25200000"/>
+            <property name="removeAbandonedTimeout" value="1800"/>
+            <property name="logAbandoned" value="true"/>
+        </bean>
+    </beans>
+
+    <beans profile="uat">
         <bean id="readDataSource" class="com.ssm.common.core.datasource.ReadDataSource" destroy-method="close">
             <property name="url" value="${jdbc_url_r}"/>
             <property name="username" value="${jdbc_username_r}"/>
@@ -58,26 +78,6 @@
                 </map>
             </property>
             <property name="defaultTargetDataSource" value="readDataSource"/>
-        </bean>
-    </beans>
-
-    <beans profile="dev">
-        <bean id="dataSource" class="com.ssm.common.core.datasource.BasicDataSource" destroy-method="close">
-            <property name="url" value="${jdbc.url}"/>
-            <property name="username" value="${jdbc.username}"/>
-            <property name="password" value="${jdbc.password}"/>
-            <property name="driverClassName" value="${jdbc.driver}"/>
-            <property name="validationQuery" value="${validation.query}"/>
-            <property name="initialSize" value="5"/>
-            <property name="minIdle" value="5"/>
-            <property name="maxIdle" value="10"/>
-            <property name="testOnBorrow" value="false"/>
-            <property name="testOnReturn" value="false"/>
-            <property name="testWhileIdle" value="true"/>
-            <property name="timeBetweenEvictionRunsMillis" value="60000"/>
-            <property name="minEvictableIdleTimeMillis" value="25200000"/>
-            <property name="removeAbandonedTimeout" value="1800"/>
-            <property name="logAbandoned" value="true"/>
         </bean>
     </beans>
 

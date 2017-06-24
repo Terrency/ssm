@@ -1,9 +1,9 @@
 package com.ssm.common.web.controller;
 
-import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import com.ssm.common.model.ModelMap;
 import com.ssm.common.util.Constant;
+import com.ssm.common.web.service.CaptchaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,24 +13,30 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
-import java.util.Date;
 
 @Controller
 @RequestMapping("/captcha")
 public class CaptchaController {
 
     @Autowired
-    private Producer kaptchaProducer;
+    private CaptchaService captchaService;
+
+    @Autowired
+    private Producer captchaProducer;
+
+    @ResponseBody
+    @RequestMapping("/getCapToken")
+    public ModelMap getCapToken() {
+        return new ModelMap("capToken", captchaService.genCapToken());
+    }
 
     /**
      * @see com.google.code.kaptcha.servlet.KaptchaServlet#doGet
      */
-    @RequestMapping(value = "/getCaptcha", method = RequestMethod.GET)
-    public void getCaptcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @RequestMapping(value = "/getCapImage", method = RequestMethod.GET)
+    public void getCapImage(@RequestParam("capToken") String capToken, HttpServletResponse response) throws Exception {
         // Set to expire far in the past.
         response.setDateHeader("Expires", 0);
         // Set standard HTTP/1.1 no-cache headers.
@@ -42,24 +48,22 @@ public class CaptchaController {
         // return a jpeg
         response.setContentType("image/jpeg");
         // create the text for the image
-        String capText = kaptchaProducer.createText();
-        // store the text in the session
-        request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
-        // store the date in the session so that it can be compared
-        // against to make sure someone hasn't taken too long to enter
-        // their kaptcha
-        request.getSession().setAttribute(Constants.KAPTCHA_SESSION_DATE, new Date());
+        String capText = captchaService.getCapText(capToken);
         // create the image with the text
-        BufferedImage bi = kaptchaProducer.createImage(capText);
+        BufferedImage bi = captchaProducer.createImage(capText);
         ServletOutputStream out = response.getOutputStream();
         // write the data out
         ImageIO.write(bi, "jpg", out);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/validateCaptcha")
-    public ModelMap validateCaptcha(@RequestParam String captcha, HttpSession session) {
-        return new ModelMap(Constant.REMOTE_VALIDATION_KEY, captcha.equalsIgnoreCase((String) session.getAttribute(Constants.KAPTCHA_SESSION_KEY)));
+    @RequestMapping("/verify")
+    public ModelMap verify(@RequestParam("capToken") String capToken, @RequestParam("capText") String capText) {
+        try {
+            return new ModelMap(Constant.REMOTE_VALIDATION_KEY, captchaService.doVerify(capToken, capText));
+        } catch (Exception e) {
+            return new ModelMap(Constant.REMOTE_VALIDATION_KEY, Boolean.FALSE);
+        }
     }
 
 }

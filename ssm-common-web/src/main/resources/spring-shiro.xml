@@ -24,33 +24,20 @@
                 <entry key="authc" value-ref="simpleFormAuthenticationFilter"/>
             </map>
         </property>
-        <property name="filterChainDefinitionMap">
-            <map>
-                <!--静态资源的匿名访问-->
-                <entry key="/favicon.ico" value="anon"/>
-                <entry key="/assets/**" value="anon"/>
-                <entry key="/captcha/**" value="anon"/>
-                <entry key="/error/**" value="anon"/>
-                <!--/security/logout对应的Java类可以不存在-->
-                <entry key="/security/logout" value="logout"/>
-                <!--配置记住我或认证通过可以访问的地址-->
-                <entry key="/portal/**" value="user"/>
-                <entry key="/**" value="authc"/>
-            </map>
-        </property>
-        <!--
         <property name="filterChainDefinitions">
             <value>
+                <!--静态资源的匿名访问-->
                 /favicon.ico=anon
                 /assets/**=anon
                 /error/**=anon
                 /captcha/**=anon
+                <!--/security/logout对应的Java类可以不存在-->
                 /security/logout=logout
+                <!--配置记住我或认证通过可以访问的地址-->
                 /portal/**=user
                 /**=authc
             </value>
         </property>
-        -->
     </bean>
 
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
@@ -99,7 +86,8 @@
     <bean id="simpleFormAuthenticationFilter" class="com.ssm.common.web.security.SimpleFormAuthenticationFilter">
         <property name="usernameParam" value="username"/>
         <property name="passwordParam" value="password"/>
-        <property name="captchaParam" value="captcha"/>
+        <property name="capTextParam" value="capText"/>
+        <property name="capTokenParam" value="capToken"/>
         <property name="rememberMeParam" value="rememberMe"/>
     </bean>
 
@@ -112,7 +100,8 @@
     This requires Shiro's Spring AOP integration to scan for the appropriate annotated classes and perform security logic as necessary.
     See <a>http://shiro.apache.org/spring.html</a> for more details.
     -->
-    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor">
         <property name="proxyTargetClass" value="true"/>
     </bean>
 
