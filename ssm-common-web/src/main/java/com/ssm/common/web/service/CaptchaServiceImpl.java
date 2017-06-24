@@ -81,11 +81,12 @@ public class CaptchaServiceImpl implements CaptchaService, InitializingBean {
 
     @Override
     public boolean doVerify(String capToken, String capText) throws BusinessException {
+        String cacheKey = genTokenVerifiedCacheKey(capToken);
         // 判断缓存中有没有此token
-        if (cacheService.get(genTokenVerifiedCacheKey(capToken)) != null) { // 如果有说明已经被验证过了
+        if (cacheService.get(cacheKey) != null) { // 如果有说明已经被验证过了
             throw new BusinessException("该验证码已经被验证过");
         } else { // 如果没有将其放入到已验证缓存库中
-            cacheService.set(genTokenVerifiedCacheKey(capToken), Boolean.TRUE);
+            cacheService.set(cacheKey, Boolean.TRUE);
         }
         return getCapText(capToken).equals(capText);
     }

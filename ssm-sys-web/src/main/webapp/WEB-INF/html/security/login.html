@@ -76,8 +76,8 @@
                                    placeholder="验证码" th:placeholder="#{capText}"
                                    data-bv-notempty="true"
                                    data-bv-threshold="6">
-                            <img id="capImage" src="" alt="正在生成验证码..." title="点击刷新"
-                                 th:title="#{clickToRefresh}" data-toggle="tooltip">
+                            <img id="capImage" src="" title="点击刷新" alt="正在生成验证码..."
+                                 data-toggle="tooltip" th:title="#{clickToRefresh}" th:alt="#{captchaGen}">
                             <input id="capToken" name="capToken" type="hidden">
                         </div>
                         <div class="checkbox">
@@ -131,12 +131,12 @@
                 $.get("captcha/getCapToken", function (data) {
                     var capToken = data.capToken;
                     $("#capToken").val(capToken);
-                    $("#capImage").attr({src: "captcha/getCapImage?capToken=" + capToken});
+                    $("#capImage").attr({src: "captcha/getCapImage?capToken=" + capToken + "&r=" + Math.random()});
                 });
             }
         };
 
-        $('#capImage').click(function () {
+        $("#capImage").click(function () {
             Captcha.refreshCaptcha();
         });
 
