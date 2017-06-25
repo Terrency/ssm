@@ -8,6 +8,8 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletRequest;
@@ -17,6 +19,8 @@ import javax.servlet.ServletResponse;
  * 自定义基于表单认证的过滤器来实现在认证之前对验证码进行校验
  */
 public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleFormAuthenticationFilter.class);
 
     public static final String DEFAULT_CAPTCHA_TEXT_PARAM = "capText";
     public static final String DEFAULT_CAPTCHA_TOKEN_PARAM = "capToken";
@@ -44,7 +48,8 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
         CaptchaUsernamePasswordToken token = this.createToken(request, response);
         try {
             // 若验证码校验失败则拒绝访问, 不再校验帐户和密码
-            if (!doCaptchaVerify(request, token)) {
+            if (!doCaptchaVerify(token)) {
+                request.setAttribute(getFailureKeyAttribute(), IncorrectCaptchaException.class.getName());
                 return true;
             }
             Subject subject = getSubject(request, response);
@@ -56,15 +61,14 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
         }
     }
 
-    protected boolean doCaptchaVerify(ServletRequest request, CaptchaUsernamePasswordToken token) {
-        if (!PropertiesLoader.getBoolean(PropertiesLoader.Config.USE_CAPTCHA)) {
-            return true;
-        }
-        if (!captchaService.doVerify(token.getCapToken(), token.getCapText())) {
-            request.setAttribute(getFailureKeyAttribute(), IncorrectCaptchaException.class.getName());
+    protected boolean doCaptchaVerify(CaptchaUsernamePasswordToken token) {
+        try {
+            return !PropertiesLoader.getBoolean(PropertiesLoader.Config.USE_CAPTCHA) ||
+                    captchaService.doVerify(token.getCapToken(), token.getCapText());
+        } catch (Exception e) {
+            LOGGER.warn("Verify captcha error: {}", e.getMessage());
             return false;
         }
-        return true;
     }
 
     protected String getCapText(ServletRequest request) {
