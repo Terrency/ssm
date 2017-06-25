@@ -75,6 +75,9 @@
                             <input id="capText" name="capText" type="text" class="form-control"
                                    placeholder="验证码" th:placeholder="#{capText}"
                                    data-bv-notempty="true"
+                                   data-bv-stringlength="true"
+                                   data-bv-stringlength-min="6"
+                                   data-bv-stringlength-max="6"
                                    data-bv-threshold="6">
                             <img id="capImage" src="" title="点击刷新" alt="正在生成验证码..."
                                  data-toggle="tooltip" th:title="#{clickToRefresh}" th:alt="#{captchaGen}">

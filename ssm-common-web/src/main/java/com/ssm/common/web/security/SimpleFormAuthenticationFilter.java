@@ -49,7 +49,7 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
             }
             Subject subject = getSubject(request, response);
             subject.login(token);
-            subject.getSession().setAttribute(Constant.USER_SESSION_ATTRIBUTE, subject.getPrincipal());
+            subject.getSession().setAttribute(Constant.USER_SESSION_KEY, subject.getPrincipal());
             return onLoginSuccess(token, subject, request, response);
         } catch (AuthenticationException e) {
             return onLoginFailure(token, e, request, response);
@@ -57,11 +57,12 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
     }
 
     protected boolean doCaptchaVerify(ServletRequest request, CaptchaUsernamePasswordToken token) {
-        if (PropertiesLoader.getBoolean(PropertiesLoader.Config.USE_CAPTCHA)) {
-            if (!captchaService.doVerify(token.getCapToken(), token.getCapText())) {
-                request.setAttribute(getFailureKeyAttribute(), IncorrectCaptchaException.class.getName());
-                return false;
-            }
+        if (!PropertiesLoader.getBoolean(PropertiesLoader.Config.USE_CAPTCHA)) {
+            return true;
+        }
+        if (!captchaService.doVerify(token.getCapToken(), token.getCapText())) {
+            request.setAttribute(getFailureKeyAttribute(), IncorrectCaptchaException.class.getName());
+            return false;
         }
         return true;
     }

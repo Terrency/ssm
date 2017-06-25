@@ -17,9 +17,9 @@ public class SecurityController {
         String exceptionName = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
         if (exceptionName != null) {
             if (IncorrectCaptchaException.class.getName().equals(exceptionName)) {
-                request.setAttribute(Constant.EXCEPTION_ATTRIBUTE, "Incorrect Captcha");
+                request.setAttribute(Constant.EXCEPTION_KEY, "Incorrect Captcha");
             } else {
-                request.setAttribute(Constant.EXCEPTION_ATTRIBUTE, "Invalid Username/Password");
+                request.setAttribute(Constant.EXCEPTION_KEY, "Invalid Username/Password");
             }
         }
         // 认证失败转到登录页面(认证成功由Shiro自动转到上一请求路径)
