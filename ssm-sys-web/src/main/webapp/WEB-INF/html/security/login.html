@@ -14,12 +14,12 @@
             background-size: cover;
         }
 
-        #capText {
+        #captcha {
             width: 50%;
             display: inline;
         }
 
-        #capImage {
+        #captchaImg {
             width: 120px;
             height: 34px;
             cursor: pointer;
@@ -71,17 +71,17 @@
                             </div>
                         </div>
                         <div class="form-group" th:if="${#servletContext.getAttribute('app')['useCaptcha']=='true'}">
-                            <label class="control-label sr-only" for="capText" th:text="#{capText}">验证码</label>
-                            <input id="capText" name="capText" type="text" class="form-control"
-                                   placeholder="验证码" th:placeholder="#{capText}"
+                            <label class="control-label sr-only" for="captcha" th:text="#{captcha}">验证码</label>
+                            <input id="captcha" name="captcha" type="text" class="form-control"
+                                   placeholder="验证码" th:placeholder="#{captcha}"
                                    data-bv-notempty="true"
                                    data-bv-stringlength="true"
                                    data-bv-stringlength-min="6"
                                    data-bv-stringlength-max="6"
                                    data-bv-threshold="6">
-                            <img id="capImage" src="" title="点击刷新" alt="正在生成验证码..."
+                            <img id="captchaImg" src="" title="点击刷新" alt="正在生成验证码..."
                                  data-toggle="tooltip" th:title="#{clickToRefresh}" th:alt="#{captchaGen}">
-                            <input id="capToken" name="capToken" type="hidden">
+                            <input id="token" name="token" type="hidden">
                         </div>
                         <div class="checkbox">
                             <label>
@@ -131,15 +131,14 @@
 
         var Captcha = {
             refreshCaptcha: function () {
-                $.get("captcha/getCapToken", function (data) {
-                    var capToken = data.capToken;
-                    $("#capToken").val(capToken);
-                    $("#capImage").attr({src: "captcha/getCapImage?capToken=" + capToken + "&r=" + Math.random()});
+                $.get("captcha/genImgCaptchaToken", function (response) {
+                    $("#token").val(response.data);
+                    $("#captchaImg").attr({src: "captcha/getCaptchaImg?imgCaptchaToken=" + response.data + "&r=" + Math.random()});
                 });
             }
         };
 
-        $("#capImage").click(function () {
+        $("#captchaImg").click(function () {
             Captcha.refreshCaptcha();
         });
 

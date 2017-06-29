@@ -4,6 +4,7 @@ import com.ssm.common.model.ModelMap;
 import com.ssm.common.page.Page;
 import com.ssm.common.util.Constant;
 import com.ssm.common.web.base.ResponseData;
+import com.ssm.common.web.controller.AbstractController;
 import com.ssm.common.web.datatable.DataTableRequest;
 import com.ssm.common.web.datatable.DataTableResponse;
 import com.ssm.common.web.datatable.DataTableUtility;
@@ -13,19 +14,14 @@ import com.ssm.sys.api.service.UserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends AbstractController {
 
     @Autowired
     private UserService userService;
@@ -55,8 +51,7 @@ public class UserController {
     @RequiresPermissions("user:create")
     @RequestMapping(value = "/addSubmit", method = RequestMethod.POST)
     public ResponseData addSubmit(User user) {
-        int row = userService.add(user);
-        return new ResponseData().setData(row);
+        return setData(userService.add(user));
     }
 
     @RequiresPermissions("user:update")
@@ -70,16 +65,14 @@ public class UserController {
     @RequiresPermissions("user:update")
     @RequestMapping(value = "/editSubmit", method = {RequestMethod.POST})
     public ResponseData editSubmit(User user) {
-        int row = userService.update(user);
-        return new ResponseData().setData(row);
+        return setData(userService.update(user));
     }
 
     @ResponseBody
     @RequiresPermissions("user:delete")
     @RequestMapping(value = "/deleteSubmit", method = {RequestMethod.POST})
     public ResponseData deleteSubmit(@RequestParam Long[] ids) {
-        int rows = userService.delete(ids);
-        return new ResponseData().setData(rows);
+        return setData(userService.delete(ids));
     }
 
     @ResponseBody
@@ -90,31 +83,26 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping("/checkPass")
-    public Map<String, Object> checkPass(@RequestParam String oldPass) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(Constant.REMOTE_VALIDATION_KEY, userService.checkPass(oldPass));
-        return map;
+    public ModelMap checkPass(@RequestParam String oldPass) {
+        return new ModelMap(Constant.REMOTE_VALIDATION_KEY, userService.checkPass(oldPass));
     }
 
     @ResponseBody
     @RequestMapping("/changePass")
     public ResponseData changePass(@RequestParam String oldPass, @RequestParam String newPass) {
-        int row = userService.changePass(oldPass, newPass);
-        return new ResponseData().setData(row);
+        return setData(userService.changePass(oldPass, newPass));
     }
 
     @ResponseBody
     @RequestMapping("/resetPass")
     public ResponseData resetPass(@RequestParam Long[] ids) {
-        int rows = userService.resetPass(ids);
-        return new ResponseData().setData(rows);
+        return setData(userService.resetPass(ids));
     }
 
     @ResponseBody
     @RequestMapping(value = "/authSubmit", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseData authSubmit(@RequestParam Long userId, @RequestParam Long[] roleIds) {
-        int rows = userService.assignRoles(userId, roleIds);
-        return new ResponseData().setData(rows);
+        return setData(userService.assignRoles(userId, roleIds));
     }
 
 }

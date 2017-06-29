@@ -1,7 +1,9 @@
 package com.ssm.common.web;
 
+import com.ssm.common.exception.BusinessException;
 import com.ssm.common.util.Constant;
-import com.ssm.common.web.captcha.CaptchaService;
+import com.ssm.common.web.captcha.service.ImgCaptchaService;
+import com.ssm.common.web.captcha.service.SmsCaptchaService;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +15,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.concurrent.TimeUnit;
+
 @ActiveProfiles(Constant.ENV_DEV)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
@@ -22,14 +26,27 @@ public class CaptchaServiceTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(CaptchaServiceTest.class);
 
     @Autowired
-    private CaptchaService captchaService;
+    private ImgCaptchaService imgCaptchaService;
+
+    @Autowired
+    private SmsCaptchaService smsCaptchaService;
 
     @Test
-    public void test() throws Exception {
-        String capToken = captchaService.genCapToken();
-        String capText = captchaService.getCapText(capToken);
+    public void test1ImgCaptcha() throws Exception {
+        String capToken = imgCaptchaService.genToken();
+        String capText = imgCaptchaService.getCaptcha(capToken);
         LOGGER.info("=== capToken: {} ===", capToken);
         LOGGER.info("=== capText: {} ===", capText);
+    }
+
+    @Test(expected = BusinessException.class)
+    public void test2SmsCaptcha() throws Exception {
+        String phone = "18798009093";
+        String captcha = smsCaptchaService.genCaptcha();
+        String token = smsCaptchaService.sendSms(phone, captcha);
+        LOGGER.info("=== {} ===", smsCaptchaService.verify(token, captcha, phone));
+        Thread.sleep(TimeUnit.MILLISECONDS.convert(10, TimeUnit.SECONDS));
+        LOGGER.info("=== {} ===", smsCaptchaService.verify(token, captcha, phone));
     }
 
 }

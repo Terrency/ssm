@@ -12,13 +12,14 @@
     <!-- 自动扫描带注解的Bean -->
     <context:component-scan base-package="com.ssm.*.web"/>
 
-    <bean id="captchaService" class="com.ssm.common.web.captcha.CaptchaServiceImpl">
+    <bean id="smsCaptchaService" class="com.ssm.common.web.captcha.service.SmsCaptchaServiceImpl">
         <property name="cacheService" ref="cacheService"/>
-        <property name="charString" value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"/>
-        <property name="cachePrefix" value="cap"/>
-        <property name="charLength" value="6"/>
-        <property name="maxAge" value="300"/>
-        <property name="secKey" value="Gavin Software"/>
+        <property name="imgCaptchaService" ref="imgCaptchaService"/>
+    </bean>
+
+    <bean id="imgCaptchaService" class="com.ssm.common.web.captcha.service.ImgCaptchaServiceImpl">
+        <property name="cacheService" ref="cacheService"/>
+        <property name="captchaProducer" ref="captchaProducer"/>
     </bean>
 
     <bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
@@ -27,7 +28,8 @@
                 <constructor-arg type="java.util.Properties">
                     <props>
                         <prop key="kaptcha.textproducer.font.color">red</prop>
-                        <prop key="kaptcha.textproducer.font.size">34</prop>
+                        <prop key="kaptcha.textproducer.font.size">36</prop>
+                        <prop key="kaptcha.textproducer.char.space">4</prop>
                         <prop key="kaptcha.word.impl">com.ssm.common.web.captcha.WordRendererExt</prop>
                         <prop key="kaptcha.obscurificator.impl">com.ssm.common.web.captcha.DefaultRipple</prop>
                     </props>

@@ -60,14 +60,14 @@ public class ProcessController {
         } finally {
             IOUtils.closeQuietly(zipInputStream);
         }
-        return new ResponseData();
+        return ResponseData.newInstance();
     }
 
     @ResponseBody
     @RequestMapping("/deleteDeployment")
     public ResponseData deleteDeployment(@RequestParam String deployId) {
         processService.deleteDeployment(deployId);
-        return new ResponseData();
+        return ResponseData.newInstance();
     }
 
     @ResponseBody
@@ -122,7 +122,7 @@ public class ProcessController {
         variables.put(ActivitiHelper.PROCESS_VARIABLE_NAME, pdKey + Constant.PERIOD_SEPARATOR + bizKey);
         // 启动流程实例
         processService.startProcessInstanceByKey(pdKey, bizKey, variables);
-        return new ResponseData();
+        return ResponseData.newInstance();
     }
 
     @ResponseBody

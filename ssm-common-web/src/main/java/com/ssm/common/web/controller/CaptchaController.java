@@ -1,9 +1,8 @@
 package com.ssm.common.web.controller;
 
-import com.google.code.kaptcha.Producer;
-import com.ssm.common.model.ModelMap;
-import com.ssm.common.util.Constant;
-import com.ssm.common.web.captcha.CaptchaService;
+import com.ssm.common.enums.StatusCode;
+import com.ssm.common.web.base.ResponseData;
+import com.ssm.common.web.captcha.service.ImgCaptchaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,51 +17,42 @@ import java.awt.image.BufferedImage;
 
 @Controller
 @RequestMapping("/captcha")
-public class CaptchaController {
+public class CaptchaController extends AbstractController {
 
     @Autowired
-    private CaptchaService captchaService;
-
-    @Autowired
-    private Producer captchaProducer;
+    private ImgCaptchaService imgCaptchaService;
 
     @ResponseBody
-    @RequestMapping("/getCapToken")
-    public ModelMap getCapToken() {
-        return new ModelMap("capToken", captchaService.genCapToken());
+    @RequestMapping("/genImgCaptchaToken")
+    public ResponseData genImgCaptchaToken() {
+        return setData(imgCaptchaService.genToken());
     }
 
     /**
      * @see com.google.code.kaptcha.servlet.KaptchaServlet#doGet
      */
-    @RequestMapping(value = "/getCapImage", method = RequestMethod.GET)
-    public void getCapImage(@RequestParam("capToken") String capToken, HttpServletResponse response) throws Exception {
-        // Set to expire far in the past.
+    @RequestMapping(value = "/getCaptchaImg", method = RequestMethod.GET)
+    public void getCaptchaImg(@RequestParam("imgCaptchaToken") String imgCaptchaToken,
+                              HttpServletResponse response) throws Exception {
         response.setDateHeader("Expires", 0);
-        // Set standard HTTP/1.1 no-cache headers.
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-        // Set IE extended HTTP/1.1 no-cache headers (use addHeader).
         response.addHeader("Cache-Control", "post-check=0, pre-check=0");
-        // Set standard HTTP/1.0 no-cache header.
         response.setHeader("Pragma", "no-cache");
-        // return a jpeg
         response.setContentType("image/jpeg");
-        // create the text for the image
-        String capText = captchaService.getCapText(capToken);
-        // create the image with the text
-        BufferedImage bi = captchaProducer.createImage(capText);
+        String captcha = imgCaptchaService.getCaptcha(imgCaptchaToken);
+        BufferedImage bi = imgCaptchaService.getCaptchaImage(captcha);
         ServletOutputStream out = response.getOutputStream();
-        // write the data out
         ImageIO.write(bi, "jpg", out);
     }
 
     @ResponseBody
-    @RequestMapping("/verify")
-    public ModelMap verify(@RequestParam("capToken") String capToken, @RequestParam("capText") String capText) {
+    @RequestMapping("/verifyImgCaptcha")
+    public ResponseData verifyImgCaptcha(@RequestParam("imgCaptchaToken") String imgCaptchaToken,
+                                         @RequestParam("imgCaptcha") String imgCaptcha) {
         try {
-            return new ModelMap(Constant.REMOTE_VALIDATION_KEY, captchaService.doVerify(capToken, capText));
+            return setData(imgCaptchaService.verify(imgCaptchaToken, imgCaptcha));
         } catch (Exception e) {
-            return new ModelMap(Constant.REMOTE_VALIDATION_KEY, Boolean.FALSE);
+            return setData(false, Integer.toString(StatusCode.FAILURE.getCode()), e.getMessage());
         }
     }
 

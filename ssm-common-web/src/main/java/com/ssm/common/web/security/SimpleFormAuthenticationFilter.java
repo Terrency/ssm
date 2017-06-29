@@ -3,7 +3,7 @@ package com.ssm.common.web.security;
 import com.ssm.common.exception.IncorrectCaptchaException;
 import com.ssm.common.util.Constant;
 import com.ssm.common.util.PropertiesLoader;
-import com.ssm.common.web.captcha.CaptchaService;
+import com.ssm.common.web.captcha.service.ImgCaptchaService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
@@ -22,14 +22,14 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleFormAuthenticationFilter.class);
 
-    public static final String DEFAULT_CAPTCHA_TEXT_PARAM = "capText";
-    public static final String DEFAULT_CAPTCHA_TOKEN_PARAM = "capToken";
+    public static final String DEFAULT_CAPTCHA_PARAM = "captcha";
+    public static final String DEFAULT_TOKEN_PARAM = "token";
 
-    private String capTextParam = DEFAULT_CAPTCHA_TEXT_PARAM;
-    private String capTokenParam = DEFAULT_CAPTCHA_TOKEN_PARAM;
+    private String captchaParam = DEFAULT_CAPTCHA_PARAM;
+    private String tokenParam = DEFAULT_TOKEN_PARAM;
 
     @Autowired
-    private CaptchaService captchaService;
+    private ImgCaptchaService imgCaptchaService;
 
     @Override
     protected CaptchaUsernamePasswordToken createToken(ServletRequest request, ServletResponse response) {
@@ -38,8 +38,8 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
                 getPassword(request),
                 isRememberMe(request),
                 getHost(request),
-                getCapText(request),
-                getCapToken(request)
+                getCaptcha(request),
+                getToken(request)
         );
     }
 
@@ -64,34 +64,35 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
     protected boolean doCaptchaVerify(CaptchaUsernamePasswordToken token) {
         try {
             return !PropertiesLoader.getBoolean(PropertiesLoader.Config.USE_CAPTCHA) ||
-                    captchaService.doVerify(token.getCapToken(), token.getCapText());
+                    imgCaptchaService.verify(token.getToken(), token.getCaptcha());
         } catch (Exception e) {
             LOGGER.warn("Verify captcha error: {}", e.getMessage());
             return false;
         }
     }
 
-    protected String getCapText(ServletRequest request) {
-        return WebUtils.getCleanParam(request, getCapTextParam());
+    protected String getCaptcha(ServletRequest request) {
+        return WebUtils.getCleanParam(request, getCaptchaParam());
     }
 
-    protected String getCapToken(ServletRequest request) {
-        return WebUtils.getCleanParam(request, getCapTokenParam());
+    protected String getToken(ServletRequest request) {
+        return WebUtils.getCleanParam(request, getTokenParam());
     }
 
-    public String getCapTextParam() {
-        return capTextParam;
+    public String getCaptchaParam() {
+        return captchaParam;
     }
 
-    public void setCapTextParam(String capTextParam) {
-        this.capTextParam = capTextParam;
+    public void setCaptchaParam(String captchaParam) {
+        this.captchaParam = captchaParam;
     }
 
-    public String getCapTokenParam() {
-        return capTokenParam;
+    public String getTokenParam() {
+        return tokenParam;
     }
 
-    public void setCapTokenParam(String capTokenParam) {
-        this.capTokenParam = capTokenParam;
+    public void setTokenParam(String tokenParam) {
+        this.tokenParam = tokenParam;
     }
+
 }

@@ -59,4 +59,8 @@ public class ResponseData implements Serializable {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 
+    public static ResponseData newInstance() {
+        return new ResponseData();
+    }
+
 }

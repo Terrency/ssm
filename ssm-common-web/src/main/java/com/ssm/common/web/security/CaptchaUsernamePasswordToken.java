@@ -7,30 +7,30 @@ import org.apache.shiro.authc.UsernamePasswordToken;
  */
 public class CaptchaUsernamePasswordToken extends UsernamePasswordToken {
 
-    private String capText;
-    private String capToken;
+    private String captcha;
+    private String token;
 
-    public String getCapText() {
-        return capText;
+    public String getCaptcha() {
+        return captcha;
     }
 
-    public void setCapText(String capText) {
-        this.capText = capText;
+    public void setCaptcha(String captcha) {
+        this.captcha = captcha;
     }
 
-    public String getCapToken() {
-        return capToken;
+    public String getToken() {
+        return token;
     }
 
-    public void setCapToken(String capToken) {
-        this.capToken = capToken;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public CaptchaUsernamePasswordToken(String username, String password, boolean rememberMe,
-                                        String host, String capText, String capToken) {
+                                        String host, String captcha, String token) {
         super(username, password, rememberMe, host);
-        this.capText = capText;
-        this.capToken = capToken;
+        this.captcha = captcha;
+        this.token = token;
     }
 
 }

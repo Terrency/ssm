@@ -2,6 +2,7 @@ package com.ssm.sys.web.controller;
 
 import com.ssm.common.model.ModelMap;
 import com.ssm.common.web.base.ResponseData;
+import com.ssm.common.web.controller.AbstractController;
 import com.ssm.sys.api.model.Permission;
 import com.ssm.sys.api.service.PermissionService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/permission")
-public class PermissionController {
+public class PermissionController extends AbstractController {
 
     @Autowired
     private PermissionService permissionService;
@@ -47,8 +48,7 @@ public class PermissionController {
     @RequiresPermissions("permission:create")
     @RequestMapping(value = "/addSubmit", method = RequestMethod.POST)
     public ResponseData addSubmit(@RequestBody Permission permission) {
-        int row = permissionService.add(permission);
-        return new ResponseData().setData(row);
+        return setData(permissionService.add(permission));
     }
 
     @RequiresPermissions("permission:update")
@@ -62,16 +62,14 @@ public class PermissionController {
     @RequiresPermissions("permission:update")
     @RequestMapping(value = "/editSubmit", method = {RequestMethod.POST})
     public ResponseData editSubmit(@RequestBody Permission permission) {
-        int row = permissionService.update(permission);
-        return new ResponseData().setData(row);
+        return setData(permissionService.update(permission));
     }
 
     @ResponseBody
     @RequiresPermissions("permission:delete")
     @RequestMapping(value = "/deleteSubmit", method = {RequestMethod.POST})
     public ResponseData deleteSubmit(@RequestParam Long id) {
-        int row = permissionService.delete(id);
-        return new ResponseData().setData(row);
+        return setData(permissionService.delete(id));
     }
 
 }

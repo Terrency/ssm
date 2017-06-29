@@ -1,5 +1,8 @@
 package com.ssm.common.web.controller;
 
+import com.ssm.common.enums.StatusCode;
+import com.ssm.common.web.base.ResponseData;
+
 public abstract class AbstractController {
 
     // @InitBinder
@@ -11,5 +14,21 @@ public abstract class AbstractController {
     // protected String toPage(@PathVariable String root, @PathVariable String page) throws Exception {
     //     return root + "/" + page;
     // }
+
+    protected ResponseData setData(Object data) {
+        return setData(true, Integer.toString(StatusCode.SUCCESS.getCode()), StatusCode.SUCCESS.getReasonPhrase(), data);
+    }
+
+    protected ResponseData setData(boolean success, String code, String message) {
+        return setData(success, code, message, null);
+    }
+
+    protected ResponseData setData(boolean success, String code, String message, Object data) {
+        return ResponseData.newInstance()
+                .setSuccess(success)
+                .setCode(code)
+                .setMessage(message)
+                .setData(data);
+    }
 
 }

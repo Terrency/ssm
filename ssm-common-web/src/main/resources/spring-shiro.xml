@@ -86,8 +86,8 @@
     <bean id="simpleFormAuthenticationFilter" class="com.ssm.common.web.security.SimpleFormAuthenticationFilter">
         <property name="usernameParam" value="username"/>
         <property name="passwordParam" value="password"/>
-        <property name="capTextParam" value="capText"/>
-        <property name="capTokenParam" value="capToken"/>
+        <property name="captchaParam" value="captcha"/>
+        <property name="tokenParam" value="token"/>
         <property name="rememberMeParam" value="rememberMe"/>
     </bean>
 

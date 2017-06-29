@@ -2,6 +2,7 @@ package com.ssm.sys.web.controller;
 
 import com.ssm.common.model.ModelMap;
 import com.ssm.common.web.base.ResponseData;
+import com.ssm.common.web.controller.AbstractController;
 import com.ssm.sys.api.model.Role;
 import com.ssm.sys.api.service.PermissionService;
 import com.ssm.sys.api.service.RoleService;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/role")
-public class RoleController {
+public class RoleController extends AbstractController {
 
     @Autowired
     private RoleService roleService;
@@ -44,24 +45,21 @@ public class RoleController {
     @RequiresPermissions("role:create")
     @RequestMapping(value = "/addSubmit", method = RequestMethod.POST)
     public ResponseData addSubmit(Role role) {
-        int row = roleService.add(role);
-        return new ResponseData().setData(row);
+        return setData(roleService.add(role));
     }
 
     @ResponseBody
     @RequiresPermissions("role:update")
     @RequestMapping(value = "/editSubmit", method = {RequestMethod.POST})
     public ResponseData editSubmit(Role role) {
-        int row = roleService.update(role);
-        return new ResponseData().setData(row);
+        return setData(roleService.update(role));
     }
 
     @ResponseBody
     @RequiresPermissions("role:delete")
     @RequestMapping(value = "/deleteSubmit", method = {RequestMethod.POST})
     public ResponseData deleteSubmit(@RequestParam Long[] ids) {
-        int rows = roleService.delete(ids);
-        return new ResponseData().setData(rows);
+        return setData(roleService.delete(ids));
     }
 
     @ResponseBody
@@ -82,8 +80,7 @@ public class RoleController {
     @ResponseBody
     @RequestMapping(value = "/authSubmit", method = RequestMethod.POST)
     public ResponseData authSubmit(@RequestParam Long id, @RequestParam Long[] permissionIds) {
-        int rows = roleService.assignPermissions(id, permissionIds);
-        return new ResponseData().setData(rows);
+        return setData(roleService.assignPermissions(id, permissionIds));
     }
 
 }

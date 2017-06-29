@@ -6,6 +6,7 @@ import com.ssm.act.api.service.ProcessService;
 import com.ssm.common.util.ActivitiHelper;
 import com.ssm.common.util.SecurityHelper;
 import com.ssm.common.web.base.ResponseData;
+import com.ssm.common.web.controller.AbstractController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/leave")
-public class LeaveController {
+public class LeaveController extends AbstractController {
 
     @Autowired
     private LeaveService leaveService;
@@ -45,29 +46,26 @@ public class LeaveController {
     @ResponseBody
     @RequestMapping(value = "/addSubmit", method = RequestMethod.POST)
     public ResponseData addSubmit(Leave leave) {
-        int row = leaveService.add(leave);
-        return new ResponseData().setData(row);
+        return setData(leaveService.add(leave));
     }
 
     @ResponseBody
     @RequestMapping(value = "/editSubmit", method = {RequestMethod.POST})
     public ResponseData editSubmit(Leave leave) {
-        int row = leaveService.update(leave);
-        return new ResponseData().setData(row);
+        return setData(leaveService.update(leave));
     }
 
     @ResponseBody
     @RequestMapping(value = "/deleteSubmit", method = {RequestMethod.POST})
     public ResponseData deleteSubmit(@RequestParam Long id) {
-        int row = leaveService.delete(id);
-        return new ResponseData().setData(row);
+        return setData(leaveService.delete(id));
     }
 
     @ResponseBody
     @RequestMapping("/startProcess")
     public ResponseData startProcess(@RequestParam Long id) {
         leaveService.startProcess(id);
-        return new ResponseData();
+        return ResponseData.newInstance();
     }
 
     @RequestMapping(value = "/task", method = {RequestMethod.GET})
@@ -87,7 +85,7 @@ public class LeaveController {
     @RequestMapping(value = "/taskSubmit", method = {RequestMethod.POST})
     public ResponseData taskSubmit(@RequestParam String taskId, @RequestParam String comment) {
         leaveService.completeTask(taskId, comment);
-        return new ResponseData();
+        return ResponseData.newInstance();
     }
 
 }
