@@ -1,4 +1,4 @@
-package com.ssm.common.web.wrapper;
+package com.ssm.common.web.base;
 
 import com.ssm.common.model.Model;
 import com.ssm.common.web.datatable.DataTableRequest;

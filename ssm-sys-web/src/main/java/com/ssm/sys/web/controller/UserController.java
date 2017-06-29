@@ -8,7 +8,7 @@ import com.ssm.common.web.controller.AbstractController;
 import com.ssm.common.web.datatable.DataTableRequest;
 import com.ssm.common.web.datatable.DataTableResponse;
 import com.ssm.common.web.datatable.DataTableUtility;
-import com.ssm.common.web.wrapper.BaseWrapper;
+import com.ssm.common.web.base.BaseWrapper;
 import com.ssm.sys.api.model.User;
 import com.ssm.sys.api.service.UserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

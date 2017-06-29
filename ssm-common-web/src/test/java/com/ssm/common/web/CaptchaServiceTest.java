@@ -2,8 +2,8 @@ package com.ssm.common.web;
 
 import com.ssm.common.exception.BusinessException;
 import com.ssm.common.util.Constant;
-import com.ssm.common.web.captcha.service.ImgCaptchaService;
-import com.ssm.common.web.captcha.service.SmsCaptchaService;
+import com.ssm.common.web.captcha.ImgCaptchaService;
+import com.ssm.common.web.captcha.SmsCaptchaService;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;

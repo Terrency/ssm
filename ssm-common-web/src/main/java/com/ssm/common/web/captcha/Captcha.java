@@ -1,4 +1,4 @@
-package com.ssm.common.web.captcha.model;
+package com.ssm.common.web.captcha;
 
 import java.io.Serializable;
 import java.util.Date;

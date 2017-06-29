@@ -12,12 +12,12 @@
     <!-- 自动扫描带注解的Bean -->
     <context:component-scan base-package="com.ssm.*.web"/>
 
-    <bean id="smsCaptchaService" class="com.ssm.common.web.captcha.service.SmsCaptchaServiceImpl">
+    <bean id="smsCaptchaService" class="com.ssm.common.web.captcha.SmsCaptchaServiceImpl">
         <property name="cacheService" ref="cacheService"/>
         <property name="imgCaptchaService" ref="imgCaptchaService"/>
     </bean>
 
-    <bean id="imgCaptchaService" class="com.ssm.common.web.captcha.service.ImgCaptchaServiceImpl">
+    <bean id="imgCaptchaService" class="com.ssm.common.web.captcha.ImgCaptchaServiceImpl">
         <property name="cacheService" ref="cacheService"/>
         <property name="captchaProducer" ref="captchaProducer"/>
     </bean>

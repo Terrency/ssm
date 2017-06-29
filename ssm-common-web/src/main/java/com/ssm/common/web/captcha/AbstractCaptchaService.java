@@ -1,4 +1,4 @@
-package com.ssm.common.web.captcha.service;
+package com.ssm.common.web.captcha;
 
 import com.ssm.common.cache.CacheService;
 import org.springframework.beans.factory.InitializingBean;

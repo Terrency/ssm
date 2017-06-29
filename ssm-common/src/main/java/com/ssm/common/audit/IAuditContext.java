@@ -1,4 +1,4 @@
-package com.ssm.common.context;
+package com.ssm.common.audit;
 
 public interface IAuditContext {
 }

@@ -1,8 +1,7 @@
-package com.ssm.common.web.captcha.service;
+package com.ssm.common.web.captcha;
 
 import com.google.code.kaptcha.Producer;
 import com.ssm.common.exception.BusinessException;
-import com.ssm.common.web.captcha.model.ImgCaptcha;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
