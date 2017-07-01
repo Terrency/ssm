@@ -1,6 +1,7 @@
 package com.ssm.common.web.controller;
 
 import com.ssm.common.enums.StatusCode;
+import com.ssm.common.web.base.AbstractController;
 import com.ssm.common.web.base.ResponseData;
 import com.ssm.common.web.captcha.ImgCaptchaService;
 import org.springframework.beans.factory.annotation.Autowired;

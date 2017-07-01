@@ -54,13 +54,13 @@ public class ResponseData implements Serializable {
         return this;
     }
 
+    public static ResponseData newInstance() {
+        return new ResponseData();
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
-    }
-
-    public static ResponseData newInstance() {
-        return new ResponseData();
     }
 
 }

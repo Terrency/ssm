@@ -1,9 +1,11 @@
-package com.ssm.common.web.controller;
+package com.ssm.common.web.base;
 
 import com.ssm.common.enums.StatusCode;
-import com.ssm.common.web.base.ResponseData;
 
 public abstract class AbstractController {
+
+    public static final String FORWARD_PREFIX = "forward:";
+    public static final String REDIRECT_PREFIX = "redirect:";
 
     // @InitBinder
     // public void initBinder(WebDataBinder binder, WebRequest request) {
@@ -29,6 +31,14 @@ public abstract class AbstractController {
                 .setCode(code)
                 .setMessage(message)
                 .setData(data);
+    }
+
+    protected String forward(String view) {
+        return FORWARD_PREFIX + view;
+    }
+
+    protected String redirect(String view) {
+        return REDIRECT_PREFIX + view;
     }
 
 }
