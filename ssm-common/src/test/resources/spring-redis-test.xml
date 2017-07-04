@@ -8,15 +8,15 @@
         <property name="locations" value="classpath:redis.properties"/>
     </bean>
 
-    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
         <property name="maxTotal" value="${redis.pool.maxActive}"/>
         <property name="maxIdle" value="${redis.pool.maxIdle}"/>
         <property name="maxWaitMillis" value="${redis.pool.maxWait}"/>
         <property name="testOnBorrow" value="${redis.pool.testOnBorrow}"/>
     </bean>
 
-    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-        <property name="poolConfig" ref="jedisPoolConfig"/>
+    <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="poolConfig" ref="poolConfig"/>
         <property name="hostName" value="${redis.host}"/>
         <property name="port" value="${redis.port}"/>
         <property name="timeout" value="${redis.timeout}"/>
@@ -24,8 +24,14 @@
         <property name="usePool" value="${redis.usePool}"/>
     </bean>
 
-    <bean id="redisTmpl" class="org.springframework.data.redis.core.StringRedisTemplate">
-        <property name="connectionFactory" ref="jedisConnectionFactory"/>
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+        </property>
     </bean>
 
 </beans>

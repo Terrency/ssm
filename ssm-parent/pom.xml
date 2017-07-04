@@ -24,8 +24,8 @@
         <commons-dbcp2.version>2.1.1</commons-dbcp2.version>
         <ehcache.version>2.5.0</ehcache.version>
         <memcached.version>2.12.0</memcached.version>
-        <redis.version>1.1.1.RELEASE</redis.version>
-        <jedis.version>2.9.0</jedis.version>
+        <spring-data-redis.version>1.6.2.RELEASE</spring-data-redis.version>
+        <jedis.version>2.7.3</jedis.version>
         <validation-api.version>1.1.0.Final</validation-api.version>
         <hibernate-validator.version>5.2.4.Final</hibernate-validator.version>
         <commons-logging.version>1.2</commons-logging.version>
@@ -209,14 +209,14 @@
             <dependency>
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-redis</artifactId>
-                <version>${redis.version}</version>
+                <version>${spring-data-redis.version}</version>
             </dependency>
             <dependency>
                 <groupId>redis.clients</groupId>
                 <artifactId>jedis</artifactId>
                 <version>${jedis.version}</version>
             </dependency>
-            
+
             <!-- Validation API -->
             <dependency>
                 <groupId>javax.validation</groupId>
