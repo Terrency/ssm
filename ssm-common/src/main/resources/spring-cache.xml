@@ -4,10 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!--
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations" value="classpath:redis.properties"/>
-    </bean>
+    <import resource="classpath:spring-config.xml"/>
 
     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
         <property name="maxTotal" value="${redis.pool.maxActive}"/>
@@ -24,7 +21,6 @@
         <property name="password" value="${redis.password}"/>
         <property name="usePool" value="${redis.usePool}"/>
     </bean>
-    -->
 
     <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
         <property name="connectionFactory" ref="connectionFactory"/>
@@ -36,6 +32,11 @@
         </property>
     </bean>
 
+    <bean id="cacheService" class="com.ssm.common.cache.RedisCacheService">
+        <property name="redisTemplate" ref="redisTemplate"/>
+    </bean>
+
+    <!--
     <bean id="cacheService" class="com.ssm.common.cache.MemcachedCacheService">
         <property name="memcachedClient" ref="memcachedClient"/>
     </bean>
@@ -57,5 +58,6 @@
         <property name="failureMode" value="Redistribute"/>
         <property name="useNagleAlgorithm" value="false"/>
     </bean>
+    -->
 
 </beans>

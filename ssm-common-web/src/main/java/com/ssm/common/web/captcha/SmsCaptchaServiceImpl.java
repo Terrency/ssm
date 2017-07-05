@@ -11,6 +11,8 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SmsCaptchaServiceImpl.class);
 
+    private static final String SMS_CACHE_PREFIX = "sms_captcha_%s";
+
     private static final int MAX_SEND_COUNT = 3;    // 短信验证码限制发送次数(10分钟)
 
     private int maxSendCount = MAX_SEND_COUNT;
@@ -19,14 +21,15 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
 
     @Override
     public String sendSms(String phone, String captcha) throws Exception {
-        SmsCaptcha smsCaptcha = cacheService.get(phone, SmsCaptcha.class);
+        String cacheKey = String.format(SMS_CACHE_PREFIX, phone);
+        SmsCaptcha smsCaptcha = cacheService.get(cacheKey, SmsCaptcha.class);
         if (smsCaptcha == null) {
             smsCaptcha = new SmsCaptcha();
             smsCaptcha.setSendCount(1);
             smsCaptcha.setCreateTime(Calendar.getInstance().getTime());
         } else {
             if (smsCaptcha.getSendCount() > maxSendCount) {
-                throw new BusinessException("该手机号发送短信验证码已超过限制次数" + maxSendCount + "次，请10分钟以后再试");
+                throw new BusinessException("该手机号发送短信验证码已超过限制发送次数" + maxSendCount + "次，请10分钟以后再试");
             }
             smsCaptcha.setSendCount(smsCaptcha.getSendCount() + 1);
         }
@@ -34,8 +37,8 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
         smsCaptcha.setPhone(phone);
         smsCaptcha.setCaptcha(captcha);
         smsCaptcha.setVerifyCount(0);
-        smsCaptcha.setVerification(SmsCaptcha.Verification.NOT_PASS);
-        cacheService.set(phone, smsCaptcha, maxAge);
+        smsCaptcha.setVerification(SmsCaptcha.Verification.UNVERIFIED);
+        cacheService.set(cacheKey, smsCaptcha, maxAge);
         String smsToken = genToken();
         cacheService.set(smsToken, smsCaptcha, maxAge);
         return smsToken;
@@ -53,12 +56,15 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
     public boolean verify(String token, String captcha, String phone) throws Exception {
         SmsCaptcha smsCaptcha = cacheService.get(token, SmsCaptcha.class);
         if (smsCaptcha == null) {
-            throw new BusinessException("该短信验证码不存在或已失效");
+            throw new BusinessException("该短信验证码已失效");
         }
         if (!smsCaptcha.getPhone().equals(phone)) {
             throw new BusinessException("两次输入手机号不一致");
         }
         if (!smsCaptcha.getCaptcha().equals(captcha)) {
+            smsCaptcha.setVerifyCount(smsCaptcha.getVerifyCount() + 1);
+            smsCaptcha.setVerification(SmsCaptcha.Verification.NOT_PASSED);
+            cacheService.set(token, captcha, maxAge);
             return false;
         }
         if (smsCaptcha.getVerifyCount() > MAX_VERIFY_COUNT) {
@@ -66,9 +72,15 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
             throw new BusinessException("该短信验证码已超过限制验证次数" + MAX_VERIFY_COUNT + "次，请重新获取");
         }
         smsCaptcha.setVerifyCount(smsCaptcha.getVerifyCount() + 1);
-        smsCaptcha.setVerification(SmsCaptcha.Verification.PASS);
+        smsCaptcha.setVerification(SmsCaptcha.Verification.PASSED);
         cacheService.set(token, captcha, maxAge);
         return true;
+    }
+
+    @Override
+    public boolean verify(String token) {
+        SmsCaptcha smsCaptcha = cacheService.get(token, SmsCaptcha.class);
+        return smsCaptcha != null && smsCaptcha.getVerification() == SmsCaptcha.Verification.PASSED;
     }
 
     @Override

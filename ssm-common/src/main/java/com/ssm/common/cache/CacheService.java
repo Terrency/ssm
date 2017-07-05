@@ -2,8 +2,6 @@ package com.ssm.common.cache;
 
 public interface CacheService {
 
-    boolean set(String key, Object value);
-
     boolean set(String key, Object value, int maxAge);
 
     Object get(String key);

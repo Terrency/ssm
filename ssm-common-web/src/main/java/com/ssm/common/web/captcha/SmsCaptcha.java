@@ -10,7 +10,7 @@ public class SmsCaptcha extends Captcha implements Serializable {
     private int sendCount;                  // 发送次数
     private Verification verification;      // 是否验证通过
 
-    public enum Verification {PASS, NOT_PASS}
+    public enum Verification {UNVERIFIED, PASSED, NOT_PASSED}
 
     public String getPhone() {
         return phone;
