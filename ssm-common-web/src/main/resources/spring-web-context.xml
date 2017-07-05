@@ -20,8 +20,6 @@
     <bean id="imgCaptchaService" class="com.ssm.common.web.captcha.ImgCaptchaServiceImpl">
         <property name="cacheService" ref="cacheService"/>
         <property name="captchaProducer" ref="captchaProducer"/>
-        <property name="charLength" value="6"/>
-        <property name="maxAge" value="30"/>
     </bean>
 
     <bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
