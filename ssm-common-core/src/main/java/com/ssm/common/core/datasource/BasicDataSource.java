@@ -1,5 +1,7 @@
 package com.ssm.common.core.datasource;
 
+import com.ssm.common.util.EncryptUtils;
+
 public class BasicDataSource extends org.apache.commons.dbcp2.BasicDataSource {
 
     private static final long serialVersionUID = 20160117L;
@@ -10,7 +12,7 @@ public class BasicDataSource extends org.apache.commons.dbcp2.BasicDataSource {
     @Override
     public void setPassword(String password) {
         try {
-            super.setPassword(AESCipher.decrypt(password, "CHINESE SOFTWARE"));
+            super.setPassword(EncryptUtils.aesDecrypt(password, EncryptUtils.DEFAULT_KEY));
         } catch (Exception e) {
             e.printStackTrace();
         }

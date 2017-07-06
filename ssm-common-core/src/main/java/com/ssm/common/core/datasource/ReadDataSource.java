@@ -1,5 +1,6 @@
 package com.ssm.common.core.datasource;
 
+import com.ssm.common.util.EncryptUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 public class ReadDataSource extends BasicDataSource {
@@ -14,7 +15,7 @@ public class ReadDataSource extends BasicDataSource {
     @Override
     public void setPassword(String password) {
         try {
-            password = AESCipher.decrypt(password, "CHINESE SOFTWARE");
+            password = EncryptUtils.aesDecrypt(password, EncryptUtils.DEFAULT_KEY);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

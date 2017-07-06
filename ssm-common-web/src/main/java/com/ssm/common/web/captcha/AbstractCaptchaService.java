@@ -23,6 +23,23 @@ public abstract class AbstractCaptchaService implements InitializingBean {
 
     protected CacheService cacheService;
 
+    public String genToken() {
+        return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    public String genCaptcha() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < charLength; i++) {
+            int randInt = Math.abs(random.nextInt());
+            sb.append(chars[randInt % chars.length]);
+        }
+        return sb.toString();
+    }
+
+    public void invalid(String token) {
+        cacheService.delete(token);
+    }
+
     public void setCharString(String charString) {
         this.chars = charString.toCharArray();
     }
@@ -41,19 +58,6 @@ public abstract class AbstractCaptchaService implements InitializingBean {
 
     public void setCacheService(CacheService cacheService) {
         this.cacheService = cacheService;
-    }
-
-    public String genToken() {
-        return UUID.randomUUID().toString().replace("-", "");
-    }
-
-    public String genCaptcha() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < charLength; i++) {
-            int randInt = Math.abs(random.nextInt());
-            sb.append(chars[randInt % chars.length]);
-        }
-        return sb.toString();
     }
 
     @Override

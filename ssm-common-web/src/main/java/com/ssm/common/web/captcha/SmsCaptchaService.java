@@ -54,4 +54,11 @@ public interface SmsCaptchaService {
      */
     boolean verify(String token);
 
+    /**
+     * 使验证码失效
+     *
+     * @param token 短信验证码token
+     */
+    void invalid(String token);
+
 }

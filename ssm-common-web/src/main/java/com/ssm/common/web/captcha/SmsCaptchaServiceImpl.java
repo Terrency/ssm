@@ -26,7 +26,6 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
         if (smsCaptcha == null) {
             smsCaptcha = new SmsCaptcha();
             smsCaptcha.setSendCount(1);
-            smsCaptcha.setCreateTime(Calendar.getInstance().getTime());
         } else {
             if (smsCaptcha.getSendCount() > maxSendCount) {
                 throw new BusinessException("该手机号发送短信验证码已超过限制发送次数" + maxSendCount + "次，请10分钟以后再试");
@@ -37,6 +36,8 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
         smsCaptcha.setPhone(phone);
         smsCaptcha.setCaptcha(captcha);
         smsCaptcha.setVerifyCount(0);
+        smsCaptcha.setVerifyCorrectCount(0);
+        smsCaptcha.setVerifyErrorCount(0);
         smsCaptcha.setVerification(SmsCaptcha.Verification.UNVERIFIED);
         cacheService.set(cacheKey, smsCaptcha, maxAge);
         String smsToken = genToken();
@@ -61,20 +62,21 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
         if (!smsCaptcha.getPhone().equals(phone)) {
             throw new BusinessException("两次输入手机号不一致");
         }
-        if (!smsCaptcha.getCaptcha().equals(captcha)) {
-            smsCaptcha.setVerifyCount(smsCaptcha.getVerifyCount() + 1);
-            smsCaptcha.setVerification(SmsCaptcha.Verification.NOT_PASSED);
-            cacheService.set(token, captcha, maxAge);
-            return false;
-        }
         if (smsCaptcha.getVerifyCount() > MAX_VERIFY_COUNT) {
             cacheService.delete(token);
             throw new BusinessException("该短信验证码已超过限制验证次数" + MAX_VERIFY_COUNT + "次，请重新获取");
         }
+        boolean flag = smsCaptcha.getCaptcha().equals(captcha);
         smsCaptcha.setVerifyCount(smsCaptcha.getVerifyCount() + 1);
-        smsCaptcha.setVerification(SmsCaptcha.Verification.PASSED);
+        if (flag) {
+            smsCaptcha.setVerifyCorrectCount(smsCaptcha.getVerifyCorrectCount() + 1);
+            smsCaptcha.setVerification(SmsCaptcha.Verification.PASSED);
+        } else {
+            smsCaptcha.setVerifyErrorCount(smsCaptcha.getVerifyErrorCount() + 1);
+            smsCaptcha.setVerification(SmsCaptcha.Verification.NOT_PASSED);
+        }
         cacheService.set(token, captcha, maxAge);
-        return true;
+        return flag;
     }
 
     @Override

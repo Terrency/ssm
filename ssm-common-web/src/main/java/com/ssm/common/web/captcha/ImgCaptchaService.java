@@ -44,4 +44,10 @@ public interface ImgCaptchaService {
      */
     boolean verify(String token, String captcha) throws Exception;
 
+    /**
+     * 使验证码失效
+     *
+     * @param token 图片验证码token
+     */
+    void invalid(String token);
 }
