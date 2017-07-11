@@ -17,6 +17,12 @@
     <name>ssm-act-parent</name>
     <url>http://maven.apache.org</url>
 
+    <properties>
+        <server.address>127.0.0.1</server.address>
+        <server.port>8081</server.port>
+        <server.context-path>/</server.context-path>
+    </properties>
+
     <!--
         parent
           |-api  : 接口层(通常我们会把提供者的服务接口单独作为一个模块，其中包含了接口、DTO、业务异常，该模块通常不要依赖第三方框架，当然Validate API除外，模块会给消费者依赖)

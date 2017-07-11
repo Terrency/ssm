@@ -49,6 +49,9 @@
         <javaee-api.version>7.0</javaee-api.version>
         <jstl-api.version>1.2</jstl-api.version>
         <junit.version>4.12</junit.version>
+        <server.address>127.0.0.1</server.address>
+        <server.port>8080</server.port>
+        <server.context-path>/</server.context-path>
     </properties>
 
     <modules>
@@ -511,6 +514,14 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>9.2.7.v20150116</version>
                 <configuration>
+                    <httpConnector>
+                        <host>${server.address}</host>
+                        <port>${server.port}</port>
+                    </httpConnector>
+                    <webAppConfig>
+                        <contextPath>${server.context-path}</contextPath>
+                    </webAppConfig>
+                    <!--
                     <systemProperties>
                         <systemProperty>
                             <name>spring.profiles.active</name>
@@ -518,9 +529,7 @@
                         </systemProperty>
                     </systemProperties>
                     <useTestClasspath>true</useTestClasspath>
-                    <webAppConfig>
-                        <contextPath>/${project.artifactId}</contextPath>
-                    </webAppConfig>
+                    -->
                 </configuration>
             </plugin>
         </plugins>

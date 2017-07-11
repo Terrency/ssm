@@ -1,5 +1,7 @@
 package com.ssm.sys.core.service;
 
+import com.ssm.common.core.mapper.BaseMapper;
+import com.ssm.common.core.service.AbstractBaseService;
 import com.ssm.common.exception.BusinessException;
 import com.ssm.common.model.ModelMap;
 import com.ssm.common.util.Constant;
@@ -15,13 +17,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.Size;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 @Service(PermissionService.BEAN_NAME)
-public class PermissionServiceImpl implements PermissionService {
+public class PermissionServiceImpl extends AbstractBaseService<Permission> implements PermissionService {
 
     @Autowired
     private PermissionMapper permissionMapper;
@@ -31,6 +31,11 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Autowired
     private RolePermissionExtMapper rolePermissionExtMapper;
+
+    @Override
+    protected BaseMapper<Permission> getBaseMapper() {
+        return permissionMapper;
+    }
 
     @Override
     public int add(Permission permission) {
@@ -54,16 +59,7 @@ public class PermissionServiceImpl implements PermissionService {
             permission.setParentIds(null);
         }
         permission.setStatus(PermissionStatus.AVAILABLE.getValue());
-        return permissionMapper.insertSelective(permission);
-    }
-
-    @Override
-    public int add(Collection<Permission> collection) {
-        int count = 0;
-        for (Permission permission : collection) {
-            count += add(permission);
-        }
-        return count;
+        return super.add(permission);
     }
 
     @Override
@@ -105,16 +101,7 @@ public class PermissionServiceImpl implements PermissionService {
     public int delete(Long id) {
         rolePermissionExtMapper.deleteByPermissionId(id);
         permissionExtMapper.deleteByParentId(id);
-        return permissionExtMapper.deleteByPrimaryKey(id);
-    }
-
-    @Override
-    public int delete(Long[] ids) {
-        int count = 0;
-        for (Long id : ids) {
-            count += delete(id);
-        }
-        return count;
+        return super.delete(id);
     }
 
     @Override

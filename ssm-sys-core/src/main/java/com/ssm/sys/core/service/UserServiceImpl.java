@@ -1,5 +1,7 @@
 package com.ssm.sys.core.service;
 
+import com.ssm.common.core.mapper.BaseMapper;
+import com.ssm.common.core.service.AbstractBaseService;
 import com.ssm.common.exception.BusinessException;
 import com.ssm.common.model.ModelMap;
 import com.ssm.common.page.Page;
@@ -18,12 +20,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 @Service(UserService.BEAN_NAME)
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends AbstractBaseService<User> implements UserService {
 
     private static final String DEFAULT_PASS = "111111";
 
@@ -37,21 +38,17 @@ public class UserServiceImpl implements UserService {
     private UserRoleExtMapper userRoleExtMapper;
 
     @Override
+    protected BaseMapper<User> getBaseMapper() {
+        return userMapper;
+    }
+
+    @Override
     public int add(User user) {
         String salt = SecurityHelper.generateRandomNumber();
         user.setStatus(UserStatus.UNLOCKED.getValue());
         user.setSalt(salt);
         user.setPass(SecurityHelper.generateMd5Hash(DEFAULT_PASS, salt));
-        return userMapper.insertSelective(user);
-    }
-
-    @Override
-    public int add(Collection<User> users) {
-        int count = 0;
-        for (User user : users) {
-            count += add(user);
-        }
-        return count;
+        return super.add(user);
     }
 
     @Override
@@ -65,20 +62,6 @@ public class UserServiceImpl implements UserService {
     public int delete(Long id) {
         userRoleExtMapper.deleteByUserId(id);
         return userMapper.deleteByPrimaryKey(id);
-    }
-
-    @Override
-    public int delete(Long[] ids) {
-        int count = 0;
-        for (Long id : ids) {
-            count += delete(id);
-        }
-        return count;
-    }
-
-    @Override
-    public User getById(Long id) {
-        return userMapper.selectByPrimaryKey(id);
     }
 
     @Override

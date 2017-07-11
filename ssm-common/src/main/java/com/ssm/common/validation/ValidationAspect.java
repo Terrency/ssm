@@ -8,21 +8,12 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
-import javax.validation.Constraint;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import javax.validation.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Service接口方法參數校驗攔截器:
@@ -40,10 +31,11 @@ import java.util.Set;
  * @see org.springframework.validation.beanvalidation.MethodValidationPostProcessor
  */
 @Aspect
-@Component
 public class ValidationAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidationAspect.class);
+
+    private final Map<Method, Method> methodCache = new ConcurrentHashMap<>();
 
     private final ValidationProcessor validationProcessor;
 
@@ -51,7 +43,6 @@ public class ValidationAspect {
         this(Validation.buildDefaultValidatorFactory());
     }
 
-    @Inject
     public ValidationAspect(ValidatorFactory validatorFactory) {
         this(validatorFactory.getValidator());
     }
@@ -84,8 +75,16 @@ public class ValidationAspect {
         // LOGGER.info("Proxy Object => {}", joinPoint.getThis().getClass().getName());
         LOGGER.debug("Invoke service method => {}.{}()", target.getClass().getName(), method.getName());
 
-        Method targetMethod = findTargetInterfaceMethod(target, methodName, parameterTypes);
-        if (targetMethod == null || !hasConstraintParameter(targetMethod)) {
+        Method targetMethod = methodCache.get(method);
+        if (targetMethod == null) {
+            targetMethod = findTargetInterfaceMethod(target, methodName, parameterTypes);
+            if (targetMethod == null) {
+                return;
+            }
+            methodCache.put(method, targetMethod);
+        }
+
+        if (!hasConstraintParameter(targetMethod)) {
             return;
         }
 

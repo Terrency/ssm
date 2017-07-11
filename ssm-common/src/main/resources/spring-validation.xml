@@ -17,6 +17,7 @@
     -->
     <context:component-scan base-package="com.ssm.common"/>
 
+
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
         <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
         <!-- 指定校验使用的资源文件(如果不指定则默认使用classpath下的ValidationMessage.properties文件) -->
@@ -32,6 +33,10 @@
                 <property name="cacheSeconds" value="120"/>
             </bean>
         </property>
+    </bean>
+
+    <bean class="com.ssm.common.validation.ValidationAspect">
+        <constructor-arg ref="validator"/>
     </bean>
 
     <!-- Enables the use of the @AspectJ style of Spring AOP. -->

@@ -1,5 +1,7 @@
 package com.ssm.sys.core.service;
 
+import com.ssm.common.core.mapper.BaseMapper;
+import com.ssm.common.core.service.AbstractBaseService;
 import com.ssm.common.model.ModelMap;
 import com.ssm.sys.api.model.Role;
 import com.ssm.sys.api.model.RolePermission;
@@ -14,12 +16,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 @Service(RoleService.BEAN_NAME)
-public class RoleServiceImpl implements RoleService {
+public class RoleServiceImpl extends AbstractBaseService<Role> implements RoleService {
 
     @Autowired
     private RoleMapper roleMapper;
@@ -34,44 +35,21 @@ public class RoleServiceImpl implements RoleService {
     private RolePermissionExtMapper rolePermissionExtMapper;
 
     @Override
-    public int add(Role role) {
-        role.setStatus(RoleStatus.AVAILABLE.getValue());
-        return roleMapper.insertSelective(role);
+    protected BaseMapper<Role> getBaseMapper() {
+        return roleMapper;
     }
 
     @Override
-    public int add(Collection<Role> roles) {
-        int count = 0;
-        for (Role role : roles) {
-            count += add(role);
-        }
-        return count;
+    public int add(Role role) {
+        role.setStatus(RoleStatus.AVAILABLE.getValue());
+        return super.add(role);
     }
 
     @Override
     public int delete(Long id) {
         userRoleExtMapper.deleteByRoleId(id);
         rolePermissionExtMapper.deleteByRoleId(id);
-        return roleMapper.deleteByPrimaryKey(id);
-    }
-
-    @Override
-    public int delete(Long[] ids) {
-        int count = 0;
-        for (Long id : ids) {
-            count += delete(id);
-        }
-        return count;
-    }
-
-    @Override
-    public int update(Role role) {
-        return roleMapper.updateByPrimaryKeySelective(role);
-    }
-
-    @Override
-    public Role getById(Long id) {
-        return roleMapper.selectByPrimaryKey(id);
+        return super.delete(id);
     }
 
     @Override
