@@ -116,6 +116,7 @@
         <property name="basePackage" value="com.ssm.*.core.mapper"/>
     </bean>
 
-    <aop:aspectj-autoproxy/>
+    <!-- @AspectJ Support -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
 
 </beans>
