@@ -9,7 +9,7 @@ public abstract class AbstractBaseController<T extends Model> extends BaseContro
     protected abstract BaseService<T> getBaseService();
 
     @RequestMapping(value = "/{root}/{page}", method = {RequestMethod.GET})
-    protected String toPage(@PathVariable String root, @PathVariable String page) throws Exception {
+    public String toPage(@PathVariable String root, @PathVariable String page) throws Exception {
         return root + "/" + page;
     }
 

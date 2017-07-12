@@ -12,15 +12,15 @@ public class BaseController {
     //     binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat(Constant.DATETIME_FORMAT), Boolean.TRUE));
     // }
 
-    protected ResponseData setData(Object data) {
+    public ResponseData setData(Object data) {
         return setData(true, Integer.toString(StatusCode.SUCCESS.getCode()), StatusCode.SUCCESS.getReasonPhrase(), data);
     }
 
-    protected ResponseData setData(boolean success, String code, String message) {
+    public ResponseData setData(boolean success, String code, String message) {
         return setData(success, code, message, null);
     }
 
-    protected ResponseData setData(boolean success, String code, String message, Object data) {
+    public ResponseData setData(boolean success, String code, String message, Object data) {
         return ResponseData.newInstance()
                 .setSuccess(success)
                 .setCode(code)
@@ -28,11 +28,11 @@ public class BaseController {
                 .setData(data);
     }
 
-    protected String forward(String view) {
+    public String forward(String view) {
         return FORWARD_PREFIX + view;
     }
 
-    protected String redirect(String view) {
+    public String redirect(String view) {
         return REDIRECT_PREFIX + view;
     }
 
