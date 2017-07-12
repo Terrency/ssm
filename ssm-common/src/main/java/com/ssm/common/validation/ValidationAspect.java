@@ -2,18 +2,16 @@ package com.ssm.common.validation;
 
 import com.ssm.common.exception.ValidationException;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.core.ParameterNameDiscoverer;
 
 import javax.validation.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 项目中, 常使用较多的是前端的JS校验, 前端校验的目的是为了提高合法用户的体验, 减轻服务器的压力;
@@ -32,14 +30,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see org.springframework.validation.beanvalidation.BeanValidationPostProcessor
  * @see org.springframework.validation.beanvalidation.MethodValidationInterceptor
  * @see org.springframework.validation.beanvalidation.MethodValidationPostProcessor
+ * @see org.springframework.core.LocalVariableTableParameterNameDiscoverer
  */
-@Aspect
 public class ValidationAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidationAspect.class);
 
-    private static Map<Method, Method> methodCache = new ConcurrentHashMap<>();
-
+    private final ParameterNameDiscoverer parameterNameDiscoverer;
     private final ValidationProcessor validationProcessor;
 
     public ValidationAspect() {
@@ -52,34 +49,24 @@ public class ValidationAspect {
 
     public ValidationAspect(Validator validator) {
         this.validationProcessor = new ValidationProcessor(validator);
+        this.parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
     }
 
-    @Pointcut("execution(* com.ssm.*.*.service.*Service.*(..))")
-    private void validatePointcut() {
-    }
-
-    @Before("validatePointcut()")
     public void validate(JoinPoint joinPoint) throws Throwable {
 
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Object target = joinPoint.getTarget();
         Method method = methodSignature.getMethod();
         String methodName = method.getName();
+
         Class<?>[] parameterTypes = method.getParameterTypes();
+        String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
         Object[] parameterValues = joinPoint.getArgs();
 
-        LOGGER.debug("method " + method + " is called on " + target + " with args " + Arrays.toString(parameterValues));
+        LOGGER.info("invoke method [{}] with args {}", method, Arrays.toString(parameterValues));
 
-        Method targetMethod = methodCache.get(method);
-        if (targetMethod == null) {
-            targetMethod = findTargetInterfaceMethod(target, methodName, parameterTypes);
-            if (targetMethod == null) {
-                return;
-            }
-            methodCache.put(method, targetMethod);
-        }
-
-        if (!hasConstraintParameter(targetMethod)) {
+        Method targetMethod = findTargetInterfaceMethod(target, methodName, parameterTypes);
+        if (targetMethod == null || !hasConstraintParameter(targetMethod)) {
             return;
         }
 
