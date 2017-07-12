@@ -2,7 +2,7 @@ package com.ssm.sys.web.controller;
 
 import com.ssm.common.model.ModelMap;
 import com.ssm.common.web.base.ResponseData;
-import com.ssm.common.web.base.AbstractController;
+import com.ssm.common.web.base.BaseController;
 import com.ssm.sys.api.model.Permission;
 import com.ssm.sys.api.service.PermissionService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/permission")
-public class PermissionController extends AbstractController {
+public class PermissionController extends BaseController {
 
     @Autowired
     private PermissionService permissionService;

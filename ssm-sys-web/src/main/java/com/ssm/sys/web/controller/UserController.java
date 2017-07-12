@@ -4,7 +4,7 @@ import com.ssm.common.model.ModelMap;
 import com.ssm.common.page.Page;
 import com.ssm.common.util.Constant;
 import com.ssm.common.web.base.ResponseData;
-import com.ssm.common.web.base.AbstractController;
+import com.ssm.common.web.base.BaseController;
 import com.ssm.common.web.datatable.DataTableRequest;
 import com.ssm.common.web.datatable.DataTableResponse;
 import com.ssm.common.web.datatable.DataTableUtility;
@@ -21,7 +21,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
-public class UserController extends AbstractController {
+public class UserController extends BaseController {
 
     @Autowired
     private UserService userService;

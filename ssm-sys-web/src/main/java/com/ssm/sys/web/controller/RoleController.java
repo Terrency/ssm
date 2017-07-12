@@ -2,7 +2,7 @@ package com.ssm.sys.web.controller;
 
 import com.ssm.common.model.ModelMap;
 import com.ssm.common.web.base.ResponseData;
-import com.ssm.common.web.base.AbstractController;
+import com.ssm.common.web.base.BaseController;
 import com.ssm.sys.api.model.Role;
 import com.ssm.sys.api.service.PermissionService;
 import com.ssm.sys.api.service.RoleService;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/role")
-public class RoleController extends AbstractController {
+public class RoleController extends BaseController {
 
     @Autowired
     private RoleService roleService;

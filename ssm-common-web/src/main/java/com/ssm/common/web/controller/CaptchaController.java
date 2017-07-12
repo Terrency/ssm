@@ -1,7 +1,7 @@
 package com.ssm.common.web.controller;
 
 import com.ssm.common.enums.StatusCode;
-import com.ssm.common.web.base.AbstractController;
+import com.ssm.common.web.base.BaseController;
 import com.ssm.common.web.base.ResponseData;
 import com.ssm.common.web.captcha.ImgCaptchaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import java.awt.image.BufferedImage;
 
 @Controller
 @RequestMapping("/captcha")
-public class CaptchaController extends AbstractController {
+public class CaptchaController extends BaseController {
 
     @Autowired
     private ImgCaptchaService imgCaptchaService;

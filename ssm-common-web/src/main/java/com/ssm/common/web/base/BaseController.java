@@ -2,7 +2,7 @@ package com.ssm.common.web.base;
 
 import com.ssm.common.enums.StatusCode;
 
-public abstract class AbstractController {
+public class BaseController {
 
     public static final String FORWARD_PREFIX = "forward:";
     public static final String REDIRECT_PREFIX = "redirect:";
@@ -10,11 +10,6 @@ public abstract class AbstractController {
     // @InitBinder
     // public void initBinder(WebDataBinder binder, WebRequest request) {
     //     binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat(Constant.DATETIME_FORMAT), Boolean.TRUE));
-    // }
-
-    // @RequestMapping(value = "/{root}/{page}", method = {RequestMethod.GET})
-    // protected String toPage(@PathVariable String root, @PathVariable String page) throws Exception {
-    //     return root + "/" + page;
     // }
 
     protected ResponseData setData(Object data) {
