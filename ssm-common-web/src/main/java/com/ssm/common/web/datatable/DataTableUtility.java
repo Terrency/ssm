@@ -1,6 +1,6 @@
 package com.ssm.common.web.datatable;
 
-import com.ssm.common.page.Page;
+import com.ssm.common.base.page.Page;
 
 public class DataTableUtility {
 

@@ -1,6 +1,6 @@
 package com.ssm.common.web.captcha;
 
-import com.ssm.common.cache.CacheService;
+import com.ssm.common.base.cache.CacheService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 

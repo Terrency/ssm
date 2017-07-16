@@ -1,14 +1,15 @@
 package com.ssm.sys.web.controller;
 
-import com.ssm.common.model.ModelMap;
-import com.ssm.common.page.Page;
-import com.ssm.common.util.Constant;
-import com.ssm.common.web.base.ResponseData;
+import com.ssm.common.base.model.ModelMap;
+import com.ssm.common.base.page.Page;
+import com.ssm.common.base.util.Constant;
 import com.ssm.common.web.base.BaseController;
+import com.ssm.common.web.base.BaseWrapper;
+import com.ssm.common.web.base.ResponseData;
 import com.ssm.common.web.datatable.DataTableRequest;
 import com.ssm.common.web.datatable.DataTableResponse;
 import com.ssm.common.web.datatable.DataTableUtility;
-import com.ssm.common.web.base.BaseWrapper;
+import com.ssm.common.web.util.SecurityHelper;
 import com.ssm.sys.api.model.User;
 import com.ssm.sys.api.service.UserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -84,13 +85,13 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping("/checkPass")
     public ModelMap checkPass(@RequestParam String oldPass) {
-        return new ModelMap(Constant.REMOTE_VALIDATION_KEY, userService.checkPass(oldPass));
+        return new ModelMap(Constant.REMOTE_VALIDATION_KEY, userService.checkPass(SecurityHelper.getActiveUser().getId(), oldPass));
     }
 
     @ResponseBody
     @RequestMapping("/changePass")
     public ResponseData changePass(@RequestParam String oldPass, @RequestParam String newPass) {
-        return setData(userService.changePass(oldPass, newPass));
+        return setData(userService.changePass(SecurityHelper.getActiveUser().getId(), oldPass, newPass));
     }
 
     @ResponseBody

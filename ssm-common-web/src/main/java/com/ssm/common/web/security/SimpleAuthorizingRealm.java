@@ -1,8 +1,8 @@
 package com.ssm.common.web.security;
 
-import com.ssm.common.subject.ActiveUser;
-import com.ssm.common.subject.Permission;
-import com.ssm.common.subject.SecurityService;
+import com.ssm.common.base.subject.ActiveUser;
+import com.ssm.common.base.subject.Permission;
+import com.ssm.common.base.subject.SecurityService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -13,14 +13,13 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleAuthorizingRealm extends AuthorizingRealm {
 
-    @Autowired
     private SecurityService securityService;
 
     /**
@@ -64,6 +63,17 @@ public class SimpleAuthorizingRealm extends AuthorizingRealm {
     public void clearCache() {
         PrincipalCollection principals = SecurityUtils.getSubject().getPrincipals();
         super.clearCache(principals);
+    }
+
+    public void setSecurityService(SecurityService securityService) {
+        this.securityService = securityService;
+    }
+
+    @PostConstruct
+    public void afterPropertiesSet() throws Exception {
+        if (securityService == null) {
+            throw new IllegalArgumentException("Property 'securityService' is required.");
+        }
     }
 
 }

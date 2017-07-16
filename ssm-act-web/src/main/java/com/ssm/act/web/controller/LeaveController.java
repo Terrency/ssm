@@ -3,10 +3,11 @@ package com.ssm.act.web.controller;
 import com.ssm.act.api.model.Leave;
 import com.ssm.act.api.service.LeaveService;
 import com.ssm.act.api.service.ProcessService;
-import com.ssm.common.util.ActivitiHelper;
-import com.ssm.common.util.SecurityHelper;
+import com.ssm.common.base.util.ActivitiHelper;
+import com.ssm.common.base.util.SecurityUtils;
 import com.ssm.common.web.base.ResponseData;
 import com.ssm.common.web.base.BaseController;
+import com.ssm.common.web.util.SecurityHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,7 @@ public class LeaveController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/addSubmit", method = RequestMethod.POST)
     public ResponseData addSubmit(Leave leave) {
+        leave.setApplicant(SecurityHelper.getActiveUser().getCode());
         return setData(leaveService.add(leave));
     }
 
@@ -84,7 +86,7 @@ public class LeaveController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/taskSubmit", method = {RequestMethod.POST})
     public ResponseData taskSubmit(@RequestParam String taskId, @RequestParam String comment) {
-        leaveService.completeTask(taskId, comment);
+        leaveService.completeTask(SecurityHelper.getActiveUser().getCode(), taskId, comment);
         return ResponseData.newInstance();
     }
 

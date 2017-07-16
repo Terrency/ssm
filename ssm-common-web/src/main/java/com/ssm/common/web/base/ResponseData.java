@@ -1,6 +1,6 @@
 package com.ssm.common.web.base;
 
-import com.ssm.common.enums.StatusCode;
+import com.ssm.common.base.enums.StatusCode;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

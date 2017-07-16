@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!-- 自动扫描与装配Bean -->
-    <context:component-scan base-package="com.ssm.act.core"/>
+    <import resource="classpath:spring-core-context.xml"/>
 
     <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
         <property name="dataSource" ref="dataSource"/>
@@ -26,5 +22,16 @@
     <bean id="taskService" factory-bean="processEngine" factory-method="getTaskService"/>
     <bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService"/>
     <bean id="managementService" factory-bean="processEngine" factory-method="getManagementService"/>
+
+    <!-- Hessian RPC -->
+    <bean id="processHessianService" parent="hessianServiceExporter">
+        <property name="serviceInterface" value="com.ssm.act.api.service.ProcessService"/>
+        <property name="service" ref="processService"/>
+    </bean>
+
+    <bean id="leaveHessianService" parent="hessianServiceExporter">
+        <property name="serviceInterface" value="com.ssm.act.api.service.LeaveService"/>
+        <property name="service" ref="leaveService"/>
+    </bean>
 
 </beans>

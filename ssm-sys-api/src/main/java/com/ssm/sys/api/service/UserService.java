@@ -1,11 +1,12 @@
 package com.ssm.sys.api.service;
 
-import com.ssm.common.model.ModelMap;
-import com.ssm.common.page.Page;
-import com.ssm.common.service.BaseService;
+import com.ssm.common.base.model.ModelMap;
+import com.ssm.common.base.page.Page;
+import com.ssm.common.base.service.BaseService;
 import com.ssm.sys.api.model.User;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +17,9 @@ public interface UserService extends BaseService<User> {
 
     User getByCode(@NotEmpty String code);
 
-    boolean checkPass(@NotEmpty String pass);
+    boolean checkPass(@NotNull Long id, @NotEmpty String pass);
 
-    int changePass(@NotEmpty String oldPass, @NotEmpty String newPass);
+    int changePass(@NotNull Long id, @NotEmpty String oldPass, @NotEmpty String newPass);
 
     int resetPass(@Size(min = 1) Long[] ids);
 

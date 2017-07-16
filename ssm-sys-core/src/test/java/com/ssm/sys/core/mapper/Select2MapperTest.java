@@ -1,9 +1,9 @@
 package com.ssm.sys.core.mapper;
 
-import com.ssm.common.model.ModelMap;
-import com.ssm.common.page.Page;
-import com.ssm.common.page.PageRequest;
-import com.ssm.common.util.Constant;
+import com.ssm.common.base.model.ModelMap;
+import com.ssm.common.base.page.Page;
+import com.ssm.common.base.page.PageRequest;
+import com.ssm.common.base.util.Constant;
 import com.ssm.sys.core.mapper.extension.Select2Mapper;
 import org.junit.Before;
 import org.junit.FixMethodOrder;

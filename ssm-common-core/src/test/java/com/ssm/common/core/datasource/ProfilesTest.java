@@ -1,6 +1,6 @@
 package com.ssm.common.core.datasource;
 
-import com.ssm.common.util.Constant;
+import com.ssm.common.base.util.Constant;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;

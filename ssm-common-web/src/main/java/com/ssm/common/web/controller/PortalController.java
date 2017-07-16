@@ -1,7 +1,9 @@
 package com.ssm.common.web.controller;
 
-import com.ssm.common.subject.Permission;
-import com.ssm.common.util.SecurityHelper;
+import com.ssm.common.base.subject.ActiveUser;
+import com.ssm.common.base.subject.Permission;
+import com.ssm.common.web.util.SecurityHelper;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

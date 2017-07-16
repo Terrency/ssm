@@ -1,8 +1,8 @@
 package com.ssm.common.core.service;
 
+import com.ssm.common.base.model.Model;
+import com.ssm.common.base.service.BaseService;
 import com.ssm.common.core.mapper.BaseMapper;
-import com.ssm.common.model.Model;
-import com.ssm.common.service.BaseService;
 
 import java.util.Collection;
 

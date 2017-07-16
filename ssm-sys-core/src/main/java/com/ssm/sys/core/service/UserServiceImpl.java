@@ -1,13 +1,12 @@
 package com.ssm.sys.core.service;
 
+import com.ssm.common.base.exception.BusinessException;
+import com.ssm.common.base.model.ModelMap;
+import com.ssm.common.base.page.Page;
+import com.ssm.common.base.page.PageRequest;
+import com.ssm.common.base.util.SecurityUtils;
 import com.ssm.common.core.mapper.BaseMapper;
 import com.ssm.common.core.service.AbstractBaseService;
-import com.ssm.common.exception.BusinessException;
-import com.ssm.common.model.ModelMap;
-import com.ssm.common.page.Page;
-import com.ssm.common.page.PageRequest;
-import com.ssm.common.subject.ActiveUser;
-import com.ssm.common.util.SecurityHelper;
 import com.ssm.sys.api.model.User;
 import com.ssm.sys.api.model.UserRole;
 import com.ssm.sys.api.service.UserService;
@@ -44,10 +43,10 @@ public class UserServiceImpl extends AbstractBaseService<User> implements UserSe
 
     @Override
     public int add(User user) {
-        String salt = SecurityHelper.generateRandomNumber();
+        String salt = SecurityUtils.generateRandomNumber();
         user.setStatus(UserStatus.UNLOCKED.getValue());
         user.setSalt(salt);
-        user.setPass(SecurityHelper.generateMd5Hash(DEFAULT_PASS, salt));
+        user.setPass(SecurityUtils.generateMd5Hash(DEFAULT_PASS, salt));
         return super.add(user);
     }
 
@@ -70,21 +69,24 @@ public class UserServiceImpl extends AbstractBaseService<User> implements UserSe
     }
 
     @Override
-    public boolean checkPass(String pass) {
-        ActiveUser activeUser = SecurityHelper.getActiveUser();
-        return activeUser.getPass().equals(SecurityHelper.generateMd5Hash(pass, activeUser.getSalt()));
+    public boolean checkPass(Long id, String pass) {
+        User user = userMapper.selectByPrimaryKey(id);
+        if (user == null) {
+            throw new BusinessException(String.format("The user which id = %d does not exist！", id));
+        }
+        return user.getPass().equals(SecurityUtils.generateMd5Hash(pass, user.getSalt()));
     }
 
     @Override
-    public int changePass(String oldPass, String newPass) {
-        if (!checkPass(oldPass)) {
+    public int changePass(Long id, String oldPass, String newPass) {
+        if (!checkPass(id, oldPass)) {
             throw new BusinessException("The password is incorrect！");
         }
         User user = new User();
-        user.setId(SecurityHelper.getActiveUser().getId());
-        String salt = SecurityHelper.generateRandomNumber();
+        user.setId(id);
+        String salt = SecurityUtils.generateRandomNumber();
         user.setSalt(salt);
-        user.setPass(SecurityHelper.generateMd5Hash(newPass, salt));
+        user.setPass(SecurityUtils.generateMd5Hash(newPass, salt));
         return userMapper.updateByPrimaryKeySelective(user);
     }
 
@@ -92,11 +94,11 @@ public class UserServiceImpl extends AbstractBaseService<User> implements UserSe
     public int resetPass(Long[] ids) {
         int count = 0;
         for (Long id : ids) {
-            String salt = SecurityHelper.generateRandomNumber();
+            String salt = SecurityUtils.generateRandomNumber();
             User user = new User();
             user.setId(id);
             user.setSalt(salt);
-            user.setPass(SecurityHelper.generateMd5Hash(DEFAULT_PASS, salt));
+            user.setPass(SecurityUtils.generateMd5Hash(DEFAULT_PASS, salt));
             count += userMapper.updateByPrimaryKeySelective(user);
         }
         return count;

@@ -1,6 +1,6 @@
 package com.ssm.common.web.base;
 
-import com.ssm.common.exception.AbstractException;
+import com.ssm.common.base.exception.AbstractException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;

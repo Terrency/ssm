@@ -1,6 +1,6 @@
 package com.ssm.common.core.datasource;
 
-import com.ssm.common.util.Constant;
+import com.ssm.common.base.util.Constant;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

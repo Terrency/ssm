@@ -1,8 +1,8 @@
 package com.ssm.sys.core.service;
 
-import com.ssm.common.subject.ActiveUser;
-import com.ssm.common.subject.Permission;
-import com.ssm.common.subject.SecurityService;
+import com.ssm.common.base.subject.ActiveUser;
+import com.ssm.common.base.subject.Permission;
+import com.ssm.common.base.subject.SecurityService;
 import com.ssm.sys.api.model.extension.UserExt;
 import com.ssm.sys.core.mapper.extension.PermissionExtMapper;
 import com.ssm.sys.core.mapper.extension.UserExtMapper;

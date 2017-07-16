@@ -2,9 +2,9 @@ package com.ssm.sys.core.service;
 
 import com.ssm.common.core.mapper.BaseMapper;
 import com.ssm.common.core.service.AbstractBaseService;
-import com.ssm.common.exception.BusinessException;
-import com.ssm.common.model.ModelMap;
-import com.ssm.common.util.Constant;
+import com.ssm.common.base.exception.BusinessException;
+import com.ssm.common.base.model.ModelMap;
+import com.ssm.common.base.util.Constant;
 import com.ssm.sys.api.model.Permission;
 import com.ssm.sys.api.model.extension.PermissionExt;
 import com.ssm.sys.api.service.PermissionService;

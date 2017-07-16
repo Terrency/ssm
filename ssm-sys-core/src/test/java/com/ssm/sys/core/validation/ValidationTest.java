@@ -1,6 +1,6 @@
 package com.ssm.sys.core.validation;
 
-import com.ssm.common.util.Constant;
+import com.ssm.common.base.util.Constant;
 import com.ssm.sys.api.model.User;
 import com.ssm.sys.api.service.UserService;
 import org.junit.Assert;
@@ -20,8 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:spring-validation.xml",
-        "classpath:spring-core-context.xml",
-        "classpath:sys-core-context.xml"
+        "classpath:spring-core-context.xml"
 })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ValidationTest {
@@ -38,7 +37,7 @@ public class ValidationTest {
 
     @Test
     public void test1GetUser() throws Exception {
-        User user = userService.getByCode("admin");
+        User user = userService.getByCode("");
         LOGGER.info("{}", user);
     }
 

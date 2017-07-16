@@ -57,7 +57,7 @@
 
     <!--
     <plugins>
-        <plugin interceptor="com.ssm.common.core.page.PageInterceptor"/>
+        <plugin interceptor="PageInterceptor"/>
     </plugins>
     -->
 

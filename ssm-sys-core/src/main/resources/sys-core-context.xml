@@ -1,13 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!-- 自动扫描与装配Bean -->
-    <context:component-scan base-package="com.ssm.sys.core"/>
+    <import resource="classpath:spring-core-context.xml"/>
+
+    <!-- Hessian RPC -->
+    <bean id="securityHessianService" parent="hessianServiceExporter">
+        <property name="serviceInterface" value="com.ssm.common.base.subject.SecurityService"/>
+        <property name="service" ref="securityService"/>
+    </bean>
+
+    <bean id="userHessianService" parent="hessianServiceExporter">
+        <property name="serviceInterface" value="com.ssm.sys.api.service.UserService"/>
+        <property name="service" ref="userService"/>
+    </bean>
+
+    <bean id="roleHessianService" parent="hessianServiceExporter">
+        <property name="serviceInterface" value="com.ssm.sys.api.service.RoleService"/>
+        <property name="service" ref="roleService"/>
+    </bean>
+
+    <bean id="permissionHessianService" parent="hessianServiceExporter">
+        <property name="serviceInterface" value="com.ssm.sys.api.service.PermissionService"/>
+        <property name="service" ref="permissionService"/>
+    </bean>
+
+    <bean id="select2HessianService" parent="hessianServiceExporter">
+        <property name="serviceInterface" value="com.ssm.sys.api.service.Select2Service"/>
+        <property name="service" ref="select2Service"/>
+    </bean>
 
 </beans>

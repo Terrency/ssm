@@ -14,12 +14,11 @@
        http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!--
-    <context:annotation-config />用于激活在Spring容器中注册过的Bean上面的注解
-    (激活注解但不能注册Bean{@Autowired|@Required|@PersistenceContext})
-    <context:component-scan />除了具有<context:annotation-config />的功能以外还可以在指定package下注册JavaBean
-    (激活注解同时还能注册Bean{@Controller|@Service|@Repository|@Component})
+        Scans the classpath for annotated components that will be auto-registered as Spring beans.
+        By default, the Spring-provided @Component, @Repository, @Service, @Controller,
+        @RestController, @ControllerAdvice, and @Configuration stereotypes will be detected.
     -->
-    <context:component-scan base-package="com.ssm.common.core"/>
+    <context:component-scan base-package="com.ssm.*.core"/>
 
     <import resource="classpath:spring-datasource.xml"/>
 
@@ -52,7 +51,7 @@
         -->
     </aop:config>
 
-    <!--<bean id="dynamicDataSource" class="com.ssm.common.core.datasource.DynamicDataSource"/>-->
+    <!--<bean id="dynamicDataSource" class="DynamicDataSource"/>-->
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
@@ -114,6 +113,12 @@
         <!--<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>-->
         <!-- You can set more than one package by using a semicolon or comma as a separator. -->
         <property name="basePackage" value="com.ssm.*.core.mapper"/>
+    </bean>
+
+    <!-- Hessian RPC -->
+    <bean id="hessianServiceExporter" class="org.springframework.remoting.caucho.HessianServiceExporter" abstract="true">
+        <property name="allowNonSerializable" value="true"/>
+        <property name="debug" value="true"/>
     </bean>
 
 </beans>

@@ -7,7 +7,33 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <!-- 自动扫描带注解的Bean -->
-    <context:component-scan base-package="com.ssm.sys.web"/>
+    <import resource="classpath:spring-web-context.xml"/>
+
+    <context:property-placeholder location="classpath:sys_hessian_client.properties" ignore-unresolvable="true"/>
+
+    <bean id="userService" parent="hessianProxyFactoryBean">
+        <property name="serviceInterface" value="com.ssm.sys.api.service.UserService"/>
+        <property name="serviceUrl" value="${sys.userHessianService}"/>
+    </bean>
+
+    <bean id="roleService" parent="hessianProxyFactoryBean">
+        <property name="serviceInterface" value="com.ssm.sys.api.service.RoleService"/>
+        <property name="serviceUrl" value="${sys.roleHessianService}"/>
+    </bean>
+
+    <bean id="permissionService" parent="hessianProxyFactoryBean">
+        <property name="serviceInterface" value="com.ssm.sys.api.service.PermissionService"/>
+        <property name="serviceUrl" value="${sys.permissionHessianService}"/>
+    </bean>
+
+    <bean id="select2Service" parent="hessianProxyFactoryBean">
+        <property name="serviceInterface" value="com.ssm.sys.api.service.Select2Service"/>
+        <property name="serviceUrl" value="${sys.select2HessianService}"/>
+    </bean>
+
+    <bean id="securityService" parent="hessianProxyFactoryBean">
+        <property name="serviceInterface" value="com.ssm.common.base.subject.SecurityService"/>
+        <property name="serviceUrl" value="${sys.securityHessianService}"/>
+    </bean>
 
 </beans>

@@ -31,7 +31,6 @@
         <!-- Velocity应用: 代码生成器 -->
         <velocity.version>1.7</velocity.version>
         <ognl.version>2.6.7</ognl.version>
-        <hessian.version>4.0.7</hessian.version>
         <junit.version>4.12</junit.version>
     </properties>
 
@@ -172,13 +171,6 @@
             <groupId>ognl</groupId>
             <artifactId>ognl</artifactId>
             <version>${ognl.version}</version>
-        </dependency>
-
-        <!-- RPC(Remote Procedure Call) -->
-        <dependency>
-            <groupId>com.caucho</groupId>
-            <artifactId>hessian</artifactId>
-            <version>${hessian.version}</version>
         </dependency>
 
         <!-- Junit Test -->

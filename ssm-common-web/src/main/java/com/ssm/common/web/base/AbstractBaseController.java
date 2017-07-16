@@ -1,7 +1,7 @@
 package com.ssm.common.web.base;
 
-import com.ssm.common.model.Model;
-import com.ssm.common.service.BaseService;
+import com.ssm.common.base.model.Model;
+import com.ssm.common.base.service.BaseService;
 import org.springframework.web.bind.annotation.*;
 
 public abstract class AbstractBaseController<T extends Model> extends BaseController {

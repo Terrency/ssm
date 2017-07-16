@@ -1,6 +1,6 @@
 package com.ssm.common.core.datasource;
 
-import com.ssm.common.util.EncryptUtils;
+import com.ssm.common.base.util.EncryptUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 public class ReadDataSource extends BasicDataSource {

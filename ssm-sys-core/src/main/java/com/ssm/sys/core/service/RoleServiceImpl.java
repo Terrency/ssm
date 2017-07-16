@@ -2,7 +2,7 @@ package com.ssm.sys.core.service;
 
 import com.ssm.common.core.mapper.BaseMapper;
 import com.ssm.common.core.service.AbstractBaseService;
-import com.ssm.common.model.ModelMap;
+import com.ssm.common.base.model.ModelMap;
 import com.ssm.sys.api.model.Role;
 import com.ssm.sys.api.model.RolePermission;
 import com.ssm.sys.api.service.RoleService;

@@ -36,7 +36,7 @@
         </where>
     </select>
 
-    <select id="selectPage" parameterType="com.ssm.common.page.Pageable" resultType="hashMap">
+    <select id="selectPage" parameterType="com.ssm.common.base.page.Pageable" resultType="hashMap">
         SELECT id AS id,
                days AS days,
                content AS content,

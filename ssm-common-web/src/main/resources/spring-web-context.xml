@@ -8,9 +8,10 @@
         http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!--
-        Scans the classpath for annotated components that will be auto-registered as Spring beans.
-        By default, the Spring-provided @Component, @Repository, @Service, @Controller,
-        @RestController, @ControllerAdvice, and @Configuration stereotypes will be detected.
+    <context:annotation-config />用于激活在Spring容器中注册过的Bean上面的注解
+    (激活注解但不能注册Bean{@Autowired|@Required|@PersistenceContext})
+    <context:component-scan />除了具有<context:annotation-config />的功能以外还可以在指定package下注册JavaBean
+    (激活注解同时还能注册Bean{@Controller|@Service|@Repository|@Component})
     -->
     <context:component-scan base-package="com.ssm.*.web"/>
 
@@ -40,6 +41,13 @@
                 </constructor-arg>
             </bean>
         </property>
+    </bean>
+
+    <!-- Hessian RPC -->
+    <bean id="hessianProxyFactoryBean" class="org.springframework.remoting.caucho.HessianProxyFactoryBean" abstract="true">
+        <property name="overloadEnabled" value="true"/>
+        <property name="allowNonSerializable" value="true"/>
+        <property name="debug" value="true"/>
     </bean>
 
 </beans>

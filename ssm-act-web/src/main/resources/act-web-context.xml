@@ -7,7 +7,18 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <!-- 自动扫描带注解的Bean -->
-    <context:component-scan base-package="com.ssm.act.web"/>
+    <import resource="classpath:spring-web-context.xml"/>
+
+    <context:property-placeholder location="classpath:act_hessian_client.properties" ignore-unresolvable="true"/>
+
+    <bean id="processService" parent="hessianProxyFactoryBean">
+        <property name="serviceInterface" value="com.ssm.act.api.service.ProcessService"/>
+        <property name="serviceUrl" value="${act.processHessianService}"/>
+    </bean>
+
+    <bean id="leaveService" parent="hessianProxyFactoryBean">
+        <property name="serviceInterface" value="com.ssm.act.api.service.LeaveService"/>
+        <property name="serviceUrl" value="${act.leaveHessianService}"/>
+    </bean>
 
 </beans>

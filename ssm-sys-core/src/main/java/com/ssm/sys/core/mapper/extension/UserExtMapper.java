@@ -1,7 +1,7 @@
 package com.ssm.sys.core.mapper.extension;
 
-import com.ssm.common.page.Page;
-import com.ssm.common.page.Pageable;
+import com.ssm.common.base.page.Page;
+import com.ssm.common.base.page.Pageable;
 import com.ssm.sys.api.model.User;
 import com.ssm.sys.api.model.extension.UserExt;
 

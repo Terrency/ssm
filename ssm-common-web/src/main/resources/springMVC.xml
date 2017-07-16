@@ -13,11 +13,15 @@
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <!--
+        Scans the classpath for annotated components that will be auto-registered as Spring beans.
+        By default, the Spring-provided @Component, @Repository, @Service, @Controller,
+        @RestController, @ControllerAdvice, and @Configuration stereotypes will be detected.
+    -->
+    <context:component-scan base-package="com.ssm.common.web"/>
+
     <import resource="classpath:spring-validation.xml"/>
     <import resource="classpath:spring-i18n.xml"/>
-
-    <!-- 自动扫描带@Controller注解的Bean -->
-    <context:component-scan base-package="com.ssm.common.web"/>
 
     <!-- Enabling Shiro Annotations -->
     <aop:config proxy-target-class="true"/>
@@ -59,6 +63,7 @@
     </bean>
     -->
 
+    <!--DispatcherServlet默认加载的映射器、适配器、视图解析器等组件参考org/springframework/web/servlet/DispatcherServlet.properties-->
     <!-- 自动注入RequestMappingHandlerMapping和RequestMappingHandlerAdapter -->
     <mvc:annotation-driven conversion-service="conversionService" validator="validator">
         <mvc:message-converters>

@@ -1,6 +1,6 @@
 package com.ssm.common.core.datasource;
 
-import com.ssm.common.enums.Action;
+import com.ssm.common.base.enums.Action;
 import org.aspectj.lang.JoinPoint;
 
 public class DynamicDataSource {

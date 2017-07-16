@@ -5,13 +5,12 @@ import com.ssm.act.api.service.LeaveService;
 import com.ssm.act.api.service.ProcessService;
 import com.ssm.act.core.mapper.LeaveMapper;
 import com.ssm.act.core.mapper.extension.LeaveExtMapper;
-import com.ssm.common.exception.BusinessException;
-import com.ssm.common.model.ModelMap;
-import com.ssm.common.page.Page;
-import com.ssm.common.page.PageRequest;
-import com.ssm.common.util.ActivitiHelper;
-import com.ssm.common.util.Constant;
-import com.ssm.common.util.SecurityHelper;
+import com.ssm.common.base.exception.BusinessException;
+import com.ssm.common.base.model.ModelMap;
+import com.ssm.common.base.page.Page;
+import com.ssm.common.base.page.PageRequest;
+import com.ssm.common.base.util.ActivitiHelper;
+import com.ssm.common.base.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +41,6 @@ public class LeaveServiceImpl implements LeaveService {
     @Override
     public int add(Leave leave) {
         leave.setStatus(0);
-        leave.setApplicant(SecurityHelper.getActiveUser().getCode());
         return leaveMapper.insertSelective(leave);
     }
 
@@ -103,13 +101,13 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     @Override
-    public void completeTask(String taskId, String comment) {
+    public void completeTask(String userId, String taskId, String comment) {
         String businessKey = processService.getBusinessKey(taskId);
         Leave leave = getById(Long.parseLong(businessKey));
         if (leave.getStatus() == 1) {
             leave.setStatus(2);
         }
-        if (processService.completeTask(taskId, comment) == null) {
+        if (processService.completeTask(userId, taskId, comment) == null) {
             leave.setStatus(3);
         }
         // 更新请假状态标志

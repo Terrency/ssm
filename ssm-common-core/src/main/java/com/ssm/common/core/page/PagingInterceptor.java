@@ -1,6 +1,6 @@
 package com.ssm.common.core.page;
 
-import com.ssm.common.page.Pageable;
+import com.ssm.common.base.page.Pageable;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;

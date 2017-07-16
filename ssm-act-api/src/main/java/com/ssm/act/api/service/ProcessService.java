@@ -39,13 +39,13 @@ public interface ProcessService {
 
     ProcessInstance startProcessInstanceByKey(@NotEmpty String processDefinitionKey, @NotEmpty String businessKey, @NotNull Map<String, Object> variables);
 
-    ProcessInstance completeTask(@NotEmpty String taskId);
+    ProcessInstance completeTask(@NotEmpty String userId, @NotEmpty String taskId);
 
-    ProcessInstance completeTask(@NotEmpty String taskId, @NotEmpty String comment);
+    ProcessInstance completeTask(@NotEmpty String userId, @NotEmpty String taskId, @NotEmpty String comment);
 
-    ProcessInstance completeTask(@NotEmpty String taskId, @NotNull Map<String, Object> variables);
+    ProcessInstance completeTask(@NotEmpty String userId, @NotEmpty String taskId, @NotNull Map<String, Object> variables);
 
-    ProcessInstance completeTask(@NotEmpty String taskId, @NotEmpty String comment, @NotNull Map<String, Object> variables);
+    ProcessInstance completeTask(@NotEmpty String userId, @NotEmpty String taskId, @NotEmpty String comment, @NotNull Map<String, Object> variables);
 
     List<Task> getTaskList(@NotEmpty String assignee);
 
@@ -62,5 +62,9 @@ public interface ProcessService {
     List<Comment> getHistoryCommentList(@NotEmpty String processInstanceId);
 
     List<Comment> getHistoryCommentList(@NotEmpty String variableName, @NotNull Object variableValue);
+
+    ProcessInstance getProcessInstance(String processInstanceId);
+
+    ProcessInstance getProcessInstance(String processDefinitionKey, String businessKey);
 
 }

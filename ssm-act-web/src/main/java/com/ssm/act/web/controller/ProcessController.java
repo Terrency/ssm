@@ -1,10 +1,10 @@
 package com.ssm.act.web.controller;
 
 import com.ssm.act.api.service.ProcessService;
-import com.ssm.common.util.ActivitiHelper;
-import com.ssm.common.util.Constant;
-import com.ssm.common.util.SecurityHelper;
+import com.ssm.common.base.util.ActivitiHelper;
+import com.ssm.common.base.util.Constant;
 import com.ssm.common.web.base.ResponseData;
+import com.ssm.common.web.util.SecurityHelper;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.repository.Deployment;

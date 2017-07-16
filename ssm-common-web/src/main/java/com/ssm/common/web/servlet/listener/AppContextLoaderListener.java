@@ -1,7 +1,7 @@
 package com.ssm.common.web.servlet.listener;
 
-import com.ssm.common.util.SpringHolder;
-import com.ssm.common.util.PropertiesLoader;
+import com.ssm.common.base.util.PropertiesLoader;
+import com.ssm.common.base.util.SpringHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.AbstractEnvironment;

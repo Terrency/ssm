@@ -1,11 +1,9 @@
 package com.ssm.common.web.captcha;
 
-import com.ssm.common.exception.BusinessException;
+import com.ssm.common.base.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
-
-import java.util.Calendar;
 
 public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements SmsCaptchaService {
 

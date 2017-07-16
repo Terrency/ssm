@@ -1,8 +1,8 @@
 package com.ssm.common.web.security;
 
-import com.ssm.common.subject.ActiveUser;
-import com.ssm.common.subject.Permission;
-import com.ssm.common.subject.SecurityService;
+import com.ssm.common.base.subject.ActiveUser;
+import com.ssm.common.base.subject.Permission;
+import com.ssm.common.base.subject.SecurityService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -21,8 +21,8 @@ import org.jasig.cas.client.validation.TicketValidationException;
 import org.jasig.cas.client.validation.TicketValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +31,6 @@ public class SimpleCasRealm extends CasRealm {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleCasRealm.class);
 
-    @Autowired
     private SecurityService securityService;
 
     /**
@@ -107,6 +106,17 @@ public class SimpleCasRealm extends CasRealm {
      */
     public void clearCache() {
         super.clearCache(SecurityUtils.getSubject().getPrincipals());
+    }
+
+    public void setSecurityService(SecurityService securityService) {
+        this.securityService = securityService;
+    }
+
+    @PostConstruct
+    public void afterPropertiesSet() throws Exception {
+        if (securityService == null) {
+            throw new IllegalArgumentException("Property 'securityService' is required.");
+        }
     }
 
 }

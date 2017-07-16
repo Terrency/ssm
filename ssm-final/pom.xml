@@ -18,19 +18,18 @@
     <name>${project.artifactId}</name>
     <url>http://maven.apache.org</url>
 
+    <properties>
+        <server.address>127.0.0.1</server.address>
+        <server.port>8080</server.port>
+        <server.context-path>/</server.context-path>
+    </properties>
+
     <dependencies>
 
         <!-- Common Module -->
-
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>ssm-common</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>ssm-common-core</artifactId>
+            <artifactId>ssm-common-base</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
@@ -40,17 +39,10 @@
             <version>${project.parent.version}</version>
         </dependency>
 
-        <!-- Sys Module -->
-
+        <!-- SYS Module -->
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>ssm-sys-api</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>ssm-sys-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
@@ -62,27 +54,10 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Act Module -->
-
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-engine</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-spring</artifactId>
-        </dependency>
-
+        <!-- ACT Module -->
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>ssm-act-api</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>ssm-act-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

@@ -1,6 +1,6 @@
 package com.ssm.common.core.mapper;
 
-import com.ssm.common.model.Model;
+import com.ssm.common.base.model.Model;
 
 /**
  * @author Gavin

@@ -1,7 +1,7 @@
 package com.ssm.common.web.controller;
 
-import com.ssm.common.exception.IncorrectCaptchaException;
-import com.ssm.common.util.Constant;
+import com.ssm.common.base.exception.IncorrectCaptchaException;
+import com.ssm.common.base.util.Constant;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

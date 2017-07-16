@@ -1,8 +1,8 @@
 package com.ssm.common.core.page;
 
-import com.ssm.common.page.Page;
-import com.ssm.common.page.PageImpl;
-import com.ssm.common.page.Pageable;
+import com.ssm.common.base.page.Page;
+import com.ssm.common.base.page.PageImpl;
+import com.ssm.common.base.page.Pageable;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;

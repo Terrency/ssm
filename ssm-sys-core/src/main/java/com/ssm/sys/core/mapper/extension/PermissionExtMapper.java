@@ -1,6 +1,6 @@
 package com.ssm.sys.core.mapper.extension;
 
-import com.ssm.common.subject.Permission;
+import com.ssm.common.base.subject.Permission;
 import com.ssm.sys.api.model.extension.PermissionExt;
 
 import java.util.List;

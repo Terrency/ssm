@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+    <appender name="consoleAppender" class="org.apache.log4j.ConsoleAppender">
+        <param name="Threshold" value="DEBUG"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <!--
+                (1)%p : 输出日志级别名称(%-5p:则表示左对齐且最小宽度为5);
+                (2)%d : 输出日期和时间;
+                (3)%c : 输出日志所属类的全名;
+                (4)%L : 输出代码中的行号;
+                (5)%m : 输出代码中指定的消息;
+                (6)%n : 输出回车换行符;
+            -->
+            <param name="ConversionPattern" value="[%-5p][%d{yyyyMMdd HH:mm:ss:sss}][%c:%L] %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="everythingDailyAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="Threshold" value="DEBUG"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="File" value="/logs/ssm/everything.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%-5p][%d{yyyyMMdd HH:mm:ss:sss}][%c:%L] %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="warningsDailyAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="Threshold" value="WARN"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="File" value="/logs/ssm/warnings.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%-5p][%d{yyyyMMdd HH:mm:ss:sss}][%c:%L] %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="errorsDailyAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="Threshold" value="ERROR"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="File" value="/logs/ssm/errors.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%-5p][%d{yyyyMMdd HH:mm:ss:sss}][%c:%L] %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="ASYNC" class="org.apache.log4j.AsyncAppender">
+        <param name="BufferSize" value="150"/>
+        <appender-ref ref="everythingDailyAppender"/>
+        <appender-ref ref="warningsDailyAppender"/>
+        <appender-ref ref="errorsDailyAppender"/>
+    </appender>
+
+    <logger name="com.ssm">
+        <level value="DEBUG"/>
+        <appender-ref ref="ASYNC"/>
+    </logger>
+
+    <logger name="com.caucho">
+        <level value="DEBUG"/>
+    </logger>
+
+    <logger name="org.springframework.jdbc">
+        <level value="DEBUG"/>
+    </logger>
+
+    <root>
+        <priority value="INFO"/>
+        <appender-ref ref="consoleAppender"/>
+    </root>
+
+</log4j:configuration>

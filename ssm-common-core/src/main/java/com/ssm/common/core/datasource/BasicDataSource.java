@@ -1,6 +1,6 @@
 package com.ssm.common.core.datasource;
 
-import com.ssm.common.util.EncryptUtils;
+import com.ssm.common.base.util.EncryptUtils;
 
 public class BasicDataSource extends org.apache.commons.dbcp2.BasicDataSource {
 

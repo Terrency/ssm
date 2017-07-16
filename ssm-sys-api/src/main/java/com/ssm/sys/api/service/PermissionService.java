@@ -1,7 +1,7 @@
 package com.ssm.sys.api.service;
 
-import com.ssm.common.model.ModelMap;
-import com.ssm.common.service.BaseService;
+import com.ssm.common.base.model.ModelMap;
+import com.ssm.common.base.service.BaseService;
 import com.ssm.sys.api.model.Permission;
 import com.ssm.sys.api.model.extension.PermissionExt;
 

@@ -1,6 +1,6 @@
 package com.ssm.act.core;
 
-import com.ssm.common.util.Constant;
+import com.ssm.common.base.util.Constant;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.junit.Before;

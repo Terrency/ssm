@@ -1,9 +1,9 @@
 package com.ssm.act.api.service;
 
 import com.ssm.act.api.model.Leave;
-import com.ssm.common.model.ModelMap;
-import com.ssm.common.page.Page;
-import com.ssm.common.service.BaseService;
+import com.ssm.common.base.model.ModelMap;
+import com.ssm.common.base.page.Page;
+import com.ssm.common.base.service.BaseService;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
@@ -16,7 +16,7 @@ public interface LeaveService extends BaseService<Leave> {
 
     String startProcess(@NotNull Long id);
 
-    void completeTask(@NotEmpty String taskId, @NotEmpty String comment);
+    void completeTask(@NotEmpty String userId, @NotEmpty String taskId, @NotEmpty String comment);
 
     List<Map> getList(@NotEmpty String applicant);
 

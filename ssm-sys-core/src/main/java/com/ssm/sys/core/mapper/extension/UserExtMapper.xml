@@ -76,7 +76,7 @@
         </where>
     </select>
 
-    <select id="selectPage" parameterType="com.ssm.common.page.Pageable" resultType="hashMap" databaseId="mysql">
+    <select id="selectPage" parameterType="com.ssm.common.base.page.Pageable" resultType="hashMap" databaseId="mysql">
         SELECT id AS id,
                code AS code,
                name AS name,

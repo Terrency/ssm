@@ -6,9 +6,9 @@
 
     <parent>
         <groupId>com.ssm</groupId>
-        <artifactId>ssm-act-parent</artifactId>
+        <artifactId>ssm-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../ssm-act-parent</relativePath>
+        <relativePath>../ssm-parent</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -18,30 +18,32 @@
     <name>${project.artifactId}</name>
     <url>http://maven.apache.org</url>
 
+    <properties>
+        <server.address>127.0.0.1</server.address>
+        <server.port>8080</server.port>
+        <server.context-path>/</server.context-path>
+    </properties>
+
     <dependencies>
 
+        <!-- Common Base Module -->
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>ssm-common</artifactId>
+            <artifactId>ssm-common-base</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
+        <!-- Common Web Module -->
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>ssm-common-web</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
+        <!-- ACT API Module -->
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>ssm-act-api</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <!-- Just For Dev Env -->
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>ssm-act-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

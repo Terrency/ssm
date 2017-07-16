@@ -1,6 +1,6 @@
 package com.ssm.act.api.model;
 
-import com.ssm.common.model.AbstractModel;
+import com.ssm.common.base.model.AbstractModel;
 
 import java.io.Serializable;
 import java.util.Date;

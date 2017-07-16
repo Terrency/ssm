@@ -1,6 +1,6 @@
 package com.ssm.common.web.servlet.converter;
 
-import com.ssm.common.util.Constant;
+import com.ssm.common.base.util.Constant;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.core.convert.converter.Converter;

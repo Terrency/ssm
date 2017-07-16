@@ -1,7 +1,6 @@
 package com.ssm.act.core.service;
 
 import com.ssm.act.api.service.ProcessService;
-import com.ssm.common.util.SecurityHelper;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricActivityInstance;
@@ -35,13 +34,13 @@ public class ProcessServiceImpl implements ProcessService {
      * 流程部署
      *
      * @param zipInputStream zip文件输入流
-     * @param name           流程名称
+     * @param deployName     流程部署名称
      */
     @Override
-    public Deployment deploy(ZipInputStream zipInputStream, String name) {
+    public Deployment deploy(ZipInputStream zipInputStream, String deployName) {
         return processEngine.getRepositoryService()
                 .createDeployment()
-                .name(name)
+                .name(deployName)
                 .addZipInputStream(zipInputStream)
                 .deploy();
     }
@@ -147,49 +146,53 @@ public class ProcessServiceImpl implements ProcessService {
     /**
      * 完成任务
      *
+     * @param userId 用户ID
      * @param taskId 任务ID
      */
     @Override
-    public ProcessInstance completeTask(String taskId) {
-        return completeTask(taskId, null, null);
+    public ProcessInstance completeTask(String userId, String taskId) {
+        return completeTask(userId, taskId, null, null);
     }
 
     /**
      * 完成任务
      *
+     * @param userId  用户ID
      * @param taskId  任务ID
      * @param comment 批注信息
      */
     @Override
-    public ProcessInstance completeTask(String taskId, String comment) {
-        return completeTask(taskId, comment, null);
+    public ProcessInstance completeTask(String userId, String taskId, String comment) {
+        return completeTask(userId, taskId, comment, null);
     }
 
     /**
      * 完成任务
      *
+     * @param userId    用户ID
      * @param taskId    任务ID
      * @param variables 流程变量
      */
     @Override
-    public ProcessInstance completeTask(String taskId, Map<String, Object> variables) {
-        return completeTask(taskId, null, variables);
+    public ProcessInstance completeTask(String userId, String taskId, Map<String, Object> variables) {
+        return completeTask(userId, taskId, null, variables);
     }
 
     /**
      * 完成任务
      *
+     * @param userId    用户ID
      * @param taskId    任务ID
      * @param comment   批注信息
      * @param variables 流程变量
      * @return ProcessInstance(若返回值为空则流程已结束)
      */
     @Override
-    public ProcessInstance completeTask(String taskId, String comment, Map<String, Object> variables) {
+    public ProcessInstance completeTask(String userId, String taskId, String comment, Map<String, Object> variables) {
         Task task = getTask(taskId);
         TaskService taskService = processEngine.getTaskService();
         if (comment != null) {
-            Authentication.setAuthenticatedUserId(SecurityHelper.getActiveUser().getCode());
+            Authentication.setAuthenticatedUserId(userId);
             taskService.addComment(taskId, task.getProcessInstanceId(), comment);
         }
         if (variables == null || variables.isEmpty()) {
@@ -294,6 +297,7 @@ public class ProcessServiceImpl implements ProcessService {
      *
      * @param processInstanceId 流程实例ID
      */
+    @Override
     public List<Comment> getHistoryCommentList(String processInstanceId) {
         List<Comment> list = new ArrayList<>();
         List<HistoricActivityInstance> haiList = processEngine.getHistoryService()
@@ -319,8 +323,34 @@ public class ProcessServiceImpl implements ProcessService {
      * @param variableName  流程实例变量的key
      * @param variableValue 流程实例变量的value
      */
+    @Override
     public List<Comment> getHistoryCommentList(String variableName, Object variableValue) {
         return getHistoryCommentList(getHistoricVariableInstance(variableName, variableValue).getProcessInstanceId());
+    }
+
+    /**
+     * @param processInstanceId 流程实例ID
+     * @return 返回null时代表流程实例已结束
+     */
+    @Override
+    public ProcessInstance getProcessInstance(String processInstanceId) {
+        return processEngine.getRuntimeService()
+                .createProcessInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .singleResult();
+    }
+
+    /**
+     * @param processDefinitionKey 流程定义KEY
+     * @param businessKey          业务表主键
+     * @return 返回null时代表流程实例已结束
+     */
+    @Override
+    public ProcessInstance getProcessInstance(String processDefinitionKey, String businessKey) {
+        return processEngine.getRuntimeService()
+                .createProcessInstanceQuery()
+                .processInstanceBusinessKey(businessKey, processDefinitionKey)
+                .singleResult();
     }
 
     private ProcessDefinition getProcessDefinition(String processDefinitionId) {
@@ -329,26 +359,6 @@ public class ProcessServiceImpl implements ProcessService {
 
     private ProcessDefinitionEntity getProcessDefinitionEntity(String processDefinitionId) {
         return (ProcessDefinitionEntity) getProcessDefinition(processDefinitionId);
-    }
-
-    /**
-     * 返回null时代表流程实例已结束
-     */
-    private ProcessInstance getProcessInstance(String processInstanceId) {
-        return processEngine.getRuntimeService()
-                .createProcessInstanceQuery()
-                .processInstanceId(processInstanceId)
-                .singleResult();
-    }
-
-    /**
-     * 返回null时代表流程实例已结束
-     */
-    private ProcessInstance getProcessInstance(String processDefinitionKey, String businessKey) {
-        return processEngine.getRuntimeService()
-                .createProcessInstanceQuery()
-                .processInstanceBusinessKey(businessKey, processDefinitionKey)
-                .singleResult();
     }
 
     private Task getTask(String taskId) {

@@ -1,7 +1,7 @@
 package com.ssm.common.core.datasource;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
-import com.ssm.common.util.Constant;
+import com.ssm.common.base.util.Constant;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;

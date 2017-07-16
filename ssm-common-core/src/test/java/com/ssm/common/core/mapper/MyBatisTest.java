@@ -1,6 +1,6 @@
 package com.ssm.common.core.mapper;
 
-import com.ssm.common.util.Constant;
+import com.ssm.common.base.util.Constant;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Assert;

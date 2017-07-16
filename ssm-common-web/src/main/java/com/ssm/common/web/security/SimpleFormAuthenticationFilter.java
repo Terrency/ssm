@@ -1,8 +1,8 @@
 package com.ssm.common.web.security;
 
-import com.ssm.common.exception.IncorrectCaptchaException;
-import com.ssm.common.util.Constant;
-import com.ssm.common.util.PropertiesLoader;
+import com.ssm.common.base.exception.IncorrectCaptchaException;
+import com.ssm.common.base.util.Constant;
+import com.ssm.common.base.util.PropertiesLoader;
 import com.ssm.common.web.captcha.ImgCaptchaService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
@@ -10,8 +10,8 @@ import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
@@ -28,7 +28,6 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
     private String captchaParam = DEFAULT_CAPTCHA_PARAM;
     private String tokenParam = DEFAULT_TOKEN_PARAM;
 
-    @Autowired
     private ImgCaptchaService imgCaptchaService;
 
     @Override
@@ -93,6 +92,17 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
 
     public void setTokenParam(String tokenParam) {
         this.tokenParam = tokenParam;
+    }
+
+    public void setImgCaptchaService(ImgCaptchaService imgCaptchaService) {
+        this.imgCaptchaService = imgCaptchaService;
+    }
+
+    @PostConstruct
+    public void afterPropertiesSet() throws Exception {
+        if (imgCaptchaService == null) {
+            throw new IllegalArgumentException("Property 'imgCaptchaService' is required.");
+        }
     }
 
 }

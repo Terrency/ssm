@@ -1,8 +1,8 @@
 package com.ssm.common.web.servlet.interceptor;
 
-import com.ssm.common.audit.AuditContext;
-import com.ssm.common.subject.ActiveUser;
-import com.ssm.common.util.SecurityHelper;
+import com.ssm.common.base.audit.AuditContext;
+import com.ssm.common.base.subject.ActiveUser;
+import com.ssm.common.base.util.Constant;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class AuditInterceptor implements HandlerInterceptor {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             RequiresPermissions annotation = handlerMethod.getMethodAnnotation(RequiresPermissions.class);
             if (annotation != null) {
-                ActiveUser activeUser = SecurityHelper.getActiveUser();
+                ActiveUser activeUser = (ActiveUser) request.getSession().getAttribute(Constant.USER_SESSION_KEY);
                 AuditContext auditContext = AuditContext.getThreadInstance();
                 auditContext.setUserId(activeUser.getId());
                 auditContext.setHostIP(request.getRemoteAddr());

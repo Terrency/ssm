@@ -5,26 +5,41 @@
 
     <parent>
         <groupId>com.ssm</groupId>
-        <artifactId>ssm-sys-parent</artifactId>
+        <artifactId>ssm-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../ssm-sys-parent</relativePath>
+        <relativePath>../ssm-parent</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ssm-sys-core</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <name>${project.artifactId}</name>
     <url>http://maven.apache.org</url>
 
+    <properties>
+        <server.address>127.0.0.1</server.address>
+        <server.port>8081</server.port>
+        <server.context-path>/</server.context-path>
+    </properties>
+
     <dependencies>
 
+        <!-- Common Base Module -->
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>ssm-common-base</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- Common Core Module -->
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>ssm-common-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
+        <!-- SYS API Module -->
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>ssm-sys-api</artifactId>
@@ -34,33 +49,7 @@
     </dependencies>
 
     <build>
-        <finalName>sys-service-provider</finalName>
+        <finalName>${project.name}</finalName>
     </build>
-
-    <profiles>
-        <profile>
-            <id>package-archive</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <configuration>
-                            <descriptor>${basedir}/src/main/assembly/assembly.xml</descriptor>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>make-assembly</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>

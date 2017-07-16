@@ -53,6 +53,7 @@
     <!-- Define the realm you want to use to connect to your back-end security datasource. -->
     <bean id="simpleAuthorizingRealm" class="com.ssm.common.web.security.SimpleAuthorizingRealm">
         <property name="credentialsMatcher" ref="credentialsMatcher"/>
+        <property name="securityService" ref="securityService"/>
     </bean>
 
     <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
@@ -86,6 +87,7 @@
         <property name="captchaParam" value="captcha"/>
         <property name="tokenParam" value="token"/>
         <property name="rememberMeParam" value="rememberMe"/>
+        <property name="imgCaptchaService" ref="imgCaptchaService"/>
     </bean>
 
     <!-- ============================== Enabling Shiro Annotations ============================== -->

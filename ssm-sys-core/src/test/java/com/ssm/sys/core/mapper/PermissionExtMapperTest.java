@@ -1,7 +1,7 @@
 package com.ssm.sys.core.mapper;
 
-import com.ssm.common.model.ModelMap;
-import com.ssm.common.util.Constant;
+import com.ssm.common.base.model.ModelMap;
+import com.ssm.common.base.util.Constant;
 import com.ssm.sys.core.mapper.extension.PermissionExtMapper;
 import org.junit.Before;
 import org.junit.FixMethodOrder;

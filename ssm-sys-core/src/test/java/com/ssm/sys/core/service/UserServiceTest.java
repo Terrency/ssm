@@ -1,7 +1,7 @@
 package com.ssm.sys.core.service;
 
-import com.ssm.common.model.ModelMap;
-import com.ssm.common.util.Constant;
+import com.ssm.common.base.model.ModelMap;
+import com.ssm.common.base.util.Constant;
 import com.ssm.sys.api.model.User;
 import com.ssm.sys.api.service.UserService;
 import org.junit.Before;

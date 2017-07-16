@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+        RPC(不同进程之间方法调用)
+        Hessian(Hessian可通过Servlet提供远程服务来解决多个Web项目之间方法的相互调用)
+        <a>http://docs.spring.io/autorepo/docs/spring/4.1.x/spring-framework-reference/html/remoting.html</a>
+    -->
+    <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings" ref="urlMappings"/>
+        <property name="order" value="100"/>
+    </bean>
+
+    <bean id="urlMappings" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="classpath:hessian.properties"/>
+    </bean>
+
+</beans>
