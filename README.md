@@ -1,5 +1,5 @@
 # ssm
-- 项目基于 [Dubbo](http://dubbo.io/) 框架来构建分布式服务，前端基于 [Thymeleaf](http://www.thymeleaf.org/) 模板技术以取代JSP，并采用了 [Bootstrap](http://getbootstrap.com/) 框架，后端采用了 [SpringMVC](https://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html)、[Spring](https://spring.io/)、[MyBatis](http://www.mybatis.org/mybatis-3/zh/)、[Shiro](https://shiro.apache.org/)、[Dubbo](http://dubbo.io/) 、[Activiti](https://www.activiti.org/) 等技术；  
+- 项目基于 [Hessian](http://hessian.caucho.com/) 框架来构建分布式服务，前端基于 [Thymeleaf](http://www.thymeleaf.org/) 模板技术以取代JSP，并采用了 [Bootstrap](http://getbootstrap.com/) 框架，后端采用了 [SpringMVC](https://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html)、[Spring](https://spring.io/)、[MyBatis](http://www.mybatis.org/mybatis-3/zh/)、[Shiro](https://shiro.apache.org/)、[Hessian](http://hessian.caucho.com/) 、[Activiti](https://www.activiti.org/) 等技术；  
 - 项目已实现了权限管理、工作流管理等部分功能；
 - 项目实现了通用的服务端参数合法性校验功能。  
 
