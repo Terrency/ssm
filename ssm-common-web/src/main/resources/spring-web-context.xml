@@ -47,7 +47,6 @@
     <bean id="hessianProxyFactoryBean" class="org.springframework.remoting.caucho.HessianProxyFactoryBean" abstract="true">
         <property name="overloadEnabled" value="true"/>
         <property name="allowNonSerializable" value="true"/>
-        <property name="debug" value="true"/>
     </bean>
 
 </beans>

@@ -37,8 +37,10 @@ public class ValidationTest {
 
     @Test
     public void test1GetUser() throws Exception {
-        User user = userService.getByCode("");
-        LOGGER.info("{}", user);
+        for (int i = 0; i < 2; i++) {
+            User user = userService.getByCode("admin");
+            LOGGER.info("{}", user);
+        }
     }
 
 }

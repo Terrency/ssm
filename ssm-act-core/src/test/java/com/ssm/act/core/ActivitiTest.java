@@ -43,6 +43,7 @@ public class ActivitiTest {
         ProcessEngines.getDefaultProcessEngine()
                 .getRepositoryService()
                 .createDeployment()
+                .name("请假流程")
                 .addZipInputStream(new ZipInputStream(inputStream))
                 .deploy();
     }

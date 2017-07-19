@@ -13,13 +13,15 @@ import javax.validation.constraints.NotNull;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipInputStream;
 
 public interface ProcessService {
 
     String BEAN_NAME = "processService";
 
-    Deployment deploy(@NotNull ZipInputStream zipInputStream, @NotEmpty String name);
+    /**
+     * @see <a href="http://hessian.caucho.com/doc/hessian-overview.xtp#Hessian">Hessian with large binary data</a>
+     */
+    Deployment deploy(@NotEmpty String deployName, @NotNull InputStream inputStream);
 
     void deleteDeployment(@NotEmpty String deploymentId);
 

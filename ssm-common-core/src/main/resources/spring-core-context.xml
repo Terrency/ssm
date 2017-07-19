@@ -118,7 +118,6 @@
     <!-- Hessian RPC -->
     <bean id="hessianServiceExporter" class="org.springframework.remoting.caucho.HessianServiceExporter" abstract="true">
         <property name="allowNonSerializable" value="true"/>
-        <property name="debug" value="true"/>
     </bean>
 
 </beans>

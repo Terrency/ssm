@@ -15,6 +15,7 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,15 +34,15 @@ public class ProcessServiceImpl implements ProcessService {
     /**
      * 流程部署
      *
-     * @param zipInputStream zip文件输入流
-     * @param deployName     流程部署名称
+     * @param deployName  流程部署名称
+     * @param inputStream 部署文件输入流
      */
     @Override
-    public Deployment deploy(ZipInputStream zipInputStream, String deployName) {
+    public Deployment deploy(String deployName, InputStream inputStream) {
         return processEngine.getRepositoryService()
                 .createDeployment()
                 .name(deployName)
-                .addZipInputStream(zipInputStream)
+                .addZipInputStream(new ZipInputStream(inputStream))
                 .deploy();
     }
 
