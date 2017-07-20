@@ -18,6 +18,8 @@ public interface LeaveService extends BaseService<Leave> {
 
     void completeTask(@NotEmpty String userId, @NotEmpty String taskId, @NotEmpty String comment);
 
+    void completeTask(@NotEmpty String userId, @NotEmpty String taskId, @NotEmpty String comment, @NotNull Map<String, Object> variables);
+
     List<Map> getList(@NotEmpty String applicant);
 
     List<Map> getList(ModelMap modelMap);

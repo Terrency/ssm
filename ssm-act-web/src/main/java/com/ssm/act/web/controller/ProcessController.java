@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipInputStream;
 
 @Controller
 @RequestMapping("/process")
@@ -55,7 +56,7 @@ public class ProcessController {
         InputStream inputStream = null;
         try {
             inputStream = file.getInputStream();
-            processService.deploy(name, inputStream);
+            processService.deploy(name, new ZipInputStream(inputStream));
             return ResponseData.newInstance();
         } finally {
             IOUtils.closeQuietly(inputStream);
@@ -119,6 +120,7 @@ public class ProcessController {
         // 业务关联流程
         Map<String, Object> variables = new HashMap<>();
         variables.put(ActivitiHelper.PROCESS_VARIABLE_NAME, pdKey + Constant.PERIOD_SEPARATOR + bizKey);
+        variables.put(ActivitiHelper.APPLICANT_PLACEHOLDER_KEY, SecurityHelper.getActiveUser().getCode());
         // 启动流程实例
         processService.startProcessInstanceByKey(pdKey, bizKey, variables);
         return ResponseData.newInstance();

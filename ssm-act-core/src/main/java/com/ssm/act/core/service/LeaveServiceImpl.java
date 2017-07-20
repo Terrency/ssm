@@ -102,12 +102,17 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Override
     public void completeTask(String userId, String taskId, String comment) {
+        completeTask(userId, taskId, comment, null);
+    }
+
+    @Override
+    public void completeTask(String userId, String taskId, String comment, Map<String, Object> variables) {
         String businessKey = processService.getBusinessKey(taskId);
         Leave leave = getById(Long.parseLong(businessKey));
         if (leave.getStatus() == 1) {
             leave.setStatus(2);
         }
-        if (processService.completeTask(userId, taskId, comment) == null) {
+        if (processService.completeTask(userId, taskId, comment, variables) == null) {
             leave.setStatus(3);
         }
         // 更新请假状态标志

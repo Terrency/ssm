@@ -34,15 +34,15 @@ public class ProcessServiceImpl implements ProcessService {
     /**
      * 流程部署
      *
-     * @param deployName  流程部署名称
-     * @param inputStream 部署文件输入流
+     * @param deployName     流程部署名称
+     * @param zipInputStream 部署文件输入流
      */
     @Override
-    public Deployment deploy(String deployName, InputStream inputStream) {
+    public Deployment deploy(String deployName, ZipInputStream zipInputStream) {
         return processEngine.getRepositoryService()
                 .createDeployment()
                 .name(deployName)
-                .addZipInputStream(new ZipInputStream(inputStream))
+                .addZipInputStream(zipInputStream)
                 .deploy();
     }
 

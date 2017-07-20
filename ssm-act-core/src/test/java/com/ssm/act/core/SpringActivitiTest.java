@@ -37,7 +37,7 @@ public class SpringActivitiTest {
     }
 
     @Test
-    public void testSpringActiviti() throws Exception {
+    public void test1Query() throws Exception {
         ProcessInstance processInstance = processEngine.getRuntimeService()
                 .createProcessInstanceQuery()
                 .processInstanceBusinessKey("34", "LeaveProcess")

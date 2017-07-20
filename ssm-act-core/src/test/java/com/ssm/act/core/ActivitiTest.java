@@ -10,6 +10,8 @@ import org.junit.runners.MethodSorters;
 import org.springframework.util.Assert;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -59,9 +61,11 @@ public class ActivitiTest {
      */
     @Test
     public void test2StartProcessInstance() throws Exception {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("applicant", "Alan");
         ProcessEngines.getDefaultProcessEngine()
                 .getRuntimeService()
-                .startProcessInstanceById("LeaveProcess:1:4", "_businessKey");
+                .startProcessInstanceById("LeaveProcess:1:4", "_businessKey", variables);
     }
 
     /**
@@ -69,9 +73,11 @@ public class ActivitiTest {
      */
     @Test
     public void test3CompleteTask() throws Exception {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("approver", "Ann");
         ProcessEngines.getDefaultProcessEngine()
                 .getTaskService()
-                .complete("107");
+                .complete("107", variables);
     }
 
     /**
@@ -79,9 +85,11 @@ public class ActivitiTest {
      */
     @Test
     public void test4CompleteTask() throws Exception {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("approver", "Gavin");
         ProcessEngines.getDefaultProcessEngine()
                 .getTaskService()
-                .complete("202");
+                .complete("202", variables);
     }
 
     /**

@@ -4,9 +4,8 @@ import com.ssm.act.api.model.Leave;
 import com.ssm.act.api.service.LeaveService;
 import com.ssm.act.api.service.ProcessService;
 import com.ssm.common.base.util.ActivitiHelper;
-import com.ssm.common.base.util.SecurityUtils;
-import com.ssm.common.web.base.ResponseData;
 import com.ssm.common.web.base.BaseController;
+import com.ssm.common.web.base.ResponseData;
 import com.ssm.common.web.util.SecurityHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -86,7 +85,9 @@ public class LeaveController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/taskSubmit", method = {RequestMethod.POST})
     public ResponseData taskSubmit(@RequestParam String taskId, @RequestParam String comment) {
-        leaveService.completeTask(SecurityHelper.getActiveUser().getCode(), taskId, comment);
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(ActivitiHelper.APPLICANT_PLACEHOLDER_KEY, SecurityHelper.getActiveUser().getManager());
+        leaveService.completeTask(SecurityHelper.getActiveUser().getCode(), taskId, comment, variables);
         return ResponseData.newInstance();
     }
 
