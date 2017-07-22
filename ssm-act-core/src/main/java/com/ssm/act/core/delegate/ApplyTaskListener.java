@@ -9,7 +9,10 @@ public class ApplyTaskListener implements TaskListener {
 
     @Override
     public void notify(DelegateTask delegateTask) {
-        delegateTask.setAssignee(delegateTask.getVariable(ACT_RU_VARIABLE_KEY).toString());
+        Object applicant = delegateTask.getVariable(ACT_RU_VARIABLE_KEY);
+        if (applicant != null) {
+            delegateTask.setAssignee(applicant.toString());
+        }
     }
 
 }

@@ -182,6 +182,12 @@
             <artifactId>commons-io</artifactId>
         </dependency>
 
+        <!-- JavaEE Specification API -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+        </dependency>
+
         <!-- =============== RPC =============== -->
 
         <dependency>

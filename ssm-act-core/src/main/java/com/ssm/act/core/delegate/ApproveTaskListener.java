@@ -9,7 +9,10 @@ public class ApproveTaskListener implements TaskListener {
 
     @Override
     public void notify(DelegateTask delegateTask) {
-        delegateTask.setAssignee(delegateTask.getVariable(ACT_RU_VARIABLE_KEY).toString());
+        Object variable = delegateTask.getVariable(ACT_RU_VARIABLE_KEY);
+        if (variable != null) {
+            delegateTask.setAssignee(variable.toString());
+        }
     }
 
 }

@@ -107,7 +107,7 @@ public class ActivitiTest {
      */
     @Test
     public void test6DeleteDeployment() {
-        ProcessEngines.getDefaultProcessEngine().getRepositoryService().deleteDeployment("101", Boolean.TRUE);
+        ProcessEngines.getDefaultProcessEngine().getRepositoryService().deleteDeployment("1801", Boolean.TRUE);
     }
 
 }

@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipInputStream;
 
 @Controller
 @RequestMapping("/process")
@@ -52,11 +51,11 @@ public class ProcessController {
 
     @ResponseBody
     @RequestMapping("/deploySubmit")
-    public ResponseData deploySubmit(@RequestParam Part file, @RequestParam String name) throws Exception {
+    public ResponseData deploySubmit(@RequestParam String name, @RequestParam Part file) throws Exception {
         InputStream inputStream = null;
         try {
             inputStream = file.getInputStream();
-            processService.deploy(name, new ZipInputStream(inputStream));
+            processService.deploy(name, inputStream);
             return ResponseData.newInstance();
         } finally {
             IOUtils.closeQuietly(inputStream);
@@ -194,10 +193,12 @@ public class ProcessController {
             OutputStream out = null;
             try {
                 out = response.getOutputStream();
-                int b = 0;
-                while ((b = in.read()) != -1) {
-                    out.write(b);
+                int len;
+                byte[] buf = new byte[1024 * 4];
+                while ((len = in.read(buf)) != -1) {
+                    out.write(buf, 0, len);
                 }
+                // IOUtils.copy(in, out);
             } finally {
                 IOUtils.closeQuietly(in);
                 IOUtils.closeQuietly(out);

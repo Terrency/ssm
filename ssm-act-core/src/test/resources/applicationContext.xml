@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="hessianProxyFactoryBean" class="org.springframework.remoting.caucho.HessianProxyFactoryBean" abstract="true">
+        <property name="overloadEnabled" value="true"/>
+    </bean>
+
+    <bean id="processService" parent="hessianProxyFactoryBean">
+        <property name="serviceInterface" value="com.ssm.act.api.service.ProcessService"/>
+        <property name="serviceUrl" value="http://127.0.0.1:8082/rpc/processHessianService"/>
+    </bean>
+
+    <bean id="leaveService" parent="hessianProxyFactoryBean">
+        <property name="serviceInterface" value="com.ssm.act.api.service.LeaveService"/>
+        <property name="serviceUrl" value="http://127.0.0.1:8082/rpc/leaveHessianService"/>
+    </bean>
+
+</beans>

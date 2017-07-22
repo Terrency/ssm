@@ -13,8 +13,12 @@ import javax.validation.constraints.NotNull;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipInputStream;
 
+/**
+ * 警告: Hessian/Burlap: 'java.lang.Enum' is an unknown class...
+ * java.lang.RuntimeException: Class java.lang.Enum is not an enum.
+ * 解决办法: 把两个项目与Hessian相关类的包名保持一致.
+ */
 public interface ProcessService {
 
     String BEAN_NAME = "processService";
@@ -22,12 +26,12 @@ public interface ProcessService {
     /**
      * 流程部署
      *
-     * @param deployName     部署名称
-     * @param zipInputStream Zip文件输入流
+     * @param deployName  部署名称
+     * @param inputStream 部署文件输入流(使用Hessian时需要把inputStream参数放在最后)
      * @return Deployment
      * @see <a href="http://hessian.caucho.com/doc/hessian-overview.xtp#Hessian">Hessian with large binary data</a>
      */
-    Deployment deploy(@NotEmpty String deployName, @NotNull ZipInputStream zipInputStream);
+    Deployment deploy(@NotEmpty String deployName, @NotNull InputStream inputStream);
 
     /**
      * 删除部署

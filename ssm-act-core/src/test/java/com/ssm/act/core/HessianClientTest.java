@@ -14,10 +14,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.ResourceUtils;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
-import java.util.zip.ZipInputStream;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext.xml")
@@ -35,16 +38,48 @@ public class HessianClientTest {
     }
 
     @Test
-    public void test1GetList() throws Exception {
+    public void test1GetDeploymentList() throws Exception {
         List<Deployment> deployList = processService.getDeploymentList();
         LOGGER.info("=== {} ===", deployList);
     }
 
     @Test
-    public void test2Deploy() throws Exception {
+    public void test2Upload() throws Exception {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("LeaveProcess.zip");
-        processService.deploy("请假流程", new ZipInputStream(inputStream));
+        processService.deploy("请假流程", inputStream);
         IOUtils.closeQuietly(inputStream);
+    }
+
+    /**
+     * Patch code:
+     * <pre>
+     *   Object value = in.readReply(method.getReturnType());
+     *   if (value instanceof InputStream) {
+     *       value = new ResultInputStream(conn, is, in, (InputStream) value);
+     *       is = null;
+     *       conn = null;
+     *   }
+     * </pre>
+     *
+     * @see com.caucho.hessian.client.HessianProxy#invoke
+     * @see <a href=http://bugs.caucho.com/view.php?id=3655">Hessian Bug</a>
+     */
+    @Test
+    public void test3Download() throws Exception {
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            in = processService.getProcessDiagram("LeaveProcess:1:1704");
+            out = new FileOutputStream("LeaveProcess.png");
+            int len;
+            byte[] buf = new byte[1024 * 4];
+            while ((len = in.read(buf)) != -1) {
+                out.write(buf, 0, len);
+            }
+        } finally {
+            IOUtils.closeQuietly(in);
+            IOUtils.closeQuietly(out);
+        }
     }
 
     @Test
