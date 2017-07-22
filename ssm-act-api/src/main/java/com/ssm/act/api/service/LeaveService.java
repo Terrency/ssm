@@ -14,16 +14,41 @@ public interface LeaveService extends BaseService<Leave> {
 
     String BEAN_NAME = "leaveService";
 
-    String startProcess(@NotNull Long id);
+    /**
+     * 请假申请
+     *
+     * @param id        请假单ID
+     * @param applicant 请假人
+     * @return 流程实例ID
+     */
+    String startProcess(@NotNull Long id, @NotEmpty String applicant);
 
-    void completeTask(@NotEmpty String userId, @NotEmpty String taskId, @NotEmpty String comment);
+    /**
+     * 完成请假申请任务
+     *
+     * @param userId   任务执行者
+     * @param taskId   任务ID
+     * @param comment  批注
+     * @param approver 任务审批人
+     */
+    void completeTask(@NotEmpty String userId, @NotEmpty String taskId, @NotEmpty String comment, @NotEmpty String approver);
 
-    void completeTask(@NotEmpty String userId, @NotEmpty String taskId, @NotEmpty String comment, @NotNull Map<String, Object> variables);
-
+    /**
+     * 获取请假单列表
+     *
+     * @param applicant 申请人
+     * @return 请假单列表
+     */
     List<Map> getList(@NotEmpty String applicant);
 
+    /**
+     * 获取请假单列表
+     */
     List<Map> getList(ModelMap modelMap);
 
+    /**
+     * 获取请假单列表
+     */
     Page<Map> getPage(ModelMap modelMap, int offset, int length);
 
 }

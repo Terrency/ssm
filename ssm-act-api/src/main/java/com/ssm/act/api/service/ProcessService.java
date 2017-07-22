@@ -88,7 +88,7 @@ public interface ProcessService {
      * 启动流程实例
      *
      * @param processDefinitionKey 流程定义KEY
-     * @param variables            流程变量(用于在运行时动态设置申请人或审批人)
+     * @param variables            流程变量
      * @return 流程实例
      */
     ProcessInstance startProcessInstanceByKey(@NotEmpty String processDefinitionKey, @NotNull Map<String, Object> variables);
@@ -98,7 +98,7 @@ public interface ProcessService {
      *
      * @param processDefinitionKey 流程定义KEY
      * @param businessKey          业务表主键值
-     * @param variables            流程变量(用于在运行时动态设置申请人或审批人)
+     * @param variables            流程变量
      * @return 流程实例
      */
     ProcessInstance startProcessInstanceByKey(@NotEmpty String processDefinitionKey, @NotEmpty String businessKey, @NotNull Map<String, Object> variables);

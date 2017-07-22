@@ -102,4 +102,12 @@ public class ActivitiTest {
                 .complete("302");
     }
 
+    /**
+     * 删除部署
+     */
+    @Test
+    public void test6DeleteDeployment() {
+        ProcessEngines.getDefaultProcessEngine().getRepositoryService().deleteDeployment("101", Boolean.TRUE);
+    }
+
 }

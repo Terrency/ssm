@@ -3,6 +3,9 @@ package com.ssm.act.core.service;
 import com.ssm.act.api.model.Leave;
 import com.ssm.act.api.service.LeaveService;
 import com.ssm.act.api.service.ProcessService;
+import com.ssm.act.core.delegate.ApplyTaskListener;
+import com.ssm.act.core.delegate.ApproveTaskListener;
+import com.ssm.act.core.enums.LeaveStatus;
 import com.ssm.act.core.mapper.LeaveMapper;
 import com.ssm.act.core.mapper.extension.LeaveExtMapper;
 import com.ssm.common.base.exception.BusinessException;
@@ -22,13 +25,6 @@ import java.util.Map;
 @Service(LeaveService.BEAN_NAME)
 public class LeaveServiceImpl implements LeaveService {
 
-    // 状态常量：审批中
-    // public static final String STATUS_RUNNING = "审批中";
-    // 状态常量：已通过
-    // public static final String STATUS_APPROVED = "已通过";
-    // 状态常量：未通过
-    // public static final String STATUS_REJECTED = "未通过";
-
     @Autowired
     private LeaveMapper leaveMapper;
 
@@ -40,7 +36,7 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Override
     public int add(Leave leave) {
-        leave.setStatus(0);
+        leave.setStatus(LeaveStatus.INITIAL.getValue());
         return leaveMapper.insertSelective(leave);
     }
 
@@ -81,12 +77,12 @@ public class LeaveServiceImpl implements LeaveService {
      * @return ProcessInstanceId
      */
     @Override
-    public String startProcess(Long id) {
+    public String startProcess(Long id, String applicant) {
         checkProcessStatus(id);
         Leave leave = new Leave();
         leave.setId(id);
-        leave.setStatus(1);
-        // 更新请假状态标志
+        leave.setStatus(LeaveStatus.APPLYING.getValue());
+        // 更新请假单状态标志
         int row = leaveMapper.updateByPrimaryKeySelective(leave);
         if (row != 1) {
             return null;
@@ -96,24 +92,22 @@ public class LeaveServiceImpl implements LeaveService {
         // 业务关联流程
         Map<String, Object> variables = new HashMap<>();
         variables.put(ActivitiHelper.PROCESS_VARIABLE_NAME, pdKey + Constant.PERIOD_SEPARATOR + bizKey);
+        variables.put(ApplyTaskListener.ACT_RU_VARIABLE_KEY, applicant);
         // 启动流程实例
         return processService.startProcessInstanceByKey(pdKey, bizKey, variables).getProcessInstanceId();
     }
 
     @Override
-    public void completeTask(String userId, String taskId, String comment) {
-        completeTask(userId, taskId, comment, null);
-    }
-
-    @Override
-    public void completeTask(String userId, String taskId, String comment, Map<String, Object> variables) {
+    public void completeTask(String userId, String taskId, String comment, String approver) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(ApproveTaskListener.ACT_RU_VARIABLE_KEY, approver);
         String businessKey = processService.getBusinessKey(taskId);
         Leave leave = getById(Long.parseLong(businessKey));
-        if (leave.getStatus() == 1) {
-            leave.setStatus(2);
+        if (leave.getStatus() == LeaveStatus.APPLYING.getValue()) {
+            leave.setStatus(LeaveStatus.PENDING.getValue());
         }
         if (processService.completeTask(userId, taskId, comment, variables) == null) {
-            leave.setStatus(3);
+            leave.setStatus(LeaveStatus.COMPLETE.getValue());
         }
         // 更新请假状态标志
         leaveMapper.updateByPrimaryKeySelective(leave);
@@ -144,7 +138,7 @@ public class LeaveServiceImpl implements LeaveService {
         if (leave == null) {
             throw new BusinessException("记录不存在！");
         }
-        if (leave.getStatus() != 0) {
+        if (leave.getStatus() != LeaveStatus.INITIAL.getValue()) {
             throw new BusinessException("只有当请假状态为【初始录入】时方可执行修改、删除和申请请假操作！");
         }
     }

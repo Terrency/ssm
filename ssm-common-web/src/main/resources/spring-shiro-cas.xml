@@ -64,7 +64,6 @@
         <property name="authorizationCacheName" value="authorizationCache"/>
         <property name="casServerUrlPrefix" value="${cas.server}"/>
         <property name="casService" value="${cas.client}/cas"/>
-        <property name="securityService" ref="securityService"/>
     </bean>
 
     <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">

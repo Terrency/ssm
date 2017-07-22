@@ -3,6 +3,7 @@ package com.ssm.act.web.controller;
 import com.ssm.act.api.model.Leave;
 import com.ssm.act.api.service.LeaveService;
 import com.ssm.act.api.service.ProcessService;
+import com.ssm.common.base.subject.ActiveUser;
 import com.ssm.common.base.util.ActivitiHelper;
 import com.ssm.common.web.base.BaseController;
 import com.ssm.common.web.base.ResponseData;
@@ -65,7 +66,7 @@ public class LeaveController extends BaseController {
     @ResponseBody
     @RequestMapping("/startProcess")
     public ResponseData startProcess(@RequestParam Long id) {
-        leaveService.startProcess(id);
+        leaveService.startProcess(id, SecurityHelper.getActiveUser().getCode());
         return ResponseData.newInstance();
     }
 
@@ -85,9 +86,8 @@ public class LeaveController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/taskSubmit", method = {RequestMethod.POST})
     public ResponseData taskSubmit(@RequestParam String taskId, @RequestParam String comment) {
-        Map<String, Object> variables = new HashMap<>();
-        variables.put(ActivitiHelper.APPLICANT_PLACEHOLDER_KEY, SecurityHelper.getActiveUser().getManager());
-        leaveService.completeTask(SecurityHelper.getActiveUser().getCode(), taskId, comment, variables);
+        ActiveUser activeUser = SecurityHelper.getActiveUser();
+        leaveService.completeTask(activeUser.getCode(), taskId, comment, activeUser.getManager());
         return ResponseData.newInstance();
     }
 

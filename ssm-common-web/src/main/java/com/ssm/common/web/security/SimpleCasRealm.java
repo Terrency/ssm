@@ -21,8 +21,8 @@ import org.jasig.cas.client.validation.TicketValidationException;
 import org.jasig.cas.client.validation.TicketValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +31,7 @@ public class SimpleCasRealm extends CasRealm {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleCasRealm.class);
 
+    @Autowired
     private SecurityService securityService;
 
     /**
@@ -106,17 +107,6 @@ public class SimpleCasRealm extends CasRealm {
      */
     public void clearCache() {
         super.clearCache(SecurityUtils.getSubject().getPrincipals());
-    }
-
-    public void setSecurityService(SecurityService securityService) {
-        this.securityService = securityService;
-    }
-
-    @PostConstruct
-    public void afterPropertiesSet() throws Exception {
-        if (securityService == null) {
-            throw new IllegalArgumentException("Property 'securityService' is required.");
-        }
     }
 
 }

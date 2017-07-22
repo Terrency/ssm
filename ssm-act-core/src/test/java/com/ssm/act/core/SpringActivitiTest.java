@@ -42,7 +42,7 @@ public class SpringActivitiTest {
                 .createProcessInstanceQuery()
                 .processInstanceBusinessKey("34", "LeaveProcess")
                 .singleResult();
-        LOGGER.info("{}", processInstance);
+        LOGGER.info("=== {} ===", processInstance);
     }
 
 }

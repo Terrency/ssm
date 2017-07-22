@@ -120,7 +120,6 @@ public class ProcessController {
         // 业务关联流程
         Map<String, Object> variables = new HashMap<>();
         variables.put(ActivitiHelper.PROCESS_VARIABLE_NAME, pdKey + Constant.PERIOD_SEPARATOR + bizKey);
-        variables.put(ActivitiHelper.APPLICANT_PLACEHOLDER_KEY, SecurityHelper.getActiveUser().getCode());
         // 启动流程实例
         processService.startProcessInstanceByKey(pdKey, bizKey, variables);
         return ResponseData.newInstance();
@@ -200,7 +199,8 @@ public class ProcessController {
                     out.write(b);
                 }
             } finally {
-                IOUtils.closeQuietly(out, in);
+                IOUtils.closeQuietly(in);
+                IOUtils.closeQuietly(out);
             }
         }
     }
