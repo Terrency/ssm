@@ -230,6 +230,7 @@
                 <groupId>com.caucho</groupId>
                 <artifactId>hessian</artifactId>
                 <version>${hessian.version}</version>
+                <scope>provided</scope>
             </dependency>
 
             <!-- Log -->
@@ -412,6 +413,14 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <!--
+                    Use the maven-dependency-plugin to overwrite individual class files from the 3rd-party jar.
+                    -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.10</version>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
                     <version>2.3</version>
@@ -472,9 +481,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.1.0</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <packagingExcludes>WEB-INF/lib/hessian-${hessian.version}.jar</packagingExcludes>
                 </configuration>
             </plugin>
             <plugin>
