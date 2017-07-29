@@ -1,11 +1,11 @@
 package com.ssm.common.web.captcha;
 
 import com.ssm.common.base.cache.CacheService;
+import com.ssm.common.base.util.EncryptUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
 import java.util.Random;
-import java.util.UUID;
 
 public abstract class AbstractCaptchaService implements InitializingBean {
 
@@ -23,10 +23,6 @@ public abstract class AbstractCaptchaService implements InitializingBean {
 
     protected CacheService cacheService;
 
-    public String genToken() {
-        return UUID.randomUUID().toString().replace("-", "");
-    }
-
     public String genCaptcha() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < charLength; i++) {
@@ -34,6 +30,28 @@ public abstract class AbstractCaptchaService implements InitializingBean {
             sb.append(chars[randInt % chars.length]);
         }
         return sb.toString();
+    }
+
+    public String genToken(String captcha) {
+        return EncryptUtils.encrypt(String.format("%s_%d", captcha, System.currentTimeMillis()), EncryptUtils.DEFAULT_KEY);
+    }
+
+    public String getCaptcha(String token) {
+        try {
+            String plainText = EncryptUtils.decrypt(token, EncryptUtils.DEFAULT_KEY);
+            String[] plainTextArr = plainText.split("_");
+            if (plainTextArr.length != 2) {
+                throw new IllegalStateException("The token data format error.");
+            }
+            // long timestamp = Long.parseLong(plainTextArr[1]);
+            // if ((System.currentTimeMillis() - timestamp) > TimeUnit.MILLISECONDS.convert(DEFAULT_MAX_AGE, TimeUnit.SECONDS)) {
+            //     throw new IllegalStateException("The verification code has expired.");
+            // }
+            return plainTextArr[0];
+        } catch (Exception e) {
+            // TODO Save the token to the blacklist
+            throw new RuntimeException("Can not decrypt the token [" + token + "].", e);
+        }
     }
 
     public void invalid(String token) {

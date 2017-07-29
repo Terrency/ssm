@@ -16,7 +16,7 @@ public class ImgCaptchaServiceImpl extends AbstractCaptchaService implements Img
 
     @Override
     public String getCaptcha(String token) {
-        String captcha = genCaptcha();
+        String captcha = super.getCaptcha(token);
         ImgCaptcha imgCaptcha = new ImgCaptcha();
         imgCaptcha.setVerifyCount(0);
         imgCaptcha.setCaptcha(captcha);
@@ -39,13 +39,13 @@ public class ImgCaptchaServiceImpl extends AbstractCaptchaService implements Img
             cacheService.delete(token);
             throw new BusinessException("该图片验证码已超过限制验证次数" + MAX_VERIFY_COUNT + "次，请重新获取");
         }
-        imgCaptcha.setVerifyCount(imgCaptcha.getVerifyCount() + 1);
         boolean flag = imgCaptcha.getCaptcha().equalsIgnoreCase(captcha);
         if (flag) {
             imgCaptcha.setVerifyCorrectCount(imgCaptcha.getVerifyCorrectCount() + 1);
         } else {
             imgCaptcha.setVerifyErrorCount(imgCaptcha.getVerifyErrorCount() + 1);
         }
+        imgCaptcha.setVerifyCount(imgCaptcha.getVerifyCount() + 1);
         cacheService.set(token, imgCaptcha, maxAge);
         return flag;
     }

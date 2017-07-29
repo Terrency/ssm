@@ -1,9 +1,8 @@
 package com.ssm.common.web;
 
+import com.ssm.common.base.util.Constant;
 import com.ssm.common.web.captcha.ImgCaptchaService;
 import com.ssm.common.web.captcha.SmsCaptchaService;
-import com.ssm.common.base.exception.BusinessException;
-import com.ssm.common.base.util.Constant;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.concurrent.TimeUnit;
+import javax.annotation.Resource;
 
 @ActiveProfiles(Constant.ENV_DEV)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -33,19 +32,18 @@ public class CaptchaServiceTest {
 
     @Test
     public void test1ImgCaptcha() throws Exception {
-        String capToken = imgCaptchaService.genToken();
-        String capText = imgCaptchaService.getCaptcha(capToken);
-        LOGGER.info("=== capToken: {} ===", capToken);
-        LOGGER.info("=== capText: {} ===", capText);
+        String token = imgCaptchaService.genToken(imgCaptchaService.genCaptcha());
+        String captcha = imgCaptchaService.getCaptcha(token);
+        LOGGER.info("=== {} ===", imgCaptchaService.verify(token, captcha));
+        LOGGER.info("=== {} ===", imgCaptchaService.verify(token, captcha));
     }
 
-    @Test(expected = BusinessException.class)
+    @Test//(expected = BusinessException.class)
     public void test2SmsCaptcha() throws Exception {
         String phone = "18798009093";
         String captcha = smsCaptchaService.genCaptcha();
         String token = smsCaptchaService.sendSms(phone, captcha);
         LOGGER.info("=== {} ===", smsCaptchaService.verify(token, captcha, phone));
-        Thread.sleep(TimeUnit.MILLISECONDS.convert(10, TimeUnit.SECONDS));
         LOGGER.info("=== {} ===", smsCaptchaService.verify(token, captcha, phone));
     }
 

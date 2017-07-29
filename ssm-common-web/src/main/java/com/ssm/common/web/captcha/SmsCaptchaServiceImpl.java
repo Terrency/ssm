@@ -38,9 +38,9 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
         smsCaptcha.setVerifyErrorCount(0);
         smsCaptcha.setVerification(SmsCaptcha.Verification.UNVERIFIED);
         cacheService.set(cacheKey, smsCaptcha, maxAge);
-        String smsToken = genToken();
-        cacheService.set(smsToken, smsCaptcha, maxAge);
-        return smsToken;
+        String token = genToken(captcha);
+        cacheService.set(token, smsCaptcha, maxAge);
+        return token;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
         if (!imgCaptchaService.verify(imgToken, imgCaptcha)) {
             throw new BusinessException("图片验证码不正确");
         }
-        return sendSms(phone, genToken());
+        return sendSms(phone, genCaptcha());
     }
 
     @Override
@@ -65,7 +65,6 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
             throw new BusinessException("该短信验证码已超过限制验证次数" + MAX_VERIFY_COUNT + "次，请重新获取");
         }
         boolean flag = smsCaptcha.getCaptcha().equals(captcha);
-        smsCaptcha.setVerifyCount(smsCaptcha.getVerifyCount() + 1);
         if (flag) {
             smsCaptcha.setVerifyCorrectCount(smsCaptcha.getVerifyCorrectCount() + 1);
             smsCaptcha.setVerification(SmsCaptcha.Verification.PASSED);
@@ -73,6 +72,7 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
             smsCaptcha.setVerifyErrorCount(smsCaptcha.getVerifyErrorCount() + 1);
             smsCaptcha.setVerification(SmsCaptcha.Verification.NOT_PASSED);
         }
+        smsCaptcha.setVerifyCount(smsCaptcha.getVerifyCount() + 1);
         cacheService.set(token, captcha, maxAge);
         return flag;
     }
@@ -96,7 +96,7 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
         this.imgCaptchaService = imgCaptchaService;
     }
 
-    private void doSendSms(String phoneNo, String captcha) throws Exception {
+    private void doSendSms(String phone, String captcha) throws Exception {
         // TODO 调用第三方短信平台API发送短信验证码
     }
 

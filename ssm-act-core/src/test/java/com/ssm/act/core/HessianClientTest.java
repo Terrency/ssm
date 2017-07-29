@@ -62,14 +62,14 @@ public class HessianClientTest {
      * </pre>
      *
      * @see com.caucho.hessian.client.HessianProxy#invoke
-     * @see <a href=http://bugs.caucho.com/view.php?id=3655">Hessian Bug</a>
+     * @see <a href="http://bugs.caucho.com/view.php?id=3655">Hessian Bug</a>
      */
     @Test
     public void test3Download() throws Exception {
         InputStream in = null;
         OutputStream out = null;
         try {
-            in = processService.getProcessDiagram("LeaveProcess:1:1704");
+            in = processService.getProcessDiagram("LeaveProcess:1:2204");
             out = new FileOutputStream("LeaveProcess.png");
             int len;
             byte[] buf = new byte[1024 * 4];

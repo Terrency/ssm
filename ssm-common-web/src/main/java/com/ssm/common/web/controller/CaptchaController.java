@@ -26,7 +26,7 @@ public class CaptchaController extends BaseController {
     @ResponseBody
     @RequestMapping("/genImgCaptchaToken")
     public ResponseData genImgCaptchaToken() {
-        return setData(imgCaptchaService.genToken());
+        return setData(imgCaptchaService.genToken(imgCaptchaService.genCaptcha()));
     }
 
     /**

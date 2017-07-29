@@ -133,7 +133,7 @@
             refreshCaptcha: function () {
                 $.get("captcha/genImgCaptchaToken", function (response) {
                     $("#token").val(response.data);
-                    $("#captchaImg").attr({src: "captcha/getCaptchaImg?imgCaptchaToken=" + response.data + "&r=" + Math.random()});
+                    $("#captchaImg").attr({src: "captcha/getCaptchaImg?imgCaptchaToken=" + response.data});
                 });
             }
         };

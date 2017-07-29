@@ -40,12 +40,14 @@
     </bean>
 
     <!--
+    <context:property-placeholder location="classpath:memcached.properties" ignore-unresolvable="true"/>
+
     <bean id="cacheService" class="com.ssm.common.base.cache.MemcachedCacheService">
         <property name="memcachedClient" ref="memcachedClient"/>
     </bean>
 
     <bean id="memcachedClient" class="net.spy.memcached.spring.MemcachedClientFactoryBean">
-        <property name="servers" value="127.0.0.1:11211"/>
+        <property name="servers" value="${memcached.servers}"/>
         <property name="protocol" value="BINARY"/>
         <property name="transcoder">
             <bean class="net.spy.memcached.transcoders.SerializingTranscoder">

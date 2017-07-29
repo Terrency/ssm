@@ -11,7 +11,7 @@ public class RedisCacheService extends AbstractCacheService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RedisCacheService.class);
 
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public boolean set(String key, Object value, int maxAge) {
@@ -49,7 +49,7 @@ public class RedisCacheService extends AbstractCacheService {
         Assert.notNull(redisTemplate, "Property 'redisTemplate' is required.");
     }
 
-    public void setRedisTemplate(RedisTemplate redisTemplate) {
+    public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 }

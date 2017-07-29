@@ -1,12 +1,6 @@
 package com.ssm.common.web.captcha;
 
 public interface SmsCaptchaService {
-    /**
-     * 生成32位随机数
-     *
-     * @return 32位随机数
-     */
-    String genToken();
 
     /**
      * 生成验证码
@@ -14,6 +8,21 @@ public interface SmsCaptchaService {
      * @return 验证码
      */
     String genCaptcha();
+
+    /**
+     * 生成一个经过加密后的令牌Token
+     *
+     * @return 令牌Token
+     */
+    String genToken(String captcha);
+
+    /**
+     * 根据token获取验证码
+     *
+     * @param token 验证码token
+     * @return 验证码
+     */
+    String getCaptcha(String token);
 
     /**
      * 发送短信

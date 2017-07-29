@@ -5,13 +5,6 @@ import java.awt.image.BufferedImage;
 public interface ImgCaptchaService {
 
     /**
-     * 生成32位随机数
-     *
-     * @return 32位随机数
-     */
-    String genToken();
-
-    /**
      * 生成验证码
      *
      * @return 验证码
@@ -19,12 +12,11 @@ public interface ImgCaptchaService {
     String genCaptcha();
 
     /**
-     * 根据验证码生成验证码图片
+     * 生成一个经过加密后的令牌Token
      *
-     * @param captcha 验证码
-     * @return 验证码图片
+     * @return 令牌Token
      */
-    BufferedImage getCaptchaImage(String captcha);
+    String genToken(String captcha);
 
     /**
      * 根据token获取验证码
@@ -33,6 +25,14 @@ public interface ImgCaptchaService {
      * @return 验证码
      */
     String getCaptcha(String token);
+
+    /**
+     * 根据验证码生成验证码图片
+     *
+     * @param captcha 验证码
+     * @return 验证码图片
+     */
+    BufferedImage getCaptchaImage(String captcha);
 
     /**
      * 校验图片验证码是否正确

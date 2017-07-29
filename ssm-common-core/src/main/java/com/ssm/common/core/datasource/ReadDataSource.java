@@ -14,12 +14,7 @@ public class ReadDataSource extends BasicDataSource {
      */
     @Override
     public void setPassword(String password) {
-        try {
-            password = EncryptUtils.aesDecrypt(password, EncryptUtils.DEFAULT_KEY);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        super.setPassword(password);
+        super.setPassword(EncryptUtils.decrypt(password, EncryptUtils.DEFAULT_KEY));
     }
 
 }

@@ -11,10 +11,6 @@ public class BasicDataSource extends org.apache.commons.dbcp2.BasicDataSource {
      */
     @Override
     public void setPassword(String password) {
-        try {
-            super.setPassword(EncryptUtils.aesDecrypt(password, EncryptUtils.DEFAULT_KEY));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        super.setPassword(EncryptUtils.decrypt(password, EncryptUtils.DEFAULT_KEY));
     }
 }
