@@ -36,7 +36,7 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
         smsCaptcha.setVerifyCount(0);
         smsCaptcha.setVerifyCorrectCount(0);
         smsCaptcha.setVerifyErrorCount(0);
-        smsCaptcha.setVerification(SmsCaptcha.Verification.UNVERIFIED);
+        smsCaptcha.setVerification(SmsCaptcha.UNVERIFIED);
         cacheService.set(cacheKey, smsCaptcha, maxAge);
         String token = genToken(captcha);
         cacheService.set(token, smsCaptcha, maxAge);
@@ -67,20 +67,20 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
         boolean flag = smsCaptcha.getCaptcha().equals(captcha);
         if (flag) {
             smsCaptcha.setVerifyCorrectCount(smsCaptcha.getVerifyCorrectCount() + 1);
-            smsCaptcha.setVerification(SmsCaptcha.Verification.PASSED);
+            smsCaptcha.setVerification(SmsCaptcha.VERIFICATION_PASSED);
         } else {
             smsCaptcha.setVerifyErrorCount(smsCaptcha.getVerifyErrorCount() + 1);
-            smsCaptcha.setVerification(SmsCaptcha.Verification.NOT_PASSED);
+            smsCaptcha.setVerification(SmsCaptcha.VERIFICATION_NOT_PASSED);
         }
         smsCaptcha.setVerifyCount(smsCaptcha.getVerifyCount() + 1);
-        cacheService.set(token, captcha, maxAge);
+        cacheService.set(token, smsCaptcha, maxAge);
         return flag;
     }
 
     @Override
     public boolean verify(String token) {
         SmsCaptcha smsCaptcha = cacheService.get(token, SmsCaptcha.class);
-        return smsCaptcha != null && smsCaptcha.getVerification() == SmsCaptcha.Verification.PASSED;
+        return smsCaptcha != null && smsCaptcha.getVerification() == SmsCaptcha.VERIFICATION_PASSED;
     }
 
     @Override

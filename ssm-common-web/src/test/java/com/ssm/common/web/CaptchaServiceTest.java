@@ -14,8 +14,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
-
 @ActiveProfiles(Constant.ENV_DEV)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
@@ -38,7 +36,7 @@ public class CaptchaServiceTest {
         LOGGER.info("=== {} ===", imgCaptchaService.verify(token, captcha));
     }
 
-    @Test//(expected = BusinessException.class)
+    @Test
     public void test2SmsCaptcha() throws Exception {
         String phone = "18798009093";
         String captcha = smsCaptchaService.genCaptcha();
