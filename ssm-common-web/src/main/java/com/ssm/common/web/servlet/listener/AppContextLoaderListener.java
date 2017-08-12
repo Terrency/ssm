@@ -1,7 +1,9 @@
 package com.ssm.common.web.servlet.listener;
 
+import com.ssm.common.base.enums.Config;
 import com.ssm.common.base.util.PropertiesLoader;
 import com.ssm.common.base.util.SpringHolder;
+import com.ssm.common.base.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.AbstractEnvironment;
@@ -25,7 +27,7 @@ public class AppContextLoaderListener extends ContextLoaderListener {
         PropertiesLoader.init(resources);
         servletContext.setAttribute(ROOT_WEB_APP_CONTEXT_ATTRIBUTE, PropertiesLoader.getProperties());
         LOGGER.info("Complete loading app config, all parameters {} have been bound to [{}] attribute name in this ServletContext.", PropertiesLoader.getProperties(), ROOT_WEB_APP_CONTEXT_ATTRIBUTE);
-        String env = PropertiesLoader.getValue(PropertiesLoader.Config.PHASE_ENV);
+        String env = PropertiesLoader.getValue(StringUtils.toCamelName(Config.PHASE_ENV.name()));
         servletContext.setInitParameter(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME, env);
         LOGGER.info("Active bean definition profiles [{}]", env);
         super.contextInitialized(event);

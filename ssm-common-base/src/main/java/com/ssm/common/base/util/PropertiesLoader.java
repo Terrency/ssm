@@ -10,17 +10,14 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * @see org.springframework.core.io.support.PropertiesLoaderSupport
+ */
 public abstract class PropertiesLoader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesLoader.class);
 
     private static final Properties properties = new Properties();
-
-    public enum Config {
-        PHASE_ENV, PAGE_SIZE, USE_CAPTCHA,
-        DATE_FORMAT, TIME_FORMAT, DATETIME_FORMAT,
-        COMPANY, PROJECT
-    }
 
     public static void init(String... resources) {
         loadProperties(resources);
@@ -38,7 +35,7 @@ public abstract class PropertiesLoader {
         }
     }
 
-    private static String getValue(String key) {
+    public static String getValue(String key) {
         // String value = System.getProperty(key);
         // if (value != null) {
         //     return value;
@@ -46,35 +43,26 @@ public abstract class PropertiesLoader {
         return properties.getProperty(key);
     }
 
-    private static String getValue(String key, String defaultValue) {
+    public static String getValue(String key, String defaultValue) {
         String value = getValue(key);
         return value != null ? value : defaultValue;
     }
 
-    public static String getValue(Config config) {
-        return getValue(StringUtils.toCamelName(config.name()));
+    public static Integer getInteger(String key) {
+        return Integer.valueOf(getValue(key));
     }
 
-    public static String getValue(Config config, String defaultValue) {
-        String value = getValue(config);
+    public static Integer getInteger(String key, Integer defaultValue) {
+        Integer value = getInteger(key);
         return value != null ? value : defaultValue;
     }
 
-    public static Integer getInteger(Config config) {
-        return Integer.valueOf(getValue(config));
+    public static Boolean getBoolean(String key) {
+        return Boolean.valueOf(getValue(key));
     }
 
-    public static Integer getInteger(Config config, Integer defaultValue) {
-        Integer value = getInteger(config);
-        return value != null ? value : defaultValue;
-    }
-
-    public static Boolean getBoolean(Config config) {
-        return Boolean.valueOf(getValue(config));
-    }
-
-    public static Boolean getBoolean(Config config, Boolean defaultValue) {
-        Boolean value = getBoolean(config);
+    public static Boolean getBoolean(String key, Boolean defaultValue) {
+        Boolean value = getBoolean(key);
         return value != null ? value : defaultValue;
     }
 

@@ -1,8 +1,10 @@
 package com.ssm.common.web.security;
 
+import com.ssm.common.base.enums.Config;
 import com.ssm.common.base.exception.IncorrectCaptchaException;
 import com.ssm.common.base.util.Constant;
 import com.ssm.common.base.util.PropertiesLoader;
+import com.ssm.common.base.util.StringUtils;
 import com.ssm.common.web.captcha.ImgCaptchaService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
@@ -63,8 +65,8 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
 
     protected boolean doCaptchaVerify(CaptchaUsernamePasswordToken token) {
         try {
-            return !PropertiesLoader.getBoolean(PropertiesLoader.Config.USE_CAPTCHA) ||
-                    imgCaptchaService.verify(token.getToken(), token.getCaptcha());
+            boolean useCaptcha = PropertiesLoader.getBoolean(StringUtils.toCamelName(Config.USE_CAPTCHA.name()));
+            return useCaptcha && imgCaptchaService.verify(token.getToken(), token.getCaptcha());
         } catch (Exception e) {
             LOGGER.warn("Verify captcha error: {}", e.getMessage());
             return false;
