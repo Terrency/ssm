@@ -44,7 +44,8 @@
     </bean>
 
     <!-- Hessian RPC -->
-    <bean id="hessianProxyFactoryBean" class="org.springframework.remoting.caucho.HessianProxyFactoryBean" abstract="true">
+    <bean id="hessianProxyFactoryBean" class="org.springframework.remoting.caucho.HessianProxyFactoryBean"
+          abstract="true">
         <property name="overloadEnabled" value="true"/>
         <property name="allowNonSerializable" value="true"/>
     </bean>

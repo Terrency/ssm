@@ -9,7 +9,7 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SmsCaptchaServiceImpl.class);
 
-    private static final String SMS_CACHE_PREFIX = "sms_captcha_%s";
+    private static final String SMS_CACHE_PREFIX = "SMS_CAPTCHA_%s";
 
     private static final int MAX_SEND_COUNT = 3;    // 短信验证码限制发送次数(10分钟)
 
@@ -37,7 +37,7 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
         smsCaptcha.setVerifyCorrectCount(0);
         smsCaptcha.setVerifyErrorCount(0);
         smsCaptcha.setVerification(SmsCaptcha.UNVERIFIED);
-        cacheService.set(cacheKey, smsCaptcha, maxAge);
+        cacheService.set(cacheKey, smsCaptcha, cacheService.hasKey(cacheKey) ? cacheService.getExpire(cacheKey) : maxAge);
         String token = genToken(captcha);
         cacheService.set(token, smsCaptcha, maxAge);
         return token;
@@ -48,7 +48,8 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
         if (!imgCaptchaService.verify(imgToken, imgCaptcha)) {
             throw new BusinessException("图片验证码不正确");
         }
-        return sendSms(phone, genCaptcha());
+        String captcha = genCaptcha();
+        return sendSms(phone, captcha);
     }
 
     @Override
@@ -73,7 +74,7 @@ public class SmsCaptchaServiceImpl extends AbstractCaptchaService implements Sms
             smsCaptcha.setVerification(SmsCaptcha.VERIFICATION_NOT_PASSED);
         }
         smsCaptcha.setVerifyCount(smsCaptcha.getVerifyCount() + 1);
-        cacheService.set(token, smsCaptcha, maxAge);
+        cacheService.set(token, smsCaptcha, cacheService.getExpire(token));
         return flag;
     }
 

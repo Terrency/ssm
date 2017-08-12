@@ -1,6 +1,7 @@
 package com.ssm.common.web;
 
 import com.ssm.common.base.util.Constant;
+import com.ssm.common.web.captcha.Captcha;
 import com.ssm.common.web.captcha.ImgCaptchaService;
 import com.ssm.common.web.captcha.SmsCaptchaService;
 import org.junit.FixMethodOrder;
@@ -30,8 +31,8 @@ public class CaptchaServiceTest {
 
     @Test
     public void test1ImgCaptcha() throws Exception {
-        String token = imgCaptchaService.genToken(imgCaptchaService.genCaptcha());
-        String captcha = imgCaptchaService.getCaptcha(token);
+        String token = imgCaptchaService.genToken(Captcha.class.getSimpleName().toUpperCase());
+        String captcha = imgCaptchaService.genCaptcha(token);
         LOGGER.info("=== {} ===", imgCaptchaService.verify(token, captcha));
         LOGGER.info("=== {} ===", imgCaptchaService.verify(token, captcha));
     }
@@ -39,7 +40,7 @@ public class CaptchaServiceTest {
     @Test
     public void test2SmsCaptcha() throws Exception {
         String phone = "18798009093";
-        String captcha = smsCaptchaService.genCaptcha();
+        String captcha = "666666";
         String token = smsCaptchaService.sendSms(phone, captcha);
         LOGGER.info("=== {} ===", smsCaptchaService.verify(token, captcha, phone));
         LOGGER.info("=== {} ===", smsCaptchaService.verify(token, captcha, phone));

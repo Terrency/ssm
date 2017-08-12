@@ -1,13 +1,13 @@
 package com.ssm.common.web.captcha;
 
 import com.ssm.common.base.cache.CacheService;
-import com.ssm.common.base.util.EncryptUtils;
+import com.ssm.common.base.util.XXTEAUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
 import java.util.Random;
 
-public abstract class AbstractCaptchaService implements InitializingBean {
+public abstract class AbstractCaptchaService implements CaptchaService, InitializingBean {
 
     public static final String DEFAULT_CHAR_STRING = "abcdefghijklmnopqrstuvwxyz0123456789";
     public static final int DEFAULT_MAX_AGE = 600;   // 验证码有效期(默认600秒即10分钟)
@@ -19,41 +19,27 @@ public abstract class AbstractCaptchaService implements InitializingBean {
     protected int charLength = DEFAULT_CHAR_LENGTH;
     protected int maxVerifyCount = MAX_VERIFY_COUNT;
 
+    private static final String DEFAULT_KEY = "I+Rj5j]#D*a-";
+
     private Random random = new Random();
 
     protected CacheService cacheService;
 
-    public String genCaptcha() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < charLength; i++) {
-            int randInt = Math.abs(random.nextInt());
-            sb.append(chars[randInt % chars.length]);
-        }
-        return sb.toString();
+    @Override
+    public String genToken(String prefix) {
+        return XXTEAUtils.encrypt(String.format("%s_%d", prefix, System.currentTimeMillis()), DEFAULT_KEY);
     }
 
-    public String genToken(String captcha) {
-        return EncryptUtils.encrypt(String.format("%s_%d", captcha, System.currentTimeMillis()), EncryptUtils.DEFAULT_KEY);
-    }
-
-    public String getCaptcha(String token) {
+    @Override
+    public boolean checkToken(String token) {
         try {
-            String plainText = EncryptUtils.decrypt(token, EncryptUtils.DEFAULT_KEY);
-            String[] plainTextArr = plainText.split("_");
-            if (plainTextArr.length != 2) {
-                throw new IllegalStateException("The token data format error.");
-            }
-            // long timestamp = Long.parseLong(plainTextArr[1]);
-            // if ((System.currentTimeMillis() - timestamp) > TimeUnit.MILLISECONDS.convert(DEFAULT_MAX_AGE, TimeUnit.SECONDS)) {
-            //     throw new IllegalStateException("The verification code has expired.");
-            // }
-            return plainTextArr[0];
+            return XXTEAUtils.decrypt(token, DEFAULT_KEY).split("_").length == 2;
         } catch (Exception e) {
-            // TODO Save the token to the blacklist
-            throw new RuntimeException("Can not decrypt the token [" + token + "].", e);
+            return false;
         }
     }
 
+    @Override
     public void invalid(String token) {
         cacheService.delete(token);
     }
@@ -85,5 +71,14 @@ public abstract class AbstractCaptchaService implements InitializingBean {
     }
 
     protected abstract void checkCaptchaConfig() throws IllegalArgumentException;
+
+    protected String genCaptcha() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < charLength; i++) {
+            int randInt = Math.abs(random.nextInt());
+            sb.append(chars[randInt % chars.length]);
+        }
+        return sb.toString();
+    }
 
 }

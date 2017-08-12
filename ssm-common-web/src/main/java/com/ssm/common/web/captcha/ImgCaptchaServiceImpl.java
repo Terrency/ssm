@@ -15,8 +15,11 @@ public class ImgCaptchaServiceImpl extends AbstractCaptchaService implements Img
     private Producer captchaProducer;
 
     @Override
-    public String getCaptcha(String token) {
-        String captcha = super.getCaptcha(token);
+    public String genCaptcha(String token) {
+        if (!checkToken(token)) {
+            throw new IllegalStateException("验证码令牌格式有误");
+        }
+        String captcha = genCaptcha();
         ImgCaptcha imgCaptcha = new ImgCaptcha();
         imgCaptcha.setVerifyCount(0);
         imgCaptcha.setCaptcha(captcha);
@@ -25,7 +28,7 @@ public class ImgCaptchaServiceImpl extends AbstractCaptchaService implements Img
     }
 
     @Override
-    public BufferedImage getCaptchaImage(String captcha) {
+    public BufferedImage createImage(String captcha) {
         return captchaProducer.createImage(captcha);
     }
 
@@ -46,7 +49,7 @@ public class ImgCaptchaServiceImpl extends AbstractCaptchaService implements Img
             imgCaptcha.setVerifyErrorCount(imgCaptcha.getVerifyErrorCount() + 1);
         }
         imgCaptcha.setVerifyCount(imgCaptcha.getVerifyCount() + 1);
-        cacheService.set(token, imgCaptcha, maxAge);
+        cacheService.set(token, imgCaptcha, cacheService.getExpire(token));
         return flag;
     }
 

@@ -14,7 +14,18 @@ public class RedisCacheService extends AbstractCacheService {
     private RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public boolean set(String key, Object value, int maxAge) {
+    public boolean set(String key, Object value) {
+        try {
+            redisTemplate.opsForValue().set(key, value);
+            return true;
+        } catch (Exception e) {
+            LOGGER.error(String.format("缓存%s时被中断操作 ", key), e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean set(String key, Object value, long maxAge) {
         try {
             redisTemplate.opsForValue().set(key, value, maxAge, TimeUnit.SECONDS);
             return true;
@@ -45,11 +56,27 @@ public class RedisCacheService extends AbstractCacheService {
     }
 
     @Override
-    public void checkCacheConfig() throws IllegalArgumentException {
-        Assert.notNull(redisTemplate, "Property 'redisTemplate' is required.");
+    public boolean hasKey(String key) {
+        return redisTemplate.hasKey(key);
+    }
+
+    @Override
+    public boolean setExpire(String key, long maxAge) {
+        return redisTemplate.expire(key, maxAge, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public long getExpire(String key) {
+        return redisTemplate.getExpire(key, TimeUnit.SECONDS);
     }
 
     public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
+
+    @Override
+    protected void checkCacheConfig() throws IllegalArgumentException {
+        Assert.notNull(redisTemplate, "Property 'redisTemplate' is required.");
+    }
+
 }

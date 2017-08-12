@@ -121,4 +121,8 @@ public class PageImpl<T> implements Page<T>, Serializable {
         return records.iterator();
     }
 
+    @Override
+    public String toString() {
+        return "PageImpl{" + "pageNumber=" + pageNumber + ", pageSize=" + pageSize + ", records=" + records + ", totalRecords=" + totalRecords + ", totalPages=" + totalPages + '}';
+    }
 }

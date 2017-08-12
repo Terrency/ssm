@@ -9,15 +9,7 @@
 
     <context:property-placeholder location="classpath:redis.properties" ignore-unresolvable="true"/>
 
-    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
-        <property name="maxTotal" value="${redis.pool.maxActive}"/>
-        <property name="maxIdle" value="${redis.pool.maxIdle}"/>
-        <property name="maxWaitMillis" value="${redis.pool.maxWait}"/>
-        <property name="testOnBorrow" value="${redis.pool.testOnBorrow}"/>
-    </bean>
-
     <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-        <property name="poolConfig" ref="poolConfig"/>
         <property name="hostName" value="${redis.host}"/>
         <property name="port" value="${redis.port}"/>
         <property name="timeout" value="${redis.timeout}"/>
@@ -25,7 +17,7 @@
         <property name="usePool" value="${redis.usePool}"/>
     </bean>
 
-    <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
         <property name="connectionFactory" ref="connectionFactory"/>
         <property name="keySerializer">
             <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
@@ -38,31 +30,5 @@
     <bean id="cacheService" class="com.ssm.common.base.cache.RedisCacheService">
         <property name="redisTemplate" ref="redisTemplate"/>
     </bean>
-
-    <!--
-    <context:property-placeholder location="classpath:memcached.properties" ignore-unresolvable="true"/>
-
-    <bean id="cacheService" class="com.ssm.common.base.cache.MemcachedCacheService">
-        <property name="memcachedClient" ref="memcachedClient"/>
-    </bean>
-
-    <bean id="memcachedClient" class="net.spy.memcached.spring.MemcachedClientFactoryBean">
-        <property name="servers" value="${memcached.servers}"/>
-        <property name="protocol" value="BINARY"/>
-        <property name="transcoder">
-            <bean class="net.spy.memcached.transcoders.SerializingTranscoder">
-                <property name="compressionThreshold" value="1024"/>
-            </bean>
-        </property>
-        <property name="opTimeout" value="1000"/>
-        <property name="timeoutExceptionThreshold" value="2000"/>
-        <property name="hashAlg">
-            <value type="net.spy.memcached.DefaultHashAlgorithm">KETAMA_HASH</value>
-        </property>
-        <property name="locatorType" value="CONSISTENT"/>
-        <property name="failureMode" value="Redistribute"/>
-        <property name="useNagleAlgorithm" value="false"/>
-    </bean>
-    -->
 
 </beans>

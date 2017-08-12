@@ -1,28 +1,6 @@
 package com.ssm.common.web.captcha;
 
-public interface SmsCaptchaService {
-
-    /**
-     * 生成验证码
-     *
-     * @return 验证码
-     */
-    String genCaptcha();
-
-    /**
-     * 生成一个经过加密后的令牌Token
-     *
-     * @return 令牌Token
-     */
-    String genToken(String captcha);
-
-    /**
-     * 根据token获取验证码
-     *
-     * @param token 验证码token
-     * @return 验证码
-     */
-    String getCaptcha(String token);
+public interface SmsCaptchaService extends CaptchaService {
 
     /**
      * 发送短信
@@ -62,12 +40,5 @@ public interface SmsCaptchaService {
      * @return 短信验证码是否正确
      */
     boolean verify(String token);
-
-    /**
-     * 使验证码失效
-     *
-     * @param token 短信验证码token
-     */
-    void invalid(String token);
 
 }
