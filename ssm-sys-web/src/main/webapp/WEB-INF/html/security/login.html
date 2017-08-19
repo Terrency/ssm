@@ -31,6 +31,9 @@
             top.location.href = location.href;
         }
     </script>
+    <script th:inline="javascript">
+        console.info(String(/*[[@{/}]]*/));
+    </script>
 </head>
 <body>
 <div class="container">

@@ -35,7 +35,7 @@
         </property>
     </bean>
 
-    <!-- 防止静态资源被拦截 -->
+    <!-- 防止静态资源被拦截(DefaultServletHttpRequestHandler) -->
     <mvc:default-servlet-handler/>
     <!--<mvc:resources location="/assets/" mapping="/assets/**" />-->
 

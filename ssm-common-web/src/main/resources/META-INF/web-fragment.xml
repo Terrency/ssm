@@ -102,10 +102,14 @@
         </init-param>
         -->
         <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
             <param-name>decoratorMappings</param-name>
             <param-value>
                 /*=/decorators/default.jsp
-                /admin/*=/decorators/admin-decorator.html
+                /admin/*=/decorators/admin.html
             </param-value>
         </init-param>
     </filter>
