@@ -34,7 +34,7 @@ public class SimpleAuthorizingRealm extends AuthorizingRealm {
         if (activeUser == null) {
             return null;
         }
-        activeUser.setMenus(securityService.getMenuList(activeUser.getId()));
+        activeUser.addMenus(securityService.getMenuList(activeUser.getId()));
         return new SimpleAuthenticationInfo(activeUser, activeUser.getPass(), ByteSource.Util.bytes(activeUser.getSalt()), getName());
     }
 
@@ -44,7 +44,7 @@ public class SimpleAuthorizingRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         ActiveUser activeUser = (ActiveUser) principalCollection.getPrimaryPrincipal();
-        activeUser.setFunctions(securityService.getFunctionList(activeUser.getId()));
+        activeUser.addFunctions(securityService.getFunctionList(activeUser.getId()));
         // 根据用户名从数据库中查询对应的权限数据
         // 基于角色的权限控制(由于角色名称可能会发生改变, 程序代码也要随之修改, 因此基于角色的权限控制不灵活, 可扩展性不强)
         // 基于资源的权限控制(即使角色名称发生改变, 程序代码也无需修改, 能很好适应变化, 建议采用此种方案)

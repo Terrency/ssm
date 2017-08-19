@@ -1,96 +1,98 @@
 package com.ssm.common.base.subject;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import java.io.Serializable;
-import java.util.List;
+import java.util.*;
 
 public class ActiveUser implements Serializable {
 
-    private Long id;
-    private String code;
-    private String name;
-    private String pass;
-    private String salt;
-    private String status;
-    private String manager;
-    private List<Permission> menus;
-    private List<Permission> functions;
+    private final Long id;
+    private final String code;
+    private final String name;
+    private final String pass;
+    private final String salt;
+    private final String status;
+    private final String manager;
+
+    private final List<Permission> menus = new ArrayList<>();
+    private final List<Permission> functions = new ArrayList<>();
+    private final Map<String, Permission> permissions = new HashMap<>();
+
+    public ActiveUser(Long id, String code, String name, String pass, String salt, String status, String manager) {
+        this.id = id;
+        this.code = code;
+        this.name = name;
+        this.pass = pass;
+        this.salt = salt;
+        this.status = status;
+        this.manager = manager;
+    }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getPass() {
         return pass;
     }
 
-    public void setPass(String pass) {
-        this.pass = pass;
-    }
-
     public String getSalt() {
         return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public String getManager() {
         return manager;
-    }
-
-    public void setManager(String manager) {
-        this.manager = manager;
     }
 
     public List<Permission> getMenus() {
         return menus;
     }
 
-    public void setMenus(List<Permission> menus) {
-        this.menus = menus;
-    }
-
     public List<Permission> getFunctions() {
         return functions;
     }
 
-    public void setFunctions(List<Permission> functions) {
-        this.functions = functions;
+    public Collection<Permission> getPermissions() {
+        return permissions.values();
+    }
+
+    public boolean hasPermission(String code) {
+        return permissions.containsKey(code);
+    }
+
+    public void addMenus(Collection<Permission> menus) {
+        this.menus.addAll(menus);
+        this.addPermissions(menus);
+    }
+
+    public void addFunctions(Collection<Permission> functions) {
+        this.functions.addAll(functions);
+        this.addPermissions(menus);
+    }
+
+    private void addPermissions(Collection<Permission> permissions) {
+        for (Permission permission : permissions) {
+            this.permissions.put(permission.getCode(), permission);
+        }
     }
 
     @Override
     public String toString() {
-        return "ActiveUser [id=" + id + ", code=" + code
-                + ", name=" + name + "]";
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 
 }

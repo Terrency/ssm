@@ -9,7 +9,9 @@ public interface SecurityService {
 
     String BEAN_NAME = "securityService";
 
-    ActiveUser getActiveUser(@NotEmpty String code);
+    boolean checkPassword(@NotEmpty String userCode, @NotEmpty String password);
+
+    ActiveUser getActiveUser(@NotEmpty String userCode);
 
     List<Permission> getMenuList(@NotNull Long userId);
 

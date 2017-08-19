@@ -21,20 +21,23 @@ public class SecurityServiceImpl implements SecurityService {
     private PermissionExtMapper permissionExtMapper;
 
     @Override
+    public boolean checkPassword(String userCode, String password) {
+        UserExt user = userExtMapper.selectByCode(userCode);
+        return user != null && user.getPass().equals(password);
+    }
+
+    @Override
     public ActiveUser getActiveUser(String userCode) {
         UserExt user = userExtMapper.selectByCode(userCode);
-        if (user == null) {
-            return null;
-        }
-        ActiveUser activeUser = new ActiveUser();
-        activeUser.setId(user.getId());
-        activeUser.setCode(user.getCode());
-        activeUser.setName(user.getName());
-        activeUser.setPass(user.getPass());
-        activeUser.setSalt(user.getSalt());
-        activeUser.setStatus(user.getStatus());
-        activeUser.setManager(user.getManagerCode());
-        return activeUser;
+        return user != null ? new ActiveUser(
+                user.getId(),
+                user.getCode(),
+                user.getName(),
+                user.getPass(),
+                user.getSalt(),
+                user.getStatus(),
+                user.getManagerCode()
+        ) : null;
     }
 
     @Override
