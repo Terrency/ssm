@@ -1,5 +1,8 @@
 package com.ssm.common.base.page;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,19 +19,19 @@ public class PageImpl<T> implements Page<T>, Serializable {
 
     /**
      * 传递的参数
-     * pageNumber: 第几页(默认从0开始)
+     * currentPage: 当前页
      * pageSize: 每页显示的记录数
      */
-    private final int pageNumber;
+    private final int currentPage;
     private final int pageSize;
 
     /**
      * 查询数据库
-     * content: 当前页的数据列表
-     * total: 总记录数
+     * items: 当前页的数据列表
+     * totalItems: 总记录数
      */
-    private final List<T> records = new ArrayList<>();
-    private final int totalRecords;
+    private final List<T> items = new ArrayList<>();
+    private final int totalItems;
 
     /**
      * 计算总页数
@@ -36,29 +39,25 @@ public class PageImpl<T> implements Page<T>, Serializable {
      */
     private final int totalPages;
 
-    public PageImpl(Pageable pageable, List<T> records, int totalRecords) {
-        this(pageable.getOffset() / pageable.getLimit(), pageable.getLimit(), records, totalRecords);
-    }
-
     /**
      * {@code PageImpl}.
      *
-     * @param pageNumber   the number of the current {@link Page}.
-     * @param pageSize     the size of the {@link Page}.
-     * @param records      the content of this page.
-     * @param totalRecords the total amount of elements available.
+     * @param currentPage the number of the current {@link Page}.
+     * @param pageSize    the size of the {@link Page}.
+     * @param items       the content of this page.
+     * @param totalItems  the total amount of elements available.
      */
-    public PageImpl(int pageNumber, int pageSize, List<T> records, int totalRecords) {
-        this.pageNumber = pageNumber;
+    public PageImpl(int currentPage, int pageSize, List<T> items, int totalItems) {
+        this.currentPage = currentPage;
         this.pageSize = pageSize;
-        this.records.addAll(records);
-        this.totalRecords = totalRecords;
-        this.totalPages = (totalRecords + pageSize - 1) / pageSize;
+        this.items.addAll(items);
+        this.totalItems = totalItems;
+        this.totalPages = (totalItems + pageSize - 1) / pageSize;
     }
 
     @Override
-    public int getPageNumber() {
-        return pageNumber;
+    public int getCurrentPage() {
+        return currentPage;
     }
 
     @Override
@@ -67,13 +66,13 @@ public class PageImpl<T> implements Page<T>, Serializable {
     }
 
     @Override
-    public List<T> getRecords() {
-        return Collections.unmodifiableList(records);
+    public List<T> getItems() {
+        return Collections.unmodifiableList(items);
     }
 
     @Override
-    public int getTotalRecords() {
-        return totalRecords;
+    public int getTotalItems() {
+        return totalItems;
     }
 
     @Override
@@ -83,17 +82,12 @@ public class PageImpl<T> implements Page<T>, Serializable {
 
     @Override
     public int getOffset() {
-        return pageNumber * pageSize;
+        return currentPage * pageSize;
     }
 
     @Override
-    public int getNumberOfRecords() {
-        return records.size();
-    }
-
-    @Override
-    public boolean hasContent() {
-        return !records.isEmpty();
+    public int getItemsSize() {
+        return items.size();
     }
 
     @Override
@@ -108,21 +102,22 @@ public class PageImpl<T> implements Page<T>, Serializable {
 
     @Override
     public boolean hasPrevious() {
-        return getPageNumber() > 0;
+        return getCurrentPage() > 0;
     }
 
     @Override
     public boolean hasNext() {
-        return getPageNumber() + 1 < getTotalPages();
+        return getCurrentPage() + 1 < getTotalPages();
     }
 
     @Override
     public Iterator<T> iterator() {
-        return records.iterator();
+        return items.iterator();
     }
 
     @Override
     public String toString() {
-        return "PageImpl{" + "pageNumber=" + pageNumber + ", pageSize=" + pageSize + ", records=" + records + ", totalRecords=" + totalRecords + ", totalPages=" + totalPages + '}';
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
+
 }

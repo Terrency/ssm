@@ -17,14 +17,14 @@ public abstract class AbstractDialect implements Dialect {
     }
 
     @Override
-    public String getLimitString(String sql, int offset, int limit) {
+    public String getLimitString(String sql, int pageSize, int currentPage) {
         if (sql == null || sql.length() == 0) {
             throw new IllegalArgumentException("The argument [sql] is required and it must not be null.");
         }
-        return getLimitQueryString(sql, offset, limit);
+        return getLimitQueryString(sql, pageSize, currentPage);
     }
 
-    protected abstract String getLimitQueryString(String sql, int offset, int limit);
+    protected abstract String getLimitQueryString(String sql, int pageSize, int currentPage);
 
     /**
      * Remove select clause

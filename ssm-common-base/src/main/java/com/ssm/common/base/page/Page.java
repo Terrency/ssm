@@ -9,6 +9,7 @@ import java.util.List;
  * @param <T>
  * @author Gavin
  */
+
 public interface Page<T> extends Iterable<T> {
 
     /**
@@ -16,7 +17,7 @@ public interface Page<T> extends Iterable<T> {
      *
      * @return the number of the current {@link Page}.
      */
-    int getPageNumber();
+    int getCurrentPage();
 
     /**
      * Returns the size of the {@link Page}.
@@ -28,14 +29,14 @@ public interface Page<T> extends Iterable<T> {
     /**
      * @return the page content as {@link List}.
      */
-    List<T> getRecords();
+    List<T> getItems();
 
     /**
      * Returns the total amount of elements.
      *
      * @return the total amount of elements
      */
-    int getTotalRecords();
+    int getTotalItems();
 
     /**
      * Returns the number of total pages.
@@ -56,12 +57,7 @@ public interface Page<T> extends Iterable<T> {
      *
      * @return the number of elements currently on this {@link Page}.
      */
-    int getNumberOfRecords();
-
-    /**
-     * @return whether the {@link Page} has content at all.
-     */
-    boolean hasContent();
+    int getItemsSize();
 
     /**
      * @return whether the current {@link Page} is the first one.

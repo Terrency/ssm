@@ -71,8 +71,8 @@ public class UserExtMapperTest {
 
     @Test
     public void test3SelectPage() throws Exception {
-        Page<Map> page = userExtMapper.selectPage(PageRequest.newInstance(new ModelMap(), 0, 10));
-        LOGGER.info("{}", page.getRecords());
+        Page<Map> page = userExtMapper.selectPage(new PageRequest<>(new ModelMap(), 0, 10));
+        LOGGER.info("{}", page.getItems());
     }
 
 }

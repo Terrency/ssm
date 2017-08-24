@@ -52,8 +52,8 @@ public class Select2MapperTest {
 
     @Test
     public void test1SelectPage() throws Exception {
-        Page<Map> page = select2Mapper.selectActorPage(PageRequest.newInstance(new ModelMap(), 0, 10));
-        LOGGER.info("{}", page.getRecords());
+        Page<Map> page = select2Mapper.selectActorPage(new PageRequest<>(new ModelMap(), 0, 10));
+        LOGGER.info("{}", page.getItems());
     }
 
 }

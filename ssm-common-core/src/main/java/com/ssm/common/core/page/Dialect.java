@@ -4,6 +4,6 @@ public interface Dialect {
 
     String getCountString(String sql);
 
-    String getLimitString(String sql, int offset, int limit);
+    String getLimitString(String sql, int pageSize, int currentPage);
 
 }

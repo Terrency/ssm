@@ -1,14 +1,14 @@
 package com.ssm.common.base.page;
 
-import com.ssm.common.base.model.Model;
+public interface Pageable<T> {
 
-public interface Pageable {
+    T getParam();
 
-    Model getParam();
+    int getCurrentPage();
+
+    int getPageSize();
 
     int getOffset();
-
-    int getLimit();
 
     boolean isCountable();
 

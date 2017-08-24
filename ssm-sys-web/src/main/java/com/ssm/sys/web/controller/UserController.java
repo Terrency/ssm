@@ -2,6 +2,7 @@ package com.ssm.sys.web.controller;
 
 import com.ssm.common.base.model.ModelMap;
 import com.ssm.common.base.page.Page;
+import com.ssm.common.base.page.PageRequest;
 import com.ssm.common.base.util.Constant;
 import com.ssm.common.web.base.BaseController;
 import com.ssm.common.web.base.BaseWrapper;
@@ -38,7 +39,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/getList", method = {RequestMethod.POST})
     public DataTableResponse<Map> getList(@RequestBody BaseWrapper<ModelMap> wrapper) {
         DataTableRequest dtArgs = wrapper.getDtArgs();
-        Page<Map> page = userService.getPage(wrapper.getModel(), dtArgs.getStart() + 1, dtArgs.getLength());
+        Page<Map> page = userService.getPage(new PageRequest<>(wrapper.getModel(), dtArgs.getLength(), dtArgs.getStart() / dtArgs.getLength() + 1));
         return DataTableUtility.buildDataTable(dtArgs, page);
     }
 

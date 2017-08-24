@@ -2,7 +2,7 @@ package com.ssm.sys.core.service;
 
 import com.ssm.common.base.model.ModelMap;
 import com.ssm.common.base.page.Page;
-import com.ssm.common.base.page.PageRequest;
+import com.ssm.common.base.page.Pageable;
 import com.ssm.sys.api.service.Select2Service;
 import com.ssm.sys.core.mapper.extension.Select2Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +33,13 @@ public class Select2ServiceImpl implements Select2Service {
     }
 
     @Override
-    public Page<Map> queryActor(ModelMap param, int offset, int length) {
-        return select2Mapper.selectActorPage(PageRequest.newInstance(param, offset, length));
+    public Page<Map> queryActor(Pageable<ModelMap> pageable) {
+        return select2Mapper.selectActorPage(pageable);
     }
 
     @Override
-    public Page<Map> queryFunc(ModelMap param, int offset, int length) {
-        return select2Mapper.selectFuncPage(PageRequest.newInstance(param, offset, length));
+    public Page<Map> queryFunc(Pageable<ModelMap> pageable) {
+        return select2Mapper.selectFuncPage(pageable);
     }
 
 }

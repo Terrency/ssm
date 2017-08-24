@@ -9,11 +9,7 @@ import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.plugin.Intercepts;
-import org.apache.ibatis.plugin.Invocation;
-import org.apache.ibatis.plugin.Plugin;
-import org.apache.ibatis.plugin.Signature;
+import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -47,18 +43,20 @@ public class PageInterceptor implements Interceptor {
         final Object[] args = invocation.getArgs();
         final Object parameter = args[PARAMETER_INDEX];
         if (parameter instanceof Pageable) {
-            Pageable pageable = (Pageable) parameter;
+            Pageable<?> pageable = (Pageable<?>) parameter;
             final MappedStatement ms = (MappedStatement) args[MAPPED_STATEMENT_INDEX];
             final BoundSql boundSql = ms.getBoundSql(parameter);
-            String limitSql = dialect.getLimitString(boundSql.getSql(), pageable.getOffset(), pageable.getLimit());
+            int pageSize = pageable.getPageSize();
+            int currentPage = pageable.getCurrentPage();
+            String limitSql = dialect.getLimitString(boundSql.getSql(), pageSize, currentPage);
             args[ROW_BOUNDS_INDEX] = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
             args[MAPPED_STATEMENT_INDEX] = newMappedStatement(ms, boundSql, limitSql);
-            List<?> list = (List<?>) invocation.proceed();
-            int count = pageable.isCountable() ? getCount(ms, boundSql) : 0;
-            Page<?> page = new PageImpl<>(pageable, list, count);
-            List<Page<?>> pageList = new ArrayList<>(1);
-            pageList.add(page);
-            return pageList;
+            List<?> itemList = (List<?>) invocation.proceed();
+            int totalItems = pageable.isCountable() ? getCount(ms, boundSql) : 0;
+            Page<?> page = new PageImpl<>(currentPage, pageSize, itemList, totalItems);
+            List<Page<?>> list = new ArrayList<>(1);
+            list.add(page);
+            return list;
         }
         return invocation.proceed();
     }

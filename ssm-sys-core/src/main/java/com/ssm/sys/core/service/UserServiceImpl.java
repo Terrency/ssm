@@ -3,7 +3,7 @@ package com.ssm.sys.core.service;
 import com.ssm.common.base.exception.BusinessException;
 import com.ssm.common.base.model.ModelMap;
 import com.ssm.common.base.page.Page;
-import com.ssm.common.base.page.PageRequest;
+import com.ssm.common.base.page.Pageable;
 import com.ssm.common.base.util.SecurityUtils;
 import com.ssm.common.core.mapper.BaseMapper;
 import com.ssm.common.core.service.AbstractBaseService;
@@ -140,8 +140,8 @@ public class UserServiceImpl extends AbstractBaseService<User> implements UserSe
     }
 
     @Override
-    public Page<Map> getPage(ModelMap param, int offset, int length) {
-        return userExtMapper.selectPage(PageRequest.newInstance(param, offset, length));
+    public Page<Map> getPage(Pageable<ModelMap> pageable) {
+        return userExtMapper.selectPage(pageable);
     }
 
 }

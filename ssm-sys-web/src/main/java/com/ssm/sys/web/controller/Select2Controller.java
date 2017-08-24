@@ -2,6 +2,7 @@ package com.ssm.sys.web.controller;
 
 import com.ssm.common.base.model.ModelMap;
 import com.ssm.common.base.page.Page;
+import com.ssm.common.base.page.PageRequest;
 import com.ssm.sys.api.service.Select2Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,7 @@ public class Select2Controller {
     public Page<Map> queryActor(@RequestParam Map<String, String> params,
                                 @RequestParam(defaultValue = "1") Integer page,
                                 @RequestParam(defaultValue = "10") Integer limit) {
-        return select2Service.queryActor(new ModelMap(params), (page - 1) * limit, limit);
+        return select2Service.queryActor(new PageRequest<>(new ModelMap(params), limit, page));
     }
 
     @ResponseBody
@@ -33,7 +34,7 @@ public class Select2Controller {
     public Page<Map> queryFunc(@RequestParam Map<String, String> params,
                                @RequestParam(defaultValue = "1") Integer page,
                                @RequestParam(defaultValue = "10") Integer limit) {
-        return select2Service.queryFunc(new ModelMap(params), (page - 1) * limit, limit);
+        return select2Service.queryFunc(new PageRequest<>(new ModelMap(params), limit, page));
     }
 
     @ResponseBody

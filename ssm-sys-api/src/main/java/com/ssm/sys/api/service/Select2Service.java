@@ -2,6 +2,7 @@ package com.ssm.sys.api.service;
 
 import com.ssm.common.base.model.ModelMap;
 import com.ssm.common.base.page.Page;
+import com.ssm.common.base.page.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -16,8 +17,8 @@ public interface Select2Service {
 
     List<Map> queryRole(ModelMap param);
 
-    Page<Map> queryActor(ModelMap param, int offset, int length);
+    Page<Map> queryActor(Pageable<ModelMap> pageable);
 
-    Page<Map> queryFunc(ModelMap param, int offset, int length);
+    Page<Map> queryFunc(Pageable<ModelMap> pageable);
 
 }

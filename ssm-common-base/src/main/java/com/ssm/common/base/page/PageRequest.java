@@ -1,38 +1,59 @@
 package com.ssm.common.base.page;
 
-import com.ssm.common.base.model.Model;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class PageRequest implements Pageable {
+public class PageRequest<T> implements Pageable<T> {
 
-    private final Model param;
-    private final int offset;
-    private final int limit;
-    private final boolean countable;
+    private T param;                            // 额外参数
+    private int pageSize;                       // 每页显示的记录数
+    private int currentPage;                    // 当前页
+    private boolean countable = Boolean.TRUE;   // 是否进行count查询
 
-    public PageRequest(Model param, int offset, int limit) {
-        this(param, offset, limit, Boolean.TRUE);
+    public PageRequest() {
     }
 
-    public PageRequest(Model param, int offset, int limit, boolean countable) {
+    public PageRequest(T param, int pageSize, int currentPage) {
+        this(param, pageSize, currentPage, Boolean.TRUE);
+    }
+
+    public PageRequest(T param, int pageSize, int currentPage, boolean countable) {
         this.param = param;
-        this.offset = offset;
-        this.limit = limit;
+        this.pageSize = pageSize;
+        this.currentPage = currentPage;
         this.countable = countable;
     }
 
     @Override
-    public Model getParam() {
+    public T getParam() {
         return param;
+    }
+
+    public void setParam(T param) {
+        this.param = param;
+    }
+
+    @Override
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    @Override
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
     }
 
     @Override
     public int getOffset() {
-        return offset;
-    }
-
-    @Override
-    public int getLimit() {
-        return limit;
+        return currentPage * pageSize;
     }
 
     @Override
@@ -40,8 +61,13 @@ public class PageRequest implements Pageable {
         return countable;
     }
 
-    public static Pageable newInstance(Model param, int offset, int limit) {
-        return new PageRequest(param, offset, limit);
+    public void setCountable(boolean countable) {
+        this.countable = countable;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 
 }

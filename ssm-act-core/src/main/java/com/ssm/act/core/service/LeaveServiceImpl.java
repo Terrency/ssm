@@ -12,6 +12,7 @@ import com.ssm.common.base.exception.BusinessException;
 import com.ssm.common.base.model.ModelMap;
 import com.ssm.common.base.page.Page;
 import com.ssm.common.base.page.PageRequest;
+import com.ssm.common.base.page.Pageable;
 import com.ssm.common.base.util.ActivitiHelper;
 import com.ssm.common.base.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,8 +130,8 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     @Override
-    public Page<Map> getPage(ModelMap modelMap, int offset, int length) {
-        return leaveExtMapper.selectPage(PageRequest.newInstance(modelMap, offset, length));
+    public Page<Map> getPage(Pageable<ModelMap> pageable) {
+        return leaveExtMapper.selectPage(pageable);
     }
 
     private void checkProcessStatus(Long id) {

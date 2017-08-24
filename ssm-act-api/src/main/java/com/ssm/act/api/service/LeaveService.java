@@ -3,6 +3,7 @@ package com.ssm.act.api.service;
 import com.ssm.act.api.model.Leave;
 import com.ssm.common.base.model.ModelMap;
 import com.ssm.common.base.page.Page;
+import com.ssm.common.base.page.Pageable;
 import com.ssm.common.base.service.BaseService;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -49,6 +50,6 @@ public interface LeaveService extends BaseService<Leave> {
     /**
      * 获取请假单列表
      */
-    Page<Map> getPage(ModelMap modelMap, int offset, int length);
+    Page<Map> getPage(Pageable<ModelMap> pageable);
 
 }

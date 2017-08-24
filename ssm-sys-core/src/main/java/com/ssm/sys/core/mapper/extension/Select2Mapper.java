@@ -1,5 +1,6 @@
 package com.ssm.sys.core.mapper.extension;
 
+import com.ssm.common.base.model.ModelMap;
 import com.ssm.common.base.page.Page;
 import com.ssm.common.base.page.Pageable;
 
@@ -14,8 +15,8 @@ public interface Select2Mapper {
 
     List<Map> selectRole(Map<String, Object> map);
 
-    Page<Map> selectActorPage(Pageable pageable);
+    Page<Map> selectActorPage(Pageable<ModelMap> pageable);
 
-    Page<Map> selectFuncPage(Pageable pageable);
+    Page<Map> selectFuncPage(Pageable<ModelMap> pageable);
 
 }

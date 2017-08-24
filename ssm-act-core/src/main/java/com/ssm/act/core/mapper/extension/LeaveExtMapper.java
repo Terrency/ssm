@@ -13,6 +13,6 @@ public interface LeaveExtMapper {
 
     List<Map> selectSelective(ModelMap modelMap);
 
-    Page<Map> selectPage(Pageable pageable);
+    Page<Map> selectPage(Pageable<ModelMap> pageable);
 
 }
