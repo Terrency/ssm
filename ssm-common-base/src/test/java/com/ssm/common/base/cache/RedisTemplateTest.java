@@ -15,9 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @ActiveProfiles(Constant.ENV_DEV)
@@ -46,21 +44,21 @@ public class RedisTemplateTest {
 
     @Test
     public void test2OpsForHash() throws Exception {
-        String prefix = "CAPTCHA";
-        String token = String.format("%s_%d", prefix, System.currentTimeMillis());
-        Map<String, Object> map = new HashMap<>();
-        map.put("captcha", "abc123");
-        map.put("verifyCount", "0");
-        map.put("verifyCorrectCount", "0");
-        map.put("verifyErrorCount", "0");
-        redisTemplate.opsForHash().putAll(token, map);
+
+        String token = UUID.randomUUID().toString();
+        Map<String, Object> hash = new HashMap<>();
+        hash.put("normal", Arrays.asList("perm1", "perm2"));
+        hash.put("admin", Arrays.asList("perm3", "perm4"));
+        hash.put("activeType", "admin");
+
+        redisTemplate.opsForHash().putAll(token, hash);
         redisTemplate.expire(token, 30, TimeUnit.SECONDS);
-        Thread.sleep(TimeUnit.MILLISECONDS.convert(5, TimeUnit.SECONDS));
-        redisTemplate.opsForHash().put(token, "captcha", "123abc");
-        Long maxAge = redisTemplate.getExpire(token, TimeUnit.SECONDS);
-        Object captcha = redisTemplate.opsForHash().get(token, "captcha");
-        LOGGER.info("=== maxAge: {} ===", maxAge);
-        LOGGER.info("=== captcha: {} ===", captcha);
+        // Thread.sleep(TimeUnit.MILLISECONDS.convert(5, TimeUnit.SECONDS));
+
+        Object activeType = redisTemplate.opsForHash().get(token, "activeType");
+        Object permissions = redisTemplate.opsForHash().get(token, activeType);
+        LOGGER.info("activeType: {}", activeType);
+        LOGGER.info("permissions: {}", permissions);
     }
 
     @Test
