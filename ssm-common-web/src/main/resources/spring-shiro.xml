@@ -8,8 +8,6 @@
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
         <property name="loginUrl" value="/security/login"/>
-        <!--认证成功统一跳转到首页(建议不配置, 由Shiro自动跳转到上一个请求路径)-->
-        <property name="successUrl" value="/"/>
         <!--
             注意：当配置了Shiro权限注解后, 下面的配置将不起作用, 即当用户访问没有被授权的资源时将不会跳转到指定的路径
             而是在页面显示org.apache.shiro.authz.UnauthorizedException异常信息.
@@ -57,18 +55,13 @@
 
     <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
         <property name="hashAlgorithmName" value="md5"/>
-        <property name="hashIterations" value="1"/>
     </bean>
 
     <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
         <property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml"/>
     </bean>
 
-    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-        <!-- 1800000 Millisecond = 30 Minute -->
-        <property name="globalSessionTimeout" value="1800000"/>
-        <property name="deleteInvalidSessions" value="true"/>
-    </bean>
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager"/>
 
     <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
         <property name="cookie" ref="cookie"/>
@@ -76,15 +69,12 @@
 
     <bean id="cookie" class="org.apache.shiro.web.servlet.SimpleCookie">
         <constructor-arg value="rememberMe"/>
-        <!-- 2592000 Second = 30 Day -->
-        <property name="maxAge" value="2592000"/>
     </bean>
 
     <bean id="simpleFormAuthenticationFilter" class="com.ssm.common.web.security.SimpleFormAuthenticationFilter">
         <property name="usernameParam" value="username"/>
         <property name="passwordParam" value="password"/>
         <property name="captchaParam" value="captcha"/>
-        <property name="tokenParam" value="token"/>
         <property name="rememberMeParam" value="rememberMe"/>
     </bean>
 

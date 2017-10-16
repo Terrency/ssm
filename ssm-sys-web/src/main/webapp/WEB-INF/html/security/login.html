@@ -31,9 +31,6 @@
             top.location.href = location.href;
         }
     </script>
-    <script th:inline="javascript">
-        console.info(String(/*[[@{/}]]*/));
-    </script>
 </head>
 <body>
 <div class="container">
@@ -79,12 +76,11 @@
                                    placeholder="验证码" th:placeholder="#{captcha}"
                                    data-bv-notempty="true"
                                    data-bv-stringlength="true"
-                                   data-bv-stringlength-min="6"
-                                   data-bv-stringlength-max="6"
-                                   data-bv-threshold="6">
-                            <img id="captchaImg" src="" title="点击刷新" alt="正在生成验证码..."
+                                   data-bv-stringlength-min="5"
+                                   data-bv-stringlength-max="5"
+                                   data-bv-threshold="5">
+                            <img id="captchaImg" src="captcha/getCaptcha" title="点击刷新" alt="正在生成验证码..."
                                  data-toggle="tooltip" th:title="#{clickToRefresh}" th:alt="#{captchaGen}">
-                            <input id="token" name="token" type="hidden">
                         </div>
                         <div class="checkbox">
                             <label>
@@ -132,20 +128,9 @@
             // }
         });
 
-        var Captcha = {
-            refreshCaptcha: function () {
-                $.get("captcha/genImgCaptchaToken", function (response) {
-                    $("#token").val(response.data);
-                    $("#captchaImg").attr({src: "captcha/getCaptchaImg?imgCaptchaToken=" + response.data});
-                });
-            }
-        };
-
-        $("#captchaImg").click(function () {
-            Captcha.refreshCaptcha();
+        $('#captchaImg').click(function () {
+            $(this).attr('src', 'captcha/getCaptcha?t=' + new Date().getTime());
         });
-
-        Captcha.refreshCaptcha();
 
     });
 </script>

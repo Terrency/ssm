@@ -1,18 +1,17 @@
 package com.ssm.common.web.security;
 
+import com.google.code.kaptcha.Constants;
 import com.ssm.common.base.enums.Config;
 import com.ssm.common.base.exception.IncorrectCaptchaException;
 import com.ssm.common.base.util.Constant;
 import com.ssm.common.base.util.PropertiesLoader;
 import com.ssm.common.base.util.StringUtils;
-import com.ssm.common.web.captcha.ImgCaptchaService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -25,13 +24,8 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleFormAuthenticationFilter.class);
 
     public static final String DEFAULT_CAPTCHA_PARAM = "captcha";
-    public static final String DEFAULT_TOKEN_PARAM = "token";
 
     private String captchaParam = DEFAULT_CAPTCHA_PARAM;
-    private String tokenParam = DEFAULT_TOKEN_PARAM;
-
-    @Autowired
-    private ImgCaptchaService imgCaptchaService;
 
     @Override
     protected CaptchaUsernamePasswordToken createToken(ServletRequest request, ServletResponse response) {
@@ -40,8 +34,7 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
                 getPassword(request),
                 isRememberMe(request),
                 getHost(request),
-                getCaptcha(request),
-                getToken(request)
+                getCaptcha(request)
         );
     }
 
@@ -49,8 +42,8 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         CaptchaUsernamePasswordToken token = this.createToken(request, response);
         try {
-            // 若验证码校验失败则拒绝访问, 不再校验帐户和密码
-            if (!doCaptchaVerify(token)) {
+            if (!doCaptchaVerify(request, token)) {
+                // 若验证码校验失败则拒绝访问, 不再校验帐户和密码
                 request.setAttribute(getFailureKeyAttribute(), IncorrectCaptchaException.class.getName());
                 return true;
             }
@@ -63,10 +56,11 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
         }
     }
 
-    protected boolean doCaptchaVerify(CaptchaUsernamePasswordToken token) {
+    protected boolean doCaptchaVerify(ServletRequest request, CaptchaUsernamePasswordToken token) {
         try {
             boolean useCaptcha = PropertiesLoader.getBoolean(StringUtils.toCamelName(Config.USE_CAPTCHA.name()));
-            return useCaptcha && imgCaptchaService.verify(token.getToken(), token.getCaptcha());
+            String captcha = (String) WebUtils.toHttp(request).getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+            return useCaptcha && captcha.equalsIgnoreCase(token.getCaptcha());
         } catch (Exception e) {
             LOGGER.warn("Verify captcha error: {}", e.getMessage());
             return false;
@@ -77,10 +71,6 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
         return WebUtils.getCleanParam(request, getCaptchaParam());
     }
 
-    protected String getToken(ServletRequest request) {
-        return WebUtils.getCleanParam(request, getTokenParam());
-    }
-
     public String getCaptchaParam() {
         return captchaParam;
     }
@@ -89,12 +79,5 @@ public class SimpleFormAuthenticationFilter extends FormAuthenticationFilter {
         this.captchaParam = captchaParam;
     }
 
-    public String getTokenParam() {
-        return tokenParam;
-    }
-
-    public void setTokenParam(String tokenParam) {
-        this.tokenParam = tokenParam;
-    }
 
 }

@@ -13,7 +13,6 @@
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
         <property name="loginUrl" value="${cas.server}/login?service=${cas.client}/cas"/>
-        <property name="successUrl" value="/"/>
         <property name="filters">
             <map>
                 <entry key="ssl" value-ref="sslFilter"/>
@@ -70,11 +69,7 @@
         <property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml"/>
     </bean>
 
-    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-        <!-- 1800000 Millisecond = 30 Minute -->
-        <property name="globalSessionTimeout" value="1800000"/>
-        <property name="deleteInvalidSessions" value="true"/>
-    </bean>
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager"/>
 
     <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
         <property name="cookie" ref="cookie"/>
@@ -82,9 +77,6 @@
 
     <bean id="cookie" class="org.apache.shiro.web.servlet.SimpleCookie">
         <constructor-arg value="rememberMe"/>
-        <!-- 2592000 Second = 30 Day -->
-        <property name="maxAge" value="2592000"/>
-        <property name="httpOnly" value="true"/>
     </bean>
 
     <!-- ============================== Enabling Shiro Annotations ============================== -->
